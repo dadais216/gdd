@@ -18,26 +18,43 @@ namespace FrbaOfertas.AbmCliente
             InitializeComponent();
         }
 
-        string connectionString = "Data Source= localhost\\SQLSERVER2012;" +
-                                 "Initial Catalog = GD2C2019; " +
-                                 "User ID = gdCupon2019; Password = gd2019;";
+
         
         private void Button1_Click(object sender, EventArgs e)
         {
-            //using esta para que se llame al destructor de con cuando se salga de scope, y se cierre la conexion.
-            //Si no estuviera la conexion se cerraria cuando el gc tenga ganas, o se tendria que cerrar explicitamente
-            //al final del metodo y en un catch
-            using (System.Data.SqlClient.SqlConnection con = new SqlConnection(connectionString))
-            {
-                con.Open();
-                SqlDataAdapter adp = new SqlDataAdapter("SELECT * FROM Cliente", con);
 
-                DataTable table = new DataTable();
 
-                adp.Fill(table);
+            string query="SELECT * FROM Cliente ";
 
-                dataGridView1.DataSource = table;
-            }
+            bool filterBefore = false;
+            var addFilter = new Action<TextBox,string,string>((text,filterQueryBeg,filterQueryEnd) =>
+              {
+                  if (text.Text != "")
+                  {
+                      if (filterBefore)
+                      {
+                          query += "AND ";
+                      }
+                      else
+                      {
+                          query += "WHERE ";
+                          filterBefore = true;
+                      }
+                      query += filterQueryBeg + text.Text + filterQueryEnd;
+                  }
+              });
+
+            addFilter(textBox1,"Cli_Nombre LIKE \'%","%\' ");
+            addFilter(textBox2, "Cli_Apellido LIKE \'%", "%\' ");
+            addFilter(textBox3, "Cli_Dni = "," ");
+            addFilter(textBox4, "Cli_Mail LIKE \'%", "%\' ");
+
+            Console.WriteLine(query);
+
+            SqlDataAdapter adp = new SqlDataAdapter(query, Program.con);
+            DataTable table = new DataTable();
+            adp.Fill(table);
+            dataGridView1.DataSource = table;
         }
 
         private void DataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
