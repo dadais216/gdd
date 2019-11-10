@@ -1,0 +1,11 @@
+C:\Users\Matias\Desktop\Groupon2019\src\FrbaOfertas\FrbaOfertas\bin\Debug\FrbaOfertas.exe.config
+C:\Users\Daniel\Desktop\gdd\Aplicacion\FrbaOfertas\FrbaOfertas\bin\Debug\FrbaOfertas.exe.config
+C:\Users\Daniel\Desktop\gdd\Aplicacion\FrbaOfertas\FrbaOfertas\bin\Debug\FrbaOfertas.exe
+C:\Users\Daniel\Desktop\gdd\Aplicacion\FrbaOfertas\FrbaOfertas\bin\Debug\FrbaOfertas.pdb
+C:\Users\Daniel\Desktop\gdd\Aplicacion\FrbaOfertas\FrbaOfertas\obj\Debug\FrbaOfertas.csprojAssemblyReference.cache
+C:\Users\Daniel\Desktop\gdd\Aplicacion\FrbaOfertas\FrbaOfertas\obj\Debug\FrbaOfertas.Properties.Resources.resources
+C:\Users\Daniel\Desktop\gdd\Aplicacion\FrbaOfertas\FrbaOfertas\obj\Debug\FrbaOfertas.csproj.GenerateResource.cache
+C:\Users\Daniel\Desktop\gdd\Aplicacion\FrbaOfertas\FrbaOfertas\obj\Debug\FrbaOfertas.csproj.CoreCompileInputs.cache
+C:\Users\Daniel\Desktop\gdd\Aplicacion\FrbaOfertas\FrbaOfertas\obj\Debug\FrbaOfertas.exe
+C:\Users\Daniel\Desktop\gdd\Aplicacion\FrbaOfertas\FrbaOfertas\obj\Debug\FrbaOfertas.pdb
+C:\Users\Daniel\Desktop\gdd\Aplicacion\FrbaOfertas\FrbaOfertas\obj\Debug\FrbaOfertas.AbmCliente.Form1.resources
