@@ -19,6 +19,7 @@ namespace FrbaOfertas.AbmCliente
         }
 
         Form1 parent;
+        string userId; 
         public void init(Form1 form1,DataGridViewCellCollection cells)
         {
             parent = form1;
@@ -32,34 +33,31 @@ namespace FrbaOfertas.AbmCliente
             fnac.Text = cells[7].Value.ToString();
 
 
+            userId = cells[0].Value.ToString();
+
             //hacer query que haga join con usuario
             //ver si esta habilitado o no, poner el text en el boton que corresponda
         }
 
         private void Button2_Click(object sender, EventArgs e)
         {
-            //por ahora aparece un textbox para dni pero la modificacion no se efectua.
-            //podria efectuarse haciendo que el query busque por el dni anterior
-            //pero modificar la pk por ahora me hace ruido
-            //para mi dni no deberia ser la pk de todas formas
-
-            
-            var command = new SqlCommand("UPDATE Cliente SET Cli_Nombre=@no,Cli_Apellido=@ap,Cli_Direccion=@di, " +
+            var command = new SqlCommand("UPDATE Cliente SET Cli_Dni=@dn,Cli_Nombre=@no,Cli_Apellido=@ap,Cli_Direccion=@di, " +
                                                             "Cli_Telefono=@te,Cli_Mail=@ma,Cli_Ciudad=@ci " + //"Cli_Fecha_Nac=@fe"+
-                                                            "WHERE Cli_Dni=@dn", Program.con);
+                                                            "WHERE id=@id", Program.con);
             command.Parameters.AddWithValue("@no", nombre.Text);
             command.Parameters.AddWithValue("@ap", apellido.Text);
             command.Parameters.AddWithValue("@dn", dni.Text);
             command.Parameters.AddWithValue("@di", direccion.Text);
             command.Parameters.AddWithValue("@te", telefono.Text);
             command.Parameters.AddWithValue("@ma", mail.Text);
+            command.Parameters.AddWithValue("@ci", ciudad.Text);
 
+            command.Parameters.AddWithValue("@id", userId);
             
             //el ToString hace mierda el formato de datetime, lo tengo que arreglar a mano?
             //command.Parameters.AddWithValue("@fe", textBox14.Text);
 
 
-            command.Parameters.AddWithValue("@ci", ciudad.Text);
             
             command.ExecuteNonQuery();
 
@@ -70,7 +68,12 @@ namespace FrbaOfertas.AbmCliente
 
         private void Button1_Click(object sender, EventArgs e)
         {
-            //
+            /* falta hacer la tabla usuario, esta es la idea nomas
+            
+            var command = new SqlCommand("UPDATE Usuario SET habilitado = "+ usuarioHabilitado? "true ": "false " +"WHERE id= "+ userId, Program.con);
+            command.ExecuteNonQuery();
+
+            */
         }
     }
 }

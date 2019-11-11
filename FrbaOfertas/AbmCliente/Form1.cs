@@ -22,10 +22,6 @@ namespace FrbaOfertas.AbmCliente
         string query;
         private void Button1_Click(object sender, EventArgs e)
         {
-
-            //query="SELECT Cli_Dni,Cli_Nombre,Cli_Apellido,Cli_Direccion" +
-            //    ",Cli_Telefono,Cli_Mail,Cli_Fecha_Nac,Cli_Ciudad FROM Cliente ";//todo menos el id
-
             query = "SELECT * FROM Cliente";
 
             bool filterBefore = false;
