@@ -19,12 +19,12 @@ namespace FrbaOfertas.AbmCliente
         }
 
 
-        
+        string query;
         private void Button1_Click(object sender, EventArgs e)
         {
 
 
-            string query="SELECT * FROM Cliente ";
+            query="SELECT * FROM Cliente ";
 
             bool filterBefore = false;
             var addFilter = new Action<TextBox,string,string>((text,filterQueryBeg,filterQueryEnd) =>
@@ -49,17 +49,23 @@ namespace FrbaOfertas.AbmCliente
             addFilter(textBox3, "Cli_Dni = "," ");
             addFilter(textBox4, "Cli_Mail LIKE \'%", "%\' ");
 
-            Console.WriteLine(query);
-
+            doQuery();
+        }
+        public void doQuery()
+        {
             SqlDataAdapter adp = new SqlDataAdapter(query, Program.con);
             DataTable table = new DataTable();
             adp.Fill(table);
             dataGridView1.DataSource = table;
         }
 
-        private void DataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
 
+        private void DataGridView1_CellClick_1(object sender, DataGridViewCellEventArgs e)
+        {
+            var modForm = new Form2();
+            modForm.init(this,dataGridView1.Rows[e.RowIndex].Cells);
+
+            modForm.Show();
         }
     }
 }

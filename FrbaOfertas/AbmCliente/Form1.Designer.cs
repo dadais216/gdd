@@ -43,9 +43,9 @@
             // 
             // listar
             // 
-            this.listar.Location = new System.Drawing.Point(385, 109);
+            this.listar.Location = new System.Drawing.Point(314, 15);
             this.listar.Name = "listar";
-            this.listar.Size = new System.Drawing.Size(75, 23);
+            this.listar.Size = new System.Drawing.Size(269, 117);
             this.listar.TabIndex = 0;
             this.listar.Text = "listar";
             this.listar.UseVisualStyleBackColor = true;
@@ -54,38 +54,38 @@
             // dataGridView1
             // 
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dataGridView1.Location = new System.Drawing.Point(21, 152);
+            this.dataGridView1.Location = new System.Drawing.Point(12, 152);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(562, 266);
+            this.dataGridView1.Size = new System.Drawing.Size(571, 266);
             this.dataGridView1.TabIndex = 1;
-            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellContentClick);
+            this.dataGridView1.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.DataGridView1_CellClick_1);
             // 
             // textBox1
             // 
-            this.textBox1.Location = new System.Drawing.Point(41, 31);
+            this.textBox1.Location = new System.Drawing.Point(22, 31);
             this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(100, 20);
+            this.textBox1.Size = new System.Drawing.Size(119, 20);
             this.textBox1.TabIndex = 2;
             // 
             // textBox2
             // 
-            this.textBox2.Location = new System.Drawing.Point(178, 31);
+            this.textBox2.Location = new System.Drawing.Point(159, 31);
             this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(100, 20);
+            this.textBox2.Size = new System.Drawing.Size(119, 20);
             this.textBox2.TabIndex = 3;
             // 
             // textBox3
             // 
-            this.textBox3.Location = new System.Drawing.Point(41, 72);
+            this.textBox3.Location = new System.Drawing.Point(22, 72);
             this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(239, 20);
+            this.textBox3.Size = new System.Drawing.Size(258, 20);
             this.textBox3.TabIndex = 4;
             // 
             // textBox4
             // 
-            this.textBox4.Location = new System.Drawing.Point(41, 112);
+            this.textBox4.Location = new System.Drawing.Point(22, 112);
             this.textBox4.Name = "textBox4";
-            this.textBox4.Size = new System.Drawing.Size(239, 20);
+            this.textBox4.Size = new System.Drawing.Size(258, 20);
             this.textBox4.TabIndex = 5;
             // 
             // label1
@@ -128,7 +128,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(595, 444);
+            this.ClientSize = new System.Drawing.Size(595, 437);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);

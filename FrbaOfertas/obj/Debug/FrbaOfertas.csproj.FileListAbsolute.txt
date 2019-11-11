@@ -9,3 +9,4 @@ C:\Users\Daniel\Desktop\gdd\Aplicacion\FrbaOfertas\FrbaOfertas\obj\Debug\FrbaOfe
 C:\Users\Daniel\Desktop\gdd\Aplicacion\FrbaOfertas\FrbaOfertas\obj\Debug\FrbaOfertas.exe
 C:\Users\Daniel\Desktop\gdd\Aplicacion\FrbaOfertas\FrbaOfertas\obj\Debug\FrbaOfertas.pdb
 C:\Users\Daniel\Desktop\gdd\Aplicacion\FrbaOfertas\FrbaOfertas\obj\Debug\FrbaOfertas.AbmCliente.Form1.resources
+C:\Users\Daniel\Desktop\gdd\Aplicacion\FrbaOfertas\FrbaOfertas\obj\Debug\FrbaOfertas.AbmCliente.Form2.resources
