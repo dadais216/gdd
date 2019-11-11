@@ -73,5 +73,12 @@ namespace FrbaOfertas.AbmCliente
 
             modForm.Show();
         }
+
+        private void Button1_Click_1(object sender, EventArgs e)
+        {
+            var newForm = new Form3();
+
+            newForm.Show();
+        }
     }
 }
