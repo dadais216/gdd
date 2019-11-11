@@ -22,14 +22,18 @@ namespace FrbaOfertas.AbmCliente
         public void init(Form1 form1,DataGridViewCellCollection cells)
         {
             parent = form1;
-            textBox8.Text = cells[1].Value.ToString();
-            textBox9.Text = cells[2].Value.ToString();
-            textBox10.Text = cells[0].Value.ToString();
-            textBox11.Text = cells[5].Value.ToString();
-            textBox12.Text = cells[4].Value.ToString();
-            textBox13.Text = cells[3].Value.ToString();
-            textBox14.Text = cells[7].Value.ToString();
-            textBox15.Text = cells[6].Value.ToString();
+            nombre.Text = cells[2].Value.ToString();
+            apellido.Text = cells[3].Value.ToString();
+            dni.Text = cells[1].Value.ToString();
+            mail.Text = cells[6].Value.ToString();
+            telefono.Text = cells[5].Value.ToString();
+            direccion.Text = cells[4].Value.ToString();
+            ciudad.Text = cells[8].Value.ToString();
+            fnac.Text = cells[7].Value.ToString();
+
+
+            //hacer query que haga join con usuario
+            //ver si esta habilitado o no, poner el text en el boton que corresponda
         }
 
         private void Button2_Click(object sender, EventArgs e)
@@ -43,25 +47,30 @@ namespace FrbaOfertas.AbmCliente
             var command = new SqlCommand("UPDATE Cliente SET Cli_Nombre=@no,Cli_Apellido=@ap,Cli_Direccion=@di, " +
                                                             "Cli_Telefono=@te,Cli_Mail=@ma,Cli_Ciudad=@ci " + //"Cli_Fecha_Nac=@fe"+
                                                             "WHERE Cli_Dni=@dn", Program.con);
-            command.Parameters.AddWithValue("@no", textBox8.Text);
-            command.Parameters.AddWithValue("@ap", textBox9.Text);
-            command.Parameters.AddWithValue("@dn", textBox10.Text);
-            command.Parameters.AddWithValue("@di", textBox13.Text);
-            command.Parameters.AddWithValue("@te", textBox12.Text);
-            command.Parameters.AddWithValue("@ma", textBox11.Text);
+            command.Parameters.AddWithValue("@no", nombre.Text);
+            command.Parameters.AddWithValue("@ap", apellido.Text);
+            command.Parameters.AddWithValue("@dn", dni.Text);
+            command.Parameters.AddWithValue("@di", direccion.Text);
+            command.Parameters.AddWithValue("@te", telefono.Text);
+            command.Parameters.AddWithValue("@ma", mail.Text);
 
             
             //el ToString hace mierda el formato de datetime, lo tengo que arreglar a mano?
-            //command.Parameters.AddWithValue("@fe", textBox15.Text);
+            //command.Parameters.AddWithValue("@fe", textBox14.Text);
 
 
-            command.Parameters.AddWithValue("@ci", textBox14.Text);
+            command.Parameters.AddWithValue("@ci", ciudad.Text);
             
             command.ExecuteNonQuery();
 
             parent.doQuery();
             Close();
 
+        }
+
+        private void Button1_Click(object sender, EventArgs e)
+        {
+            //
         }
     }
 }

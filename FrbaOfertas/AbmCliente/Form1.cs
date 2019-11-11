@@ -23,8 +23,10 @@ namespace FrbaOfertas.AbmCliente
         private void Button1_Click(object sender, EventArgs e)
         {
 
+            //query="SELECT Cli_Dni,Cli_Nombre,Cli_Apellido,Cli_Direccion" +
+            //    ",Cli_Telefono,Cli_Mail,Cli_Fecha_Nac,Cli_Ciudad FROM Cliente ";//todo menos el id
 
-            query="SELECT * FROM Cliente ";
+            query = "SELECT * FROM Cliente";
 
             bool filterBefore = false;
             var addFilter = new Action<TextBox,string,string>((text,filterQueryBeg,filterQueryEnd) =>
@@ -56,6 +58,13 @@ namespace FrbaOfertas.AbmCliente
             SqlDataAdapter adp = new SqlDataAdapter(query, Program.con);
             DataTable table = new DataTable();
             adp.Fill(table);
+
+            //table.Columns.RemoveAt(0);
+            //me gustaria no mostrar el id, pero evitar tener que hacer otro query.
+            //lo unico que se me ocurre es copiar la columna id a un array y sacarla del dataGridView,
+            //manejarla como vector amigo
+            //es algo estetico igual 
+
             dataGridView1.DataSource = table;
         }
 
@@ -64,6 +73,7 @@ namespace FrbaOfertas.AbmCliente
         {
             var modForm = new Form2();
             modForm.init(this,dataGridView1.Rows[e.RowIndex].Cells);
+
 
             modForm.Show();
         }
