@@ -27,8 +27,8 @@ namespace FrbaOfertas.AbmCliente
             //y este no es un caso comun que requiera eficiencia.
 
             var command = new SqlCommand("INSERT INTO Cliente " +
-                "(Cli_Dni,Cli_Nombre,Cli_Apellido,Cli_Direccion,Cli_Telefono,Cli_Mail,Cli_Ciudad) " + //"Cli_Fecha_Nac=@fe+"
-                "VALUES (@dn,@no,@ap,@di,@te,@ma,@ci)", Program.con);
+                "(Cli_Dni,Cli_Nombre,Cli_Apellido,Cli_Direccion,Cli_Telefono,Cli_Mail,Cli_Ciudad,Saldo) " + //"Cli_Fecha_Nac=@fe+"
+                "VALUES (@dn,@no,@ap,@di,@te,@ma,@ci,@saldoInicial)", Program.con);
             command.Parameters.AddWithValue("@no", nombre.Text);
             command.Parameters.AddWithValue("@ap", apellido.Text);
             command.Parameters.AddWithValue("@dn", dni.Text);
@@ -36,6 +36,12 @@ namespace FrbaOfertas.AbmCliente
             command.Parameters.AddWithValue("@te", telefono.Text);
             command.Parameters.AddWithValue("@ma", mail.Text);
             command.Parameters.AddWithValue("@ci", ciudad.Text);
+
+            command.Parameters.AddWithValue("@saldoInicial", 200);
+            //pongo el valor inicial por codigo en vez de en la db con DEFAULT porque DEFAULT afectaria a usuarios viejos
+            //que se estan migrando. Podria hacerse con defualt metiendo la regla despues de hacer la migracion, pero en el 
+            //tp no podemos controlar que pasa antes y despues.
+
 
 
             //@TODO el ToString hace mierda el formato de datetime, lo tengo que arreglar a mano?
@@ -49,6 +55,8 @@ namespace FrbaOfertas.AbmCliente
             catch (SqlException er)
             {
                 var newForm = new ErrorWindow();
+
+                Console.WriteLine(er.Message+" >>>>>>>"+er.Number);
                 if (er.Number == 2627)//registro duplicado
                 {
                     newForm.setText("un usuario con esos datos ya existe");

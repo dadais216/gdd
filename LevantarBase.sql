@@ -1,24 +1,20 @@
 
-/*
-DROP TABLE Carga;
-DROP TABLE Proveedor;
-DROP TABLE Oferta;
-DROP TABLE Factura;
-DROP TABLE Compra_Oferta;
-DROP TABLE Cliente;
-*/
+
 CREATE TABLE Cliente(
 	id INT IDENTITY(1,1) PRIMARY KEY,
-	Cli_Dni NUMERIC(18,0),
-	Cli_Nombre NVARCHAR(255),
-	Cli_Apellido NVARCHAR(255),
-	Cli_Direccion NVARCHAR(255),
-	Cli_Telefono NUMERIC(18,0),
-	Cli_Mail NVARCHAR(255),
-	Cli_Fecha_Nac DATETIME,
-	Cli_Ciudad NVARCHAR(255),
+	Cli_Dni NUMERIC(18,0) NOT NULL,
+	Cli_Nombre NVARCHAR(255) NOT NULL,
+	Cli_Apellido NVARCHAR(255) NOT NULL,
+	Cli_Direccion NVARCHAR(255) NOT NULL,
+	Cli_Telefono NUMERIC(18,0) NOT NULL, /*UNIQUE?*/
+	Cli_Mail NVARCHAR(255) NOT NULL, /*UNIQUE hay dos minas que comparte mail, no sé si considerarlo un problema*/
+	Cli_Fecha_Nac DATETIME, /*deberia ser NOT NULL pero no solucione el tema de la conversion*/
+	Cli_Ciudad NVARCHAR(255) NOT NULL,
+	Saldo DECIMAL(32,2) NOT NULL DEFAULT 0,
+	UNIQUE(Cli_Nombre,Cli_Apellido,Cli_Dni,Cli_Direccion,Cli_Telefono,Cli_Mail,Cli_Fecha_Nac,Cli_Ciudad)
+	--deberia ser todo NOT NULL?
 )
-INSERT INTO Cliente --(Cli_Dni, Cli_Nombre, Cli_Apellido, Cli_Direccion, Cli_Telefono, Cli_Mail, Cli_Fecha_Nac, Cli_Ciudad)
+INSERT INTO Cliente (Cli_Dni, Cli_Nombre, Cli_Apellido, Cli_Direccion, Cli_Telefono, Cli_Mail, Cli_Fecha_Nac, Cli_Ciudad)
 SELECT DISTINCT Cli_Dni, Cli_Nombre, Cli_Apellido, Cli_Direccion, Cli_Telefono, Cli_Mail, Cli_Fecha_Nac, Cli_Ciudad
 FROM gd_esquema.Maestra 
 
@@ -98,3 +94,18 @@ B.Oferta_Entregado_Fecha IS NOT NULL
 --no es perfecto porque no tengo un identificador que me separe esos dos registros
 --osea si un cliente pide la misma oferta el mismo dia van a generarse 2 registros de mas
 */
+
+
+
+/*SELECT CONCAT(Cli_Nombre,id) FROM Cliente;
+*/
+
+
+UPDATE Cliente SET Saldo = (SELECT SUM(Carga_Credito) FROM Carga WHERE Cliente.id=Cli_id)
+WHERE EXISTS (SELECT Carga_Credito FROM Carga WHERE Cliente.id=Cli_id)
+--@TODO restar las compras
+
+
+
+
+--@TODO habria que meter todo en el esquema gd_esquema?
