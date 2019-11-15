@@ -22,7 +22,7 @@ namespace FrbaOfertas.AbmCliente
         string query;
         private void Button1_Click(object sender, EventArgs e)
         {
-            query = "SELECT * FROM Cliente";
+            query = "SELECT * FROM Cliente ";
 
             bool filterBefore = false;
             var addFilter = new Action<TextBox,string,string>((text,filterQueryBeg,filterQueryEnd) =>
@@ -53,13 +53,21 @@ namespace FrbaOfertas.AbmCliente
         {
             SqlDataAdapter adp = new SqlDataAdapter(query, Program.con);
             DataTable table = new DataTable();
-            adp.Fill(table);
+
+            try
+            {
+                adp.Fill(table);
+            }catch(System.Data.SqlClient.SqlException e)
+            {
+                //esto creo que solo pasa cuando se pone una letra en dni, tambien se podria solucionar ahi
+            }
 
             //table.Columns.RemoveAt(0);
             //me gustaria no mostrar el id, pero evitar tener que hacer otro query.
             //lo unico que se me ocurre es copiar la columna id a un array y sacarla del dataGridView,
             //manejarla como vector amigo
             //es algo estetico igual 
+            //@TODO
 
             dataGridView1.DataSource = table;
         }

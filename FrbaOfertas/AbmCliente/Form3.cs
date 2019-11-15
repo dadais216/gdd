@@ -21,6 +21,11 @@ namespace FrbaOfertas.AbmCliente
         private void Button1_Click(object sender, EventArgs e)
         {
 
+            //la validacion de no duplicados se hace con una constain unique en la db.
+            //segun lo que lei en internet hacer un query y verificar por codigo es mas rapido
+            //que responder a una excepcion de sql server, pero hacerlo es una solucion mas simple
+            //y este no es un caso comun que requiera eficiencia.
+
             var command = new SqlCommand("INSERT INTO Cliente " +
                 "(Cli_Dni,Cli_Nombre,Cli_Apellido,Cli_Direccion,Cli_Telefono,Cli_Mail,Cli_Ciudad) " + //"Cli_Fecha_Nac=@fe+"
                 "VALUES (@dn,@no,@ap,@di,@te,@ma,@ci)", Program.con);
@@ -33,13 +38,28 @@ namespace FrbaOfertas.AbmCliente
             command.Parameters.AddWithValue("@ci", ciudad.Text);
 
 
-            //el ToString hace mierda el formato de datetime, lo tengo que arreglar a mano?
+            //@TODO el ToString hace mierda el formato de datetime, lo tengo que arreglar a mano?
             //command.Parameters.AddWithValue("@fe", textBox14.Text);
 
 
+            try
+            {
+                command.ExecuteNonQuery();
+            }
+            catch (SqlException er)
+            {
+                var newForm = new ErrorWindow();
+                if (er.Number == 2627)//registro duplicado
+                {
+                    newForm.setText("un usuario con esos datos ya existe");
+                }
+                else
+                {
+                    newForm.setText("algunos datos no corresponden (problablemente letras en un campo de numeros?)");
+                }
 
-            command.ExecuteNonQuery();
-
+                newForm.Show();
+            }
             Close();
 
         }
