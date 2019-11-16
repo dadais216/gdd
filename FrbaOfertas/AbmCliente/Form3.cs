@@ -42,6 +42,7 @@ namespace FrbaOfertas.AbmCliente
             //que se estan migrando. Podria hacerse con defualt metiendo la regla despues de hacer la migracion, pero en el 
             //tp no podemos controlar que pasa antes y despues.
 
+            //@TODO se podria registar la carga de bienvenida como una carga
 
 
             //@TODO el ToString hace mierda el formato de datetime, lo tengo que arreglar a mano?
@@ -57,13 +58,13 @@ namespace FrbaOfertas.AbmCliente
                 var newForm = new ErrorWindow();
 
                 Console.WriteLine(er.Message+" >>>>>>>"+er.Number);
-                if (er.Number == 2627)//registro duplicado
+                if (er.Number == 2627)
                 {
                     newForm.setText("un usuario con esos datos ya existe");
                 }
                 else
                 {
-                    newForm.setText("algunos datos no corresponden (problablemente letras en un campo de numeros?)");
+                    newForm.setText("datos faltantes o mal ingresados"); //tira el mismo error para datos vacios y malos sql
                 }
 
                 newForm.Show();

@@ -97,6 +97,50 @@ B.Oferta_Entregado_Fecha IS NOT NULL
 
 
 
+--no estoy seguro de si resolver esto con un muchos a muchos normalizado es la mejor idea
+
+CREATE TABLE Funcionalidad(
+	id int IDENTITY(1,1) PRIMARY KEY,
+	name nvarchar(40),
+)
+
+CREATE TABLE Rol(
+	id int IDENTITY(1,1) PRIMARY KEY,
+	name nvarchar(40),
+	habilitado bit DEFAULT 1,
+)
+
+CREATE TABLE RolxFuncionalidad(
+	id int IDENTITY(1,1) PRIMARY KEY,
+	funcionalidad int FOREIGN KEY REFERENCES Funcionalidad(id),
+	rol int FOREIGN KEY REFERENCES Rol(id),
+)
+
+
+INSERT INTO Funcionalidad (name)
+VALUES ('abm rol'), ('abm clientes'),('abm proveedor'),('carga credito')
+,('confeccion y publicacion de oferta'),('comprar oferta'),('consumo oferta')
+,('facturacion a proveedor'),('listado estadistico');
+--interpreto que loguearse y registrarse no son funcionalidades valores asignables a un rol
+--podria interpretarse que son funcionalidades de un rol 'no logueado', pero tambien podrian tratarse
+--aparte.
+
+
+INSERT INTO Rol (name)
+VALUES ('cliente'),('proveedor'),('administrador'),('administrador general');
+
+--SELECT * FROM Rol;
+--SELECT * FROM Funcionalidad;
+
+INSERT INTO RolxFuncionalidad (rol,funcionalidad) --hay alguna forma mejor de hacer esto? 
+VALUES  (1,4),(1,6),(1,7),
+		(2,5),
+		(3,1),(3,2),(3,3),(3,8),(3,9);
+INSERT INTO RolxFuncionalidad (rol,funcionalidad)
+(SELECT 4,id FROM Funcionalidad);
+
+
+
 /*SELECT CONCAT(Cli_Nombre,id) FROM Cliente;
 */
 
