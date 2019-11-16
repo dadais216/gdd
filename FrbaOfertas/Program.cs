@@ -26,7 +26,7 @@ namespace FrbaOfertas
 
             con.Open();
 
-            Application.Run(new AbmCliente.Form1());
+            Application.Run(new Main());
             
         }
     }

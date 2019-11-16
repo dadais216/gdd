@@ -13,12 +13,10 @@ namespace FrbaOfertas
 {
     public partial class Login : Form
     {
-        SqlConnection conexion = Program.con;
         string fecha;
         public Login(string fecha)
         {
             this.fecha = fecha;
-            conexion.Open();
             InitializeComponent();
             username.Text = "admin";
             password.Text = "w23e";
