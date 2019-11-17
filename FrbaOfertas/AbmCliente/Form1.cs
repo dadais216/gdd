@@ -75,8 +75,7 @@ namespace FrbaOfertas.AbmCliente
 
         private void DataGridView1_CellClick_1(object sender, DataGridViewCellEventArgs e)
         {
-            var modForm = new Form2();
-            modForm.init(this,dataGridView1.Rows[e.RowIndex].Cells);
+            var modForm = new Form2(this, dataGridView1.Rows[e.RowIndex].Cells);
 
 
             modForm.Show();

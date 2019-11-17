@@ -14,19 +14,10 @@ namespace FrbaOfertas
     public partial class Main : Form
     {
 
-        Dictionary<string, Form> funcionalidad=new Dictionary<string, Form>();
         public Main()
         {
             //un switch seria mejor porque es estatico y delega la creacion
-            funcionalidad.Add("abm cliente", new AbmCliente.Form1());
-            funcionalidad.Add("abm proveedor", new AbmProveedor.Form1());
-            funcionalidad.Add("abm rol", new AbmRol.Form1());
-            funcionalidad.Add("compra oferta", new ComprarOferta.Form1());
-            funcionalidad.Add("carga credito", new CragaCredito.Form1());
-            funcionalidad.Add("confeccion y publicacion de oferta", new CrearOferta.Form1());
-            funcionalidad.Add("facturacion a proveedor", new Facturar.Form1());
-            funcionalidad.Add("listado estadistico", new ListadoEstadistico.Form1());
-            funcionalidad.Add("consumo oferta", null);
+
 
             InitializeComponent();
 
@@ -57,7 +48,22 @@ namespace FrbaOfertas
         public void handleClick(object sender,EventArgs args)
         {
             Button b = (Button)sender;
-            funcionalidad[b.Text].Show();
+
+            //antes usaba un diccionario, pero un switch es mejor porque es estatico,
+            //ademas el diccionario era <string,Form>, por lo que necesitaba alocar todas
+            //las forms en su inicializacion y tenia problemas si se cerraba una y se queria volver a abrir
+            switch (b.Text)
+            {
+                case "abm cliente": new AbmCliente.Form1().Show();break;
+                case "abm proveedor": new AbmProveedor.Form1().Show();break;
+                case "abm rol": new AbmRol.Form1().Show(); break;
+                case "compra oferta": new ComprarOferta.Form1().Show(); break;
+                case "carga credito": new CragaCredito.Form1().Show(); break;
+                case "confeccion y publicacion de oferta": new CrearOferta.Form1().Show(); break;
+                case "facturacion a proveedor": new Facturar.Form1().Show(); break;
+                case "listado estadistico": new ListadoEstadistico.Form1().Show(); break;
+                case "consumo oferta": new ListadoEstadistico.Form1().Show(); break;
+            }
         }
 
     }

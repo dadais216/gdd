@@ -13,15 +13,14 @@ namespace FrbaOfertas.AbmCliente
 {
     public partial class Form2 : Form
     {
-        public Form2()
-        {
-            InitializeComponent();
-        }
+
 
         Form1 parent;
-        string userId; 
-        public void init(Form1 form1,DataGridViewCellCollection cells)
+        string userId;
+        public Form2(Form1 form1, DataGridViewCellCollection cells)
         {
+            InitializeComponent();
+
             parent = form1;
             nombre.Text = cells[2].Value.ToString();
             apellido.Text = cells[3].Value.ToString();
@@ -38,6 +37,7 @@ namespace FrbaOfertas.AbmCliente
             //hacer query que haga join con usuario
             //ver si esta habilitado o no, poner el text en el boton que corresponda
         }
+
 
         private void Button2_Click(object sender, EventArgs e)
         {

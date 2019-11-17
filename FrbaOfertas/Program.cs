@@ -24,7 +24,7 @@ namespace FrbaOfertas
             Application.SetCompatibleTextRenderingDefault(false);
 
 
-            con.Open();
+            con.Open(); // a veces falla el login no sé por que
 
             Application.Run(new Main());
             

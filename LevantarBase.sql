@@ -118,8 +118,8 @@ CREATE TABLE RolxFuncionalidad(
 
 
 INSERT INTO Funcionalidad (name)
-VALUES ('abm rol'), ('abm clientes'),('abm proveedor'),('carga credito')
-,('confeccion y publicacion de oferta'),('comprar oferta'),('consumo oferta')
+VALUES ('abm rol'), ('abm cliente'),('abm proveedor'),('carga credito')
+,('confeccion y publicacion de oferta'),('compra oferta'),('consumo oferta')
 ,('facturacion a proveedor'),('listado estadistico');
 --interpreto que loguearse y registrarse no son funcionalidades valores asignables a un rol
 --podria interpretarse que son funcionalidades de un rol 'no logueado', pero tambien podrian tratarse
