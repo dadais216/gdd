@@ -13,6 +13,8 @@ namespace FrbaOfertas.AbmCliente
 {
     public partial class Form1 : Form
     {
+
+        List<string> userIds=new List<string>();
         public Form1()
         {
             InitializeComponent();
@@ -49,6 +51,7 @@ namespace FrbaOfertas.AbmCliente
 
             doQuery();
         }
+
         public void doQuery()
         {
             SqlDataAdapter adp = new SqlDataAdapter(query, Program.con);
@@ -57,17 +60,23 @@ namespace FrbaOfertas.AbmCliente
             try
             {
                 adp.Fill(table);
-            }catch(System.Data.SqlClient.SqlException e)
+
+                //esta gilada esta para no mostrar ids pero traermelos en un mismo query
+
+                if(table.Rows.Count>userIds.Capacity)//chequeo porque c# no se la banca
+                    userIds.Capacity = table.Rows.Count;
+
+                for (int i = 0; i < table.Rows.Count; i++)
+                {
+                    userIds.Add(table.Rows[i].ItemArray[0].ToString());
+                }
+
+                table.Columns.RemoveAt(0);
+            }
+            catch (System.Data.SqlClient.SqlException e)
             {
                 //esto creo que solo pasa cuando se pone una letra en dni, tambien se podria solucionar ahi
             }
-
-            //table.Columns.RemoveAt(0);
-            //me gustaria no mostrar el id, pero evitar tener que hacer otro query.
-            //lo unico que se me ocurre es copiar la columna id a un array y sacarla del dataGridView,
-            //manejarla como vector amigo
-            //es algo estetico igual 
-            //@TODO
 
             dataGridView1.DataSource = table;
         }
@@ -75,7 +84,7 @@ namespace FrbaOfertas.AbmCliente
 
         private void DataGridView1_CellClick_1(object sender, DataGridViewCellEventArgs e)
         {
-            var modForm = new Form2(this, dataGridView1.Rows[e.RowIndex].Cells);
+            var modForm = new Form2(this, userIds[e.RowIndex],dataGridView1.Rows[e.RowIndex].Cells);
 
 
             modForm.Show();

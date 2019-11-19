@@ -13,18 +13,24 @@ namespace FrbaOfertas.AbmRol
 {
     public partial class Form2 : Form
     {
-
+        Form1 parent;
         Tuple<CheckBox,Label,int>[] checks;
         string rolId;
         string rolName;
-        public Form2(string rolId_,string rolName_)
+        bool habilitado;
+        public Form2(Form1 parent_, string rolId_,string rolName_,bool habilitado_)
         {
             rolId = rolId_;
             rolName = rolName_;
+            habilitado = habilitado_;
+            parent = parent_;
 
             InitializeComponent();
 
             nombre.Text = rolName;
+
+            button1.Text = habilitado ? "deshabilitar" : "habilitar";
+
 
             SqlDataAdapter adp = new SqlDataAdapter("SELECT id,name " +
                                                     "FROM Funcionalidad"
@@ -111,6 +117,22 @@ namespace FrbaOfertas.AbmRol
             {
                 command = new SqlCommand("UPDATE Rol SET name = \'" + nombre.Text + "\' WHERE id = " + rolId, Program.con);
                 command.ExecuteNonQuery();
+            }
+
+            parent.doQuery();
+            Close();
+        }
+
+        private void Button1_Click(object sender, EventArgs e)
+        {
+
+            var command = new SqlCommand("UPDATE Rol SET habilitado = " + (habilitado ? "FALSE":"TRUE")
+                                         + " WHERE id = " + rolId, Program.con);
+            command.ExecuteNonQuery();
+
+            if (habilitado)
+            {
+                //setear en null la fk de los usuarios que tengan este rol
             }
         }
     }

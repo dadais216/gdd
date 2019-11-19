@@ -13,25 +13,41 @@ namespace FrbaOfertas.AbmRol
 {
     public partial class Form1 : Form
     {
+        List<string> userIds=new List<string>();
         public Form1()
         {
             InitializeComponent();
 
-            SqlDataAdapter adp = new SqlDataAdapter("SELECT id,name FROM Rol ", Program.con);
+            doQuery();
+        }
+
+        public void doQuery()
+        {
+            SqlDataAdapter adp = new SqlDataAdapter("SELECT id,name,habilitado FROM Rol ", Program.con);
             DataTable table = new DataTable();
 
 
             adp.Fill(table);
-            //@TODO mismo tema que con cliente, quiero el id para ahorrar un join pero no quiero mostrarlo
+
+            //copy paste de cliente
+            if (table.Rows.Count > userIds.Capacity)//chequeo porque c# no se la banca
+                userIds.Capacity = table.Rows.Count;
+
+            for (int i = 0; i < table.Rows.Count; i++)
+            {
+                userIds.Add(table.Rows[i].ItemArray[0].ToString());
+            }
+
+            table.Columns.RemoveAt(0);
 
             dataGridView1.DataSource = table;
-
-
         }
-
         private void DataGridView1_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            var modForm = new Form2(dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString(), dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString());
+            var modForm = new Form2(this,
+                                    userIds[e.RowIndex], 
+                                    dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString(),
+                                    (bool)dataGridView1.Rows[e.RowIndex].Cells[1].Value);
 
             modForm.Show();
         }

@@ -17,22 +17,22 @@ namespace FrbaOfertas.AbmCliente
 
         Form1 parent;
         string userId;
-        public Form2(Form1 form1, DataGridViewCellCollection cells)
+        public Form2(Form1 form1, string userId_, DataGridViewCellCollection cells)
         {
             InitializeComponent();
 
             parent = form1;
-            nombre.Text = cells[2].Value.ToString();
-            apellido.Text = cells[3].Value.ToString();
-            dni.Text = cells[1].Value.ToString();
-            mail.Text = cells[6].Value.ToString();
-            telefono.Text = cells[5].Value.ToString();
-            direccion.Text = cells[4].Value.ToString();
-            ciudad.Text = cells[8].Value.ToString();
-            fnac.Text = cells[7].Value.ToString();
+            nombre.Text = cells[1].Value.ToString();
+            apellido.Text = cells[2].Value.ToString();
+            dni.Text = cells[0].Value.ToString();
+            mail.Text = cells[5].Value.ToString();
+            telefono.Text = cells[4].Value.ToString();
+            direccion.Text = cells[3].Value.ToString();
+            ciudad.Text = cells[7].Value.ToString();
+            fnac.Text = cells[6].Value.ToString();
 
 
-            userId = cells[0].Value.ToString();
+            userId = userId_;
 
             //hacer query que haga join con usuario
             //ver si esta habilitado o no, poner el text en el boton que corresponda
