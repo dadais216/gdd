@@ -1,3 +1,5 @@
+
+DROP TABLE Usuario;
 DROP TABLE Carga;
 DROP TABLE Proveedor;
 DROP TABLE Oferta;

@@ -32,7 +32,8 @@ FROM gd_esquema.Maestra AS M
 WHERE Carga_Credito IS NOT NULL
 
 CREATE TABLE Proveedor(
-	Provee_RS NVARCHAR(100) PRIMARY KEY, --creo que usar esto como primary key es lento, no?
+	id INT IDENTITY(1,1) PRIMARY KEY,
+	Provee_RS NVARCHAR(100), --no uso esto como PK porque es mas lento y solo es unico dentro de un pais
 	Provee_Drom NVARCHAR(100),
 	Provee_Ciudad NVARCHAR(255), --100 para el domicilio y 255 para ciudad??
 	Provee_Telefono NUMERIC(18,0),
@@ -52,20 +53,22 @@ CREATE TABLE Oferta(
 	Oferta_Fecha_Venc DATETIME NOT NULL,
 	Oferta_Precio NUMERIC(18,2) NOT NULL,
 	Oferta_Precio_Ficticio NUMERIC(18,2) NOT NULL,
-	Provee_RS NVARCHAR(100) REFERENCES Proveedor(Provee_RS)
+	Proveedor INT REFERENCES Proveedor(id)
 	)
 INSERT INTO Oferta
-SELECT DISTINCT Oferta_Codigo, Oferta_Descripcion, Oferta_Cantidad, Oferta_Fecha, Oferta_Fecha_Venc, Oferta_Precio, Oferta_Precio_Ficticio, Provee_RS
-FROM gd_esquema.Maestra
+SELECT DISTINCT Oferta_Codigo, Oferta_Descripcion, Oferta_Cantidad, Oferta_Fecha, Oferta_Fecha_Venc, Oferta_Precio, Oferta_Precio_Ficticio, (SELECT id FROM Proveedor p WHERE p.Provee_RS=m.Provee_RS)
+FROM gd_esquema.Maestra m
 WHERE Oferta_Codigo IS NOT NULL 
 
 CREATE TABLE Factura(
 	Factura_Nro NUMERIC(18,0) PRIMARY KEY,
 	Factura_Fecha DATETIME,
-	Provee_RS NVARCHAR(100) REFERENCES Proveedor(Provee_RS)
+	Proveedor INT REFERENCES Proveedor(id)
 	)
 INSERT INTO Factura
-SELECT DISTINCT Factura_Nro,Factura_Fecha,Provee_RS FROM gd_esquema.Maestra WHERE Factura_Nro IS NOT NULL
+SELECT DISTINCT Factura_Nro,Factura_Fecha,(SELECT id FROM Proveedor p WHERE p.Provee_RS=m.Provee_RS) 
+FROM gd_esquema.Maestra m 
+WHERE Factura_Nro IS NOT NULL
 
 CREATE TABLE Compra_Oferta(
 	id INT IDENTITY(1,1) PRIMARY KEY, --no estoy seguro de si la combinacion de las 3 FK es una PK
@@ -140,16 +143,49 @@ INSERT INTO RolxFuncionalidad (rol,funcionalidad)
 (SELECT 4,id FROM Funcionalidad);
 
 
-
-/*SELECT CONCAT(Cli_Nombre,id) FROM Cliente;
-*/
-
-
 UPDATE Cliente SET Saldo = (SELECT SUM(Carga_Credito) FROM Carga WHERE Cliente.id=Cli_id)
 WHERE EXISTS (SELECT Carga_Credito FROM Carga WHERE Cliente.id=Cli_id)
 --@TODO restar las compras
 
 
 
+
+
+/*
+Entiendo que un nombre y apellido no son unicos pero se da la casualidad de que
+si son unicos en la base de datos de la que se esta migrando:
+
+SELECT c.Cli_Nombre FROM Cliente c JOIN Cliente b 
+ON c.Cli_Nombre=b.Cli_Nombre AND c.Cli_Apellido=b.Cli_Apellido AND c.id!=b.id;
+
+da vacio.
+Esto es conveniente porque permite generar usuarios sin numeros ni cosas raras.
+Si hubieran repeticiones se habria agregado un numero a cada usuario, probablemente concatenado su id
+
+con proveedores pasa algo parecido. RS es unico solo dentro de un pais, por lo que podria darse que
+haya 2 sociedades con el mismo nombre pero no se dio
+*/
+
+CREATE TABLE Usuario(
+	id INT IDENTITY(1,1) PRIMARY KEY, -- estario bueno que la PK sea (cliente,proveedor), pero sql no se banca que parte de una pk sea null
+	nombre VARCHAR(128) NOT NULL UNIQUE, --este podria ser la PK
+	contraseña VARCHAR(128) NOT NULL,
+	rol INT FOREIGN KEY REFERENCES Rol(id),
+	fallosLogin INT DEFAULT 0,
+	habilitado BIT DEFAULT 1,
+	cliente INT FOREIGN KEY REFERENCES Cliente(id),
+	proveedor INT FOREIGN KEY REFERENCES Proveedor(id),
+	--se podrian guardar la FK del cliente y del proveedor en un mismo campo y discriminar por el rol
+	--si es que eso existe en sql ni idea
+)
+
+--@todo contraseña
+INSERT INTO Usuario (nombre,contraseña,rol,cliente,proveedor)
+SELECT CONCAT(Cli_Nombre,' ',Cli_Apellido),'1234',(SELECT id FROM Rol WHERE name='Cliente'),id,null
+FROM Cliente
+
+INSERT INTO Usuario (nombre,contraseña,rol,cliente,proveedor)
+SELECT Provee_RS,'1234',(SELECT id FROM Rol WHERE name='Proveedor'),null,id
+FROM Proveedor
 
 --@TODO habria que meter todo en el esquema gd_esquema?
