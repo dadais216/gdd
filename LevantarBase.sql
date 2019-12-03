@@ -2,42 +2,43 @@
 
 CREATE TABLE Cliente(
 	id INT IDENTITY(1,1) PRIMARY KEY,
-	Cli_Dni NUMERIC(18,0) NOT NULL,
-	Cli_Nombre NVARCHAR(255) NOT NULL,
-	Cli_Apellido NVARCHAR(255) NOT NULL,
-	Cli_Direccion NVARCHAR(255) NOT NULL,
-	Cli_Telefono NUMERIC(18,0) NOT NULL, /*UNIQUE?*/
-	Cli_Mail NVARCHAR(255) NOT NULL, /*UNIQUE hay dos minas que comparte mail, no sé si considerarlo un problema*/
-	Cli_Fecha_Nac DATETIME, /*deberia ser NOT NULL pero no solucione el tema de la conversion*/
-	Cli_Ciudad NVARCHAR(255) NOT NULL,
-	Saldo DECIMAL(32,2) NOT NULL DEFAULT 0,
-	UNIQUE(Cli_Nombre,Cli_Apellido,Cli_Dni,Cli_Direccion,Cli_Telefono,Cli_Mail,Cli_Fecha_Nac,Cli_Ciudad)
+	dni NUMERIC(18,0) NOT NULL,
+	nombre NVARCHAR(255) NOT NULL,
+	apellido NVARCHAR(255) NOT NULL,
+	direccion NVARCHAR(255) NOT NULL,
+	telefono NUMERIC(18,0) NOT NULL, /*UNIQUE?*/
+	mail NVARCHAR(255) NOT NULL, /*UNIQUE hay dos minas que comparte mail, no sé si considerarlo un problema*/
+	fecha_Nac DATETIME, /*deberia ser NOT NULL pero no solucione el tema de la conversion*/
+	ciudad NVARCHAR(255) NOT NULL,
+	saldo DECIMAL(32,2) NOT NULL DEFAULT 0,
+	UNIQUE(nombre,apellido,dni,direccion,telefono,mail,fecha_Nac,ciudad)
 	--deberia ser todo NOT NULL?
 )
-INSERT INTO Cliente (Cli_Dni, Cli_Nombre, Cli_Apellido, Cli_Direccion, Cli_Telefono, Cli_Mail, Cli_Fecha_Nac, Cli_Ciudad)
+INSERT INTO Cliente (dni, nombre, apellido, direccion, telefono, mail, fecha_Nac, ciudad)
 SELECT DISTINCT Cli_Dni, Cli_Nombre, Cli_Apellido, Cli_Direccion, Cli_Telefono, Cli_Mail, Cli_Fecha_Nac, Cli_Ciudad
 FROM gd_esquema.Maestra 
 
 CREATE TABLE Carga(
 	id INT IDENTITY(1,1) PRIMARY KEY,
-	Cli_id INT REFERENCES Cliente(id),
-	Carga_Credito NUMERIC(18,2), --seria redundante ponerle NOT NULL a estos?
-	Carga_Fecha DATETIME,
-	Tipo_Pago_Desc NVARCHAR(100), -- ni idea de que es esto pero es algo de carga. Podria ser un enum
+	cliente INT REFERENCES Cliente(id),
+	credito NUMERIC(18,2), --seria redundante ponerle NOT NULL a estos?
+	fecha DATETIME,
+	tipo_Pago_Desc NVARCHAR(100), -- ni idea de que es esto pero es algo de carga. Podria ser un enum
 	)
 
 INSERT INTO Carga
-SELECT (SELECT id FROM Cliente WHERE Cli_Dni=M.Cli_Dni),Carga_Credito,Carga_Fecha,Tipo_Pago_Desc
+SELECT (SELECT id FROM Cliente WHERE dni=Cli_Dni),Carga_Credito,Carga_Fecha,Tipo_Pago_Desc
 FROM gd_esquema.Maestra AS M
 WHERE Carga_Credito IS NOT NULL
 
 CREATE TABLE Proveedor(
 	id INT IDENTITY(1,1) PRIMARY KEY,
-	Provee_RS NVARCHAR(100), --no uso esto como PK porque es mas lento y solo es unico dentro de un pais
-	Provee_Drom NVARCHAR(100),
-	Provee_Ciudad NVARCHAR(255), --100 para el domicilio y 255 para ciudad??
-	Provee_Telefono NUMERIC(18,0),
-	Provee_CUIT NVARCHAR(100),
+	RS NVARCHAR(100) UNIQUE, --no uso esto como PK porque es mas lento y solo es unico dentro de un pais
+	dom NVARCHAR(255),
+	ciudad NVARCHAR(255),
+	telefono NUMERIC(18,0),
+	CUIT NVARCHAR(100) UNIQUE,
+	--estoy casi seguro de que el rs y el cuit no son unicos globalmente, pero lo pide el enunciado
 	)
 
 INSERT INTO Proveedor
@@ -46,37 +47,37 @@ FROM gd_esquema.Maestra
 WHERE Provee_RS IS NOT NULL
 
 CREATE TABLE Oferta(
-	Oferta_Codigo NVARCHAR(50) PRIMARY KEY, --hay ofertas iguales con codigos distintos, sospechoso
-	Oferta_Descripcion NVARCHAR(255),
-	Oferta_Cantidad NUMERIC(18,0), --es el stock
-	Oferta_Fecha DATETIME NOT NULL,
-	Oferta_Fecha_Venc DATETIME NOT NULL,
-	Oferta_Precio NUMERIC(18,2) NOT NULL,
-	Oferta_Precio_Ficticio NUMERIC(18,2) NOT NULL,
-	Proveedor INT REFERENCES Proveedor(id)
+	codigo NVARCHAR(50) PRIMARY KEY, --hay ofertas iguales con codigos distintos, sospechoso
+	descripcion NVARCHAR(255),
+	cantidad NUMERIC(18,0), --es el stock
+	fecha DATETIME NOT NULL,
+	fecha_Venc DATETIME NOT NULL,
+	precio NUMERIC(18,2) NOT NULL,
+	precio_Ficticio NUMERIC(18,2) NOT NULL,
+	proveedor INT REFERENCES Proveedor(id)
 	)
 INSERT INTO Oferta
-SELECT DISTINCT Oferta_Codigo, Oferta_Descripcion, Oferta_Cantidad, Oferta_Fecha, Oferta_Fecha_Venc, Oferta_Precio, Oferta_Precio_Ficticio, (SELECT id FROM Proveedor p WHERE p.Provee_RS=m.Provee_RS)
+SELECT DISTINCT Oferta_Codigo, Oferta_Descripcion, Oferta_Cantidad, Oferta_Fecha, Oferta_Fecha_Venc, Oferta_Precio, Oferta_Precio_Ficticio, (SELECT id FROM Proveedor p WHERE p.RS=m.Provee_RS)
 FROM gd_esquema.Maestra m
 WHERE Oferta_Codigo IS NOT NULL 
 
 CREATE TABLE Factura(
-	Factura_Nro NUMERIC(18,0) PRIMARY KEY,
-	Factura_Fecha DATETIME,
-	Proveedor INT REFERENCES Proveedor(id)
+	nro NUMERIC(18,0) PRIMARY KEY,
+	fecha DATETIME,
+	proveedor INT REFERENCES Proveedor(id)
 	)
 INSERT INTO Factura
-SELECT DISTINCT Factura_Nro,Factura_Fecha,(SELECT id FROM Proveedor p WHERE p.Provee_RS=m.Provee_RS) 
+SELECT DISTINCT Factura_Nro,Factura_Fecha,(SELECT id FROM Proveedor p WHERE p.RS=m.Provee_RS) 
 FROM gd_esquema.Maestra m 
 WHERE Factura_Nro IS NOT NULL
 
 CREATE TABLE Compra_Oferta(
 	id INT IDENTITY(1,1) PRIMARY KEY, --no estoy seguro de si la combinacion de las 3 FK es una PK
-	Cli_id INT REFERENCES Cliente(id),
-	Oferta_Codigo NVARCHAR(50) REFERENCES Oferta(Oferta_Codigo),
-	Factura_Nro NUMERIC(18,0) REFERENCES Factura(Factura_Nro),
-	Oferta_Fecha_Compra DATETIME,
-	Oferta_Entregado_Fecha DATETIME,
+	cliente INT REFERENCES Cliente(id),
+	oferta NVARCHAR(50) REFERENCES Oferta(codigo),
+	factura NUMERIC(18,0) REFERENCES Factura(nro),
+	fecha_Compra DATETIME,
+	fecha_Entrega DATETIME,
 
 	--en la tabla maestra hay 3 tipos de filas,
 	--unas tienen la factura (indica la compra)
@@ -104,12 +105,12 @@ B.Oferta_Entregado_Fecha IS NOT NULL
 
 CREATE TABLE Funcionalidad(
 	id int IDENTITY(1,1) PRIMARY KEY,
-	name nvarchar(40),
+	nombre nvarchar(40),
 )
 
 CREATE TABLE Rol(
 	id int IDENTITY(1,1) PRIMARY KEY,
-	name nvarchar(40),
+	nombre nvarchar(40),
 	habilitado bit DEFAULT 1,
 )
 
@@ -120,7 +121,7 @@ CREATE TABLE RolxFuncionalidad(
 )
 
 
-INSERT INTO Funcionalidad (name)
+INSERT INTO Funcionalidad (nombre)
 VALUES ('abm rol'), ('abm cliente'),('abm proveedor'),('carga credito')
 ,('confeccion y publicacion de oferta'),('compra oferta'),('consumo oferta')
 ,('facturacion a proveedor'),('listado estadistico');
@@ -129,7 +130,7 @@ VALUES ('abm rol'), ('abm cliente'),('abm proveedor'),('carga credito')
 --aparte.
 
 
-INSERT INTO Rol (name)
+INSERT INTO Rol (nombre)
 VALUES ('cliente'),('proveedor'),('administrador'),('administrador general');
 
 --SELECT * FROM Rol;
@@ -143,8 +144,8 @@ INSERT INTO RolxFuncionalidad (rol,funcionalidad)
 (SELECT 4,id FROM Funcionalidad);
 
 
-UPDATE Cliente SET Saldo = (SELECT SUM(Carga_Credito) FROM Carga WHERE Cliente.id=Cli_id)
-WHERE EXISTS (SELECT Carga_Credito FROM Carga WHERE Cliente.id=Cli_id)
+UPDATE Cliente SET Saldo = (SELECT SUM(credito) FROM Carga WHERE Cliente.id=cliente)
+WHERE EXISTS (SELECT credito FROM Carga WHERE Cliente.id=cliente)
 --@TODO restar las compras
 
 
@@ -181,11 +182,11 @@ CREATE TABLE Usuario(
 
 --@todo contraseña
 INSERT INTO Usuario (nombre,contraseña,rol,cliente,proveedor)
-SELECT CONCAT(Cli_Nombre,' ',Cli_Apellido),'1234',(SELECT id FROM Rol WHERE name='Cliente'),id,null
+SELECT CONCAT(nombre,' ',apellido),'1234',(SELECT id FROM Rol WHERE nombre='Cliente'),id,null
 FROM Cliente
 
 INSERT INTO Usuario (nombre,contraseña,rol,cliente,proveedor)
-SELECT Provee_RS,'1234',(SELECT id FROM Rol WHERE name='Proveedor'),null,id
+SELECT RS,'1234',(SELECT id FROM Rol WHERE nombre='Proveedor'),null,id
 FROM Proveedor
 
 --@TODO habria que meter todo en el esquema gd_esquema?

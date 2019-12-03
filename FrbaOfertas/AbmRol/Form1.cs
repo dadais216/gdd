@@ -13,7 +13,7 @@ namespace FrbaOfertas.AbmRol
 {
     public partial class Form1 : Form
     {
-        List<string> userIds=new List<string>();
+        string[] userIds;
         public Form1()
         {
             InitializeComponent();
@@ -23,19 +23,17 @@ namespace FrbaOfertas.AbmRol
 
         public void doQuery()
         {
-            SqlDataAdapter adp = new SqlDataAdapter("SELECT id,name,habilitado FROM Rol ", Program.con);
+            SqlDataAdapter adp = new SqlDataAdapter("SELECT id,nombre,habilitado FROM Rol ", Program.con);
             DataTable table = new DataTable();
 
 
             adp.Fill(table);
 
-            //copy paste de cliente
-            if (table.Rows.Count > userIds.Capacity)//chequeo porque c# no se la banca
-                userIds.Capacity = table.Rows.Count;
+            userIds = new string[table.Rows.Count];
 
             for (int i = 0; i < table.Rows.Count; i++)
             {
-                userIds.Add(table.Rows[i].ItemArray[0].ToString());
+                userIds[i]=table.Rows[i].ItemArray[0].ToString();
             }
 
             table.Columns.RemoveAt(0);
@@ -54,7 +52,7 @@ namespace FrbaOfertas.AbmRol
 
         private void Button1_Click(object sender, EventArgs e)
         {
-            var newForm = new Form3();
+            var newForm = new Form3(this);
 
             newForm.Show();
         }

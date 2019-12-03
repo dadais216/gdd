@@ -22,7 +22,7 @@ namespace FrbaOfertas
             InitializeComponent();
 
             //cuando el usuario se logee se hace un join y se consigue el rol
-            string query = "SELECT name FROM "+
+            string query = "SELECT nombre FROM "+
                            "Funcionalidad f JOIN RolxFuncionalidad rf ON f.id = rf.funcionalidad "+
                            "WHERE rf.rol = 4";
 

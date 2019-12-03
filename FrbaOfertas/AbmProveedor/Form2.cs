@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace FrbaOfertas.AbmCliente
+namespace FrbaOfertas.AbmProveedor
 {
     public partial class Form2 : Form
     {
@@ -33,7 +33,8 @@ namespace FrbaOfertas.AbmCliente
 
             userId = userId_;
 
-            SqlDataAdapter adp = new SqlDataAdapter("SELECT habilitado FROM Usuario WHERE cliente = " +userId, Program.con);
+
+            SqlDataAdapter adp = new SqlDataAdapter("SELECT habilitado FROM Usuario WHERE cliente = " + userId, Program.con);
             DataTable table = new DataTable();
             adp.Fill(table);
 
@@ -45,8 +46,8 @@ namespace FrbaOfertas.AbmCliente
 
         private void Button2_Click(object sender, EventArgs e)
         {
-            var command = new SqlCommand("UPDATE Cliente SET dni=@dn,nombre=@no,apellido=@ap,direccion=@di, " +
-                                                            "telefono=@te,mail=@ma,ciudad=@ci " + //"Cli_Fecha_Nac=@fe"+
+            var command = new SqlCommand("UPDATE Cliente SET Cli_Dni=@dn,Cli_Nombre=@no,Cli_Apellido=@ap,Cli_Direccion=@di, " +
+                                                            "Cli_Telefono=@te,Cli_Mail=@ma,Cli_Ciudad=@ci " + //"Cli_Fecha_Nac=@fe"+
                                                             "WHERE id=@id", Program.con);
             command.Parameters.AddWithValue("@no", nombre.Text);
             command.Parameters.AddWithValue("@ap", apellido.Text);
@@ -60,7 +61,7 @@ namespace FrbaOfertas.AbmCliente
             
             //el ToString hace mierda el formato de datetime, lo tengo que arreglar a mano?
             //command.Parameters.AddWithValue("@fe", textBox14.Text);
-            //@todo
+
 
             
             command.ExecuteNonQuery();
@@ -72,7 +73,8 @@ namespace FrbaOfertas.AbmCliente
 
         private void Button1_Click(object sender, EventArgs e)
         {
-            var command = new SqlCommand("UPDATE Usuario SET habilitado = "+ (habilitado? "0 ": "1 ") +"WHERE cliente = "+ userId, Program.con);
+
+            var command = new SqlCommand("UPDATE Usuario SET habilitado = " + (habilitado ? "0 " : "1 ") + "WHERE cliente = " + userId, Program.con);
             command.ExecuteNonQuery();
 
             Close();

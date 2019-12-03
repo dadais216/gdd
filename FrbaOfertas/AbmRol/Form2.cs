@@ -32,7 +32,7 @@ namespace FrbaOfertas.AbmRol
             button1.Text = habilitado ? "deshabilitar" : "habilitar";
 
 
-            SqlDataAdapter adp = new SqlDataAdapter("SELECT id,name " +
+            SqlDataAdapter adp = new SqlDataAdapter("SELECT id,nombre " +
                                                     "FROM Funcionalidad"
                                                     , Program.con);
             DataTable funcs = new DataTable();
@@ -115,7 +115,7 @@ namespace FrbaOfertas.AbmRol
 
             if (rolName != nombre.Text)
             {
-                command = new SqlCommand("UPDATE Rol SET name = \'" + nombre.Text + "\' WHERE id = " + rolId, Program.con);
+                command = new SqlCommand("UPDATE Rol SET nombre = \'" + nombre.Text + "\' WHERE id = " + rolId, Program.con);
                 command.ExecuteNonQuery();
             }
 
@@ -126,14 +126,20 @@ namespace FrbaOfertas.AbmRol
         private void Button1_Click(object sender, EventArgs e)
         {
 
-            var command = new SqlCommand("UPDATE Rol SET habilitado = " + (habilitado ? "FALSE":"TRUE")
+            var command = new SqlCommand("UPDATE Rol SET habilitado = " + (habilitado ? "0":"1")
                                          + " WHERE id = " + rolId, Program.con);
             command.ExecuteNonQuery();
 
             if (habilitado)
             {
-                //setear en null la fk de los usuarios que tengan este rol
+                command= new SqlCommand("UPDATE Usuario SET rol = null WHERE rol = "+rolId,Program.con);
+                command.ExecuteNonQuery();
+
+                //dejar usuarios sin rol es sospechoso. 
+                //@todo hacer un rol vacio sin funcionalidades, y asignar a eso?
             }
+            parent.doQuery();
+            Close();
         }
     }
 

@@ -9,7 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace FrbaOfertas.AbmCliente
+namespace FrbaOfertas.AbmProveedor
 {
     public partial class Form3 : Form
     {
@@ -27,7 +27,7 @@ namespace FrbaOfertas.AbmCliente
             //y este no es un caso comun que requiera eficiencia.
 
             var command = new SqlCommand("INSERT INTO Cliente " +
-                "(dni,nombre,apellido,direccion,telefono,mail,ciudad,saldo) " + //"Cli_Fecha_Nac=@fe+"
+                "(Cli_Dni,Cli_Nombre,Cli_Apellido,Cli_Direccion,Cli_Telefono,Cli_Mail,Cli_Ciudad,Saldo) " + //"Cli_Fecha_Nac=@fe+"
                 "VALUES (@dn,@no,@ap,@di,@te,@ma,@ci,@saldoInicial)", Program.con);
             command.Parameters.AddWithValue("@no", nombre.Text);
             command.Parameters.AddWithValue("@ap", apellido.Text);

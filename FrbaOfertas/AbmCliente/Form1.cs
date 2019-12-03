@@ -13,8 +13,7 @@ namespace FrbaOfertas.AbmCliente
 {
     public partial class Form1 : Form
     {
-
-        List<string> userIds=new List<string>();
+        string[] userIds;
         public Form1()
         {
             InitializeComponent();
@@ -44,10 +43,10 @@ namespace FrbaOfertas.AbmCliente
                   }
               });
 
-            addFilter(textBox1,"Cli_Nombre LIKE \'%","%\' ");
-            addFilter(textBox2, "Cli_Apellido LIKE \'%", "%\' ");
-            addFilter(textBox3, "Cli_Dni = "," ");
-            addFilter(textBox4, "Cli_Mail LIKE \'%", "%\' ");
+            addFilter(textBox1,"nombre LIKE \'%","%\' ");
+            addFilter(textBox2, "apellido LIKE \'%", "%\' ");
+            addFilter(textBox3, "dni = "," ");
+            addFilter(textBox4, "mail LIKE \'%", "%\' ");
 
             doQuery();
         }
@@ -63,12 +62,11 @@ namespace FrbaOfertas.AbmCliente
 
                 //esta gilada esta para no mostrar ids pero traermelos en un mismo query
 
-                if(table.Rows.Count>userIds.Capacity)//chequeo porque c# no se la banca
-                    userIds.Capacity = table.Rows.Count;
+                userIds = new string[table.Rows.Count];
 
                 for (int i = 0; i < table.Rows.Count; i++)
                 {
-                    userIds.Add(table.Rows[i].ItemArray[0].ToString());
+                    userIds[i]=table.Rows[i].ItemArray[0].ToString();
                 }
 
                 table.Columns.RemoveAt(0);
@@ -84,6 +82,8 @@ namespace FrbaOfertas.AbmCliente
 
         private void DataGridView1_CellClick_1(object sender, DataGridViewCellEventArgs e)
         {
+            if (e.RowIndex == -1) return;
+
             var modForm = new Form2(this, userIds[e.RowIndex],dataGridView1.Rows[e.RowIndex].Cells);
 
 
