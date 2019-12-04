@@ -1,12 +1,8 @@
 {
   "ExpandedNodes": [
     "",
-    "\\FrbaOfertas",
-    "\\FrbaOfertas\\AbmCliente",
-    "\\FrbaOfertas\\AbmProveedor",
-    "\\FrbaOfertas\\AbmRol",
-    "\\FrbaOfertas\\ComprarOferta"
+    "\\FrbaOfertas"
   ],
-  "SelectedNode": "\\FrbaOfertas\\Program.cs",
+  "SelectedNode": "\\FrbaOfertas.sln",
   "PreviewInSolutionExplorer": false
 }
