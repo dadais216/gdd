@@ -21,22 +21,22 @@ namespace FrbaOfertas.AbmProveedor
             InitializeComponent();
 
             parent = form1;
-            nombre.Text = cells[1].Value.ToString();
-            apellido.Text = cells[2].Value.ToString();
-            dni.Text = cells[0].Value.ToString();
-            mail.Text = cells[5].Value.ToString();
-            telefono.Text = cells[4].Value.ToString();
-            direccion.Text = cells[3].Value.ToString();
-            ciudad.Text = cells[7].Value.ToString();
-            fnac.Text = cells[6].Value.ToString();
 
+            //RS,dom,ciudad,telefono,CUIT,mail,codigoPostal,rubro
+
+            razonSocial.Text = cells[0].Value.ToString();
+            direccion.Text = cells[1].Value.ToString();
+            ciudad.Text = cells[2].Value.ToString();
+            telefono.Text = cells[3].Value.ToString();
+            CUIT.Text = cells[4].Value.ToString();
+            mail.Text = cells[5].Value.ToString();
+            codigoPostal.Text = cells[6].Value.ToString();
+            rubro.Text = cells[7].Value.ToString();
+            contacto.Text = cells[8].Value.ToString();
 
             userId = userId_;
 
-
-            SqlDataAdapter adp = new SqlDataAdapter("SELECT habilitado FROM Usuario WHERE cliente = " + userId, Program.con);
-            DataTable table = new DataTable();
-            adp.Fill(table);
+            var table = util.tableQuery("SELECT habilitado FROM Usuario WHERE proveedor = " + userId);
 
             habilitado = (bool)table.Rows[0].ItemArray[0];
 
@@ -46,25 +46,28 @@ namespace FrbaOfertas.AbmProveedor
 
         private void Button2_Click(object sender, EventArgs e)
         {
-            var command = new SqlCommand("UPDATE Cliente SET Cli_Dni=@dn,Cli_Nombre=@no,Cli_Apellido=@ap,Cli_Direccion=@di, " +
-                                                            "Cli_Telefono=@te,Cli_Mail=@ma,Cli_Ciudad=@ci " + //"Cli_Fecha_Nac=@fe"+
-                                                            "WHERE id=@id", Program.con);
-            command.Parameters.AddWithValue("@no", nombre.Text);
-            command.Parameters.AddWithValue("@ap", apellido.Text);
-            command.Parameters.AddWithValue("@dn", dni.Text);
-            command.Parameters.AddWithValue("@di", direccion.Text);
-            command.Parameters.AddWithValue("@te", telefono.Text);
-            command.Parameters.AddWithValue("@ma", mail.Text);
-            command.Parameters.AddWithValue("@ci", ciudad.Text);
+            util.execCommand("UPDATE Proveedor SET RS=@RS,dom=@di,ciudad=@ci,telefono=@te,CUIT=@CU,mail=@ma, " +
+                                                            "codigoPostal=@co,rubro=@ru " +
+                                                            "WHERE id=@id",
+                                                            "@RS", razonSocial.Text,
+                                                            "@di", direccion.Text,
+                                                            "@ci", ciudad.Text,
+                                                            "@te", telefono.Text,
+                                                            "@cu", CUIT.Text,
+                                                            "@ma", mail.Text,
+                                                            "@co", codigoPostal.Text,
+                                                            "@ru", rubro.Text,
+                                                            "@no", contacto.Text,
+                                                            "@id", userId);
 
-            command.Parameters.AddWithValue("@id", userId);
-            
+
             //el ToString hace mierda el formato de datetime, lo tengo que arreglar a mano?
             //command.Parameters.AddWithValue("@fe", textBox14.Text);
+            //@todo
 
 
-            
-            command.ExecuteNonQuery();
+            //hacer una modificacion setea los nulls de mail y codigoPostal a "" y 0, arreglarlo implica no usar los parameters
+            //estos (que son una cagada). No sé si vale la pena molestarse por eso igual
 
             parent.doQuery();
             Close();
@@ -73,9 +76,7 @@ namespace FrbaOfertas.AbmProveedor
 
         private void Button1_Click(object sender, EventArgs e)
         {
-
-            var command = new SqlCommand("UPDATE Usuario SET habilitado = " + (habilitado ? "0 " : "1 ") + "WHERE cliente = " + userId, Program.con);
-            command.ExecuteNonQuery();
+            util.execCommand("UPDATE Usuario SET habilitado = " + (habilitado ? "0 " : "1 ") + "WHERE cliente = " + userId);
 
             Close();
         }

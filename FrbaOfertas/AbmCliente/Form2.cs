@@ -21,21 +21,19 @@ namespace FrbaOfertas.AbmCliente
             InitializeComponent();
 
             parent = form1;
+            dni.Text = cells[0].Value.ToString();
             nombre.Text = cells[1].Value.ToString();
             apellido.Text = cells[2].Value.ToString();
-            dni.Text = cells[0].Value.ToString();
-            mail.Text = cells[5].Value.ToString();
-            telefono.Text = cells[4].Value.ToString();
             direccion.Text = cells[3].Value.ToString();
-            ciudad.Text = cells[7].Value.ToString();
+            telefono.Text = cells[4].Value.ToString();
+            mail.Text = cells[5].Value.ToString();
             fnac.Text = cells[6].Value.ToString();
+            ciudad.Text = cells[7].Value.ToString();
 
 
             userId = userId_;
 
-            SqlDataAdapter adp = new SqlDataAdapter("SELECT habilitado FROM Usuario WHERE cliente = " +userId, Program.con);
-            DataTable table = new DataTable();
-            adp.Fill(table);
+            var table = util.tableQuery("SELECT habilitado FROM Usuario WHERE cliente = " + userId);
 
             habilitado = (bool)table.Rows[0].ItemArray[0];
 
@@ -45,25 +43,23 @@ namespace FrbaOfertas.AbmCliente
 
         private void Button2_Click(object sender, EventArgs e)
         {
-            var command = new SqlCommand("UPDATE Cliente SET dni=@dn,nombre=@no,apellido=@ap,direccion=@di, " +
+            util.execCommand("UPDATE Cliente SET dni=@dn,nombre=@no,apellido=@ap,direccion=@di, " +
                                                             "telefono=@te,mail=@ma,ciudad=@ci " + //"Cli_Fecha_Nac=@fe"+
-                                                            "WHERE id=@id", Program.con);
-            command.Parameters.AddWithValue("@no", nombre.Text);
-            command.Parameters.AddWithValue("@ap", apellido.Text);
-            command.Parameters.AddWithValue("@dn", dni.Text);
-            command.Parameters.AddWithValue("@di", direccion.Text);
-            command.Parameters.AddWithValue("@te", telefono.Text);
-            command.Parameters.AddWithValue("@ma", mail.Text);
-            command.Parameters.AddWithValue("@ci", ciudad.Text);
+                                                            "WHERE id=@id",
+                                                            "@no", nombre.Text,
+                                                            "@ap", apellido.Text,
+                                                            "@dn", dni.Text,
+                                                            "@di", direccion.Text,
+                                                            "@te", telefono.Text,
+                                                            "@ma", mail.Text,
+                                                            "@ci", ciudad.Text,
+                                                            "@id", userId);
 
-            command.Parameters.AddWithValue("@id", userId);
             
             //el ToString hace mierda el formato de datetime, lo tengo que arreglar a mano?
             //command.Parameters.AddWithValue("@fe", textBox14.Text);
             //@todo
 
-            
-            command.ExecuteNonQuery();
 
             parent.doQuery();
             Close();
@@ -72,8 +68,7 @@ namespace FrbaOfertas.AbmCliente
 
         private void Button1_Click(object sender, EventArgs e)
         {
-            var command = new SqlCommand("UPDATE Usuario SET habilitado = "+ (habilitado? "0 ": "1 ") +"WHERE cliente = "+ userId, Program.con);
-            command.ExecuteNonQuery();
+            util.execCommand("UPDATE Usuario SET habilitado = " + (habilitado ? "0 " : "1 ") + "WHERE cliente = " + userId);
 
             Close();
         }

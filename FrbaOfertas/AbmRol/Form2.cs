@@ -31,12 +31,8 @@ namespace FrbaOfertas.AbmRol
 
             button1.Text = habilitado ? "deshabilitar" : "habilitar";
 
+            var funcs = util.tableQuery("SELECT id,nombre FROM Funcionalidad");
 
-            SqlDataAdapter adp = new SqlDataAdapter("SELECT id,nombre " +
-                                                    "FROM Funcionalidad"
-                                                    , Program.con);
-            DataTable funcs = new DataTable();
-            adp.Fill(funcs);
 
             //no puedo asumir que la posicion de checked es igual al id porque no lo es si se modifica algo en la db
             checks = new Tuple<CheckBox, Label,int>[funcs.Rows.Count];
@@ -63,12 +59,9 @@ namespace FrbaOfertas.AbmRol
                 Controls.Add(label);
             }
 
-            adp = new SqlDataAdapter("SELECT f.id " +
+            var funcsChecked = util.tableQuery("SELECT f.id " +
                                        "FROM Funcionalidad f JOIN RolxFuncionalidad rf ON f.id = rf.funcionalidad " +
-                                       "WHERE rf.rol = " + rolId
-                                       , Program.con);
-            DataTable funcsChecked = new DataTable();
-            adp.Fill(funcsChecked);
+                                       "WHERE rf.rol = " + rolId);
 
             for (int i = 0; i < funcsChecked.Rows.Count; i++)
             {

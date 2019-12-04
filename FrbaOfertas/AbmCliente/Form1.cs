@@ -23,7 +23,8 @@ namespace FrbaOfertas.AbmCliente
         string query;
         private void Button1_Click(object sender, EventArgs e)
         {
-            query = "SELECT * FROM Cliente ";
+            //pido cada uno en vez de usar * por si hay un cambio de columnas, que no explote nada 
+            query = "SELECT id,dni,nombre,apellido,direccion,telefono,mail,fecha_Nac,ciudad,saldo FROM Cliente ";
 
             bool filterBefore = false;
             var addFilter = new Action<TextBox,string,string>((text,filterQueryBeg,filterQueryEnd) =>
@@ -53,12 +54,9 @@ namespace FrbaOfertas.AbmCliente
 
         public void doQuery()
         {
-            SqlDataAdapter adp = new SqlDataAdapter(query, Program.con);
-            DataTable table = new DataTable();
-
             try
             {
-                adp.Fill(table);
+                var table=util.tableQuery(query);
 
                 //esta gilada esta para no mostrar ids pero traermelos en un mismo query
 
@@ -70,13 +68,14 @@ namespace FrbaOfertas.AbmCliente
                 }
 
                 table.Columns.RemoveAt(0);
+                dataGridView1.DataSource = table;
             }
             catch (System.Data.SqlClient.SqlException e)
             {
                 //esto creo que solo pasa cuando se pone una letra en dni, tambien se podria solucionar ahi
+                dataGridView1.DataSource = new DataTable();
             }
 
-            dataGridView1.DataSource = table;
         }
 
 

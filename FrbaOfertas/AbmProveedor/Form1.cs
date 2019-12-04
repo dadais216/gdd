@@ -23,7 +23,7 @@ namespace FrbaOfertas.AbmProveedor
         string query;
         private void Button1_Click(object sender, EventArgs e)
         {
-            query = "SELECT * FROM Proveedor ";
+            query = "SELECT id,RS,dom,ciudad,telefono,CUIT,mail,codigoPostal,rubro,contacto FROM Proveedor ";
 
             bool filterBefore = false;
             var addFilter = new Action<TextBox, string, string>((text, filterQueryBeg, filterQueryEnd) =>
@@ -43,21 +43,18 @@ namespace FrbaOfertas.AbmProveedor
                 }
             });
 
-            addFilter(textBox1, "Provee_RS LIKE \'%", "%\' ");
-            addFilter(textBox3, "Cli_Dni = ", " ");
-            addFilter(textBox4, "Cli_Mail LIKE \'%", "%\' ");
+            addFilter(textBox1, "RS LIKE \'%", "%\' ");
+            addFilter(textBox3, "CUIT = ", " ");
+            addFilter(textBox4, "mail LIKE \'%", "%\' ");
 
             doQuery();
         }
 
         public void doQuery()
         {
-            SqlDataAdapter adp = new SqlDataAdapter(query, Program.con);
-            DataTable table = new DataTable();
-
             try
             {
-                adp.Fill(table);
+                var table = util.tableQuery(query);
 
                 //esta gilada esta para no mostrar ids pero traermelos en un mismo query
 
@@ -69,20 +66,22 @@ namespace FrbaOfertas.AbmProveedor
                 }
 
                 table.Columns.RemoveAt(0);
+                dataGridView1.DataSource = table;
             }
             catch (System.Data.SqlClient.SqlException e)
             {
                 //esto creo que solo pasa cuando se pone una letra en dni, tambien se podria solucionar ahi
+                dataGridView1.DataSource = new DataTable();
             }
 
-            dataGridView1.DataSource = table;
         }
 
 
         private void DataGridView1_CellClick_1(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex == -1) return;
-            var modForm = new Form2(this, userIds[e.RowIndex],dataGridView1.Rows[e.RowIndex].Cells);
+
+            var modForm = new Form2(this, userIds[e.RowIndex], dataGridView1.Rows[e.RowIndex].Cells);
 
 
             modForm.Show();

@@ -23,11 +23,7 @@ namespace FrbaOfertas.AbmRol
 
         public void doQuery()
         {
-            SqlDataAdapter adp = new SqlDataAdapter("SELECT id,nombre,habilitado FROM Rol ", Program.con);
-            DataTable table = new DataTable();
-
-
-            adp.Fill(table);
+            var table = util.tableQuery("SELECT id,nombre,habilitado FROM Rol ");
 
             userIds = new string[table.Rows.Count];
 
