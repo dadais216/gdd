@@ -14,17 +14,13 @@ namespace FrbaOfertas
     public partial class Main : Form
     {
 
-        public Main()
+        public Main(string rolIdOrNull)
         {
-            //un switch seria mejor porque es estatico y delega la creacion
-
-
             InitializeComponent();
 
-            //cuando el usuario se logee se hace un join y se consigue el rol
             string query = "SELECT nombre FROM "+
                            "Funcionalidad f JOIN RolxFuncionalidad rf ON f.id = rf.funcionalidad "+
-                           "WHERE rf.rol = 4";
+                           "WHERE rf.rol = "+rolIdOrNull;
 
             SqlDataAdapter adp = new SqlDataAdapter(query, Program.con);
             DataTable table = new DataTable();

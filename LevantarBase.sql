@@ -37,12 +37,18 @@ CREATE TABLE Proveedor(
 	dom NVARCHAR(255),
 	ciudad NVARCHAR(255),
 	telefono NUMERIC(18,0),
-	CUIT NVARCHAR(100) UNIQUE,
+	CUIT NVARCHAR(16) UNIQUE,
+	rubro NVARCHAR(32),
+	mail NVARCHAR(255) DEFAULT null,
+	codigoPostal INT DEFAULT null, 
+	contacto NVARCHAR(255) DEFAULT null,
 	--estoy casi seguro de que el rs y el cuit no son unicos globalmente, pero lo pide el enunciado
+	--la tabla maestra no tiene mail ni codigoPostal ni contacto, pero se da a entender que son datos que tienen
+	--los proveedores y que se van a agregar mas adelante
 	)
 
-INSERT INTO Proveedor
-SELECT DISTINCT Provee_RS,Provee_Dom,Provee_Ciudad,Provee_Telefono,Provee_CUIT
+INSERT INTO Proveedor (RS,dom,ciudad,telefono,CUIT,rubro)
+SELECT DISTINCT Provee_RS,Provee_Dom,Provee_Ciudad,Provee_Telefono,Provee_CUIT,Provee_Rubro
 FROM gd_esquema.Maestra
 WHERE Provee_RS IS NOT NULL
 

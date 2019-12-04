@@ -19,3 +19,4 @@ C:\Users\Daniel\Desktop\gdd\Aplicacion\FrbaOfertas\FrbaOfertas\obj\Debug\FrbaOfe
 C:\Users\Daniel\Desktop\gdd\Aplicacion\FrbaOfertas\FrbaOfertas\obj\Debug\FrbaOfertas.AbmProveedor.Form1.resources
 C:\Users\Daniel\Desktop\gdd\Aplicacion\FrbaOfertas\FrbaOfertas\obj\Debug\FrbaOfertas.AbmProveedor.Form2.resources
 C:\Users\Daniel\Desktop\gdd\Aplicacion\FrbaOfertas\FrbaOfertas\obj\Debug\FrbaOfertas.AbmProveedor.Form3.resources
+C:\Users\Daniel\Desktop\gdd\Aplicacion\FrbaOfertas\FrbaOfertas\obj\Debug\FrbaOfertas.Login.resources
