@@ -76,7 +76,7 @@ namespace FrbaOfertas.AbmProveedor
 
         private void Button1_Click(object sender, EventArgs e)
         {
-            util.execCommand("UPDATE Usuario SET habilitado = " + (habilitado ? "0 " : "1 ") + "WHERE cliente = " + userId);
+            util.execCommand("UPDATE Usuario SET habilitado = " + (habilitado ? "0 " : "1 ") + "WHERE proveedor = " + userId);
 
             Close();
         }

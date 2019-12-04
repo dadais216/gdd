@@ -21,34 +21,20 @@ namespace FrbaOfertas.AbmProveedor
         private void Button1_Click(object sender, EventArgs e)
         {
 
-            //la validacion de no duplicados se hace con una constain unique en la db.
-            //segun lo que lei en internet hacer un query y verificar por codigo es mas rapido
-            //que responder a una excepcion de sql server, pero hacerlo es una solucion mas simple
-            //y este no es un caso comun que requiera eficiencia.
-
             try
             {
-                util.execCommand("INSERT INTO Cliente " +
-                                "(dni,nombre,apellido,direccion,telefono,mail,ciudad,saldo) " + //"Cli_Fecha_Nac=@fe+"
-                                "VALUES (@dn,@no,@ap,@di,@te,@ma,@ci,@saldoInicial)",
-                                "@no", nombre.Text,
-                                "@ap", apellido.Text,
-                                "@dn", dni.Text,
-                                "@di", direccion.Text,
-                                "@te", telefono.Text,
-                                "@ma", mail.Text,
-                                "@ci", ciudad.Text,
-                                "@saldoInicial", 200.ToString());
-
-                //pongo el valor inicial por codigo en vez de en la db con DEFAULT porque DEFAULT afectaria a usuarios viejos
-                //que se estan migrando. Podria hacerse con defualt metiendo la regla despues de hacer la migracion, pero en el 
-                //tp no podemos controlar que pasa antes y despues.
-
-                //@TODO se podria registar la carga de bienvenida como una carga
-
-
-                //@TODO el ToString hace mierda el formato de datetime, lo tengo que arreglar a mano?
-                //command.Parameters.AddWithValue("@fe", textBox14.Text);
+                util.execCommand("INSERT INTO Proveedor (RS,dom,ciudad,telefono,CUIT,mail,codigoPostal,rubro,contacto) " +
+                                 "VALUES (@RS,@di,@ci,@te,@cu,@ma,@co,@ru,@no)",
+                                                            "@RS", razonSocial.Text,
+                                                            "@di", direccion.Text,
+                                                            "@ci", ciudad.Text,
+                                                            "@te", telefono.Text,
+                                                            "@cu", CUIT.Text,
+                                                            "@ma", mail.Text,
+                                                            "@co", codigoPostal.Text,
+                                                            "@ru", rubro.Text,
+                                                            "@no", contacto.Text
+                                                            );
             }
             catch (SqlException er)
             {
