@@ -44,7 +44,7 @@ namespace FrbaOfertas
 
                         var main=new Main(rolIdOrNull);
                         Hide();
-                        main.Closed += (s, args) => this.Close();
+                        main.Closed += (s, args) => Close();
                         main.Show();
                     }
                     else
@@ -70,10 +70,15 @@ namespace FrbaOfertas
                 }
             }
 
+        }
 
+        private void Button2_Click(object sender, EventArgs e)
+        {
+            var registro = new Registro(nombre.Text,contraseña.Text);
 
-
-
+            Hide();
+            registro.Closed += (s, args) => Show();
+            registro.Show();
         }
     }
 }

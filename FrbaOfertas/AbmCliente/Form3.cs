@@ -17,7 +17,7 @@ namespace FrbaOfertas.AbmCliente
         {
             InitializeComponent();
         }
-
+        public bool finished = false;//lo usa register
         private void Button1_Click(object sender, EventArgs e)
         {
 
@@ -49,6 +49,7 @@ namespace FrbaOfertas.AbmCliente
 
                 //@TODO el ToString hace mierda el formato de datetime, lo tengo que arreglar a mano?
                 //command.Parameters.AddWithValue("@fe", textBox14.Text);
+                finished = true;
             }
             catch (SqlException er)
             {

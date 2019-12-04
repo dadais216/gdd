@@ -17,7 +17,7 @@ namespace FrbaOfertas.AbmProveedor
         {
             InitializeComponent();
         }
-
+        public bool finished = false;
         private void Button1_Click(object sender, EventArgs e)
         {
 
@@ -35,6 +35,7 @@ namespace FrbaOfertas.AbmProveedor
                                                             "@ru", rubro.Text,
                                                             "@no", contacto.Text
                                                             );
+                finished = true;
             }
             catch (SqlException er)
             {
