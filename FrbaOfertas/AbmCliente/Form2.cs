@@ -55,10 +55,17 @@ namespace FrbaOfertas.AbmCliente
                                                             "@ci", ciudad.Text,
                                                             "@id", userId);
 
-            
+
             //el ToString hace mierda el formato de datetime, lo tengo que arreglar a mano?
             //command.Parameters.AddWithValue("@fe", textBox14.Text);
             //@todo
+
+            if (contraseña.Text != "")
+            {
+                util.execCommand("UPDATE Usuario SET contraseña=@co WHERE cliente=@id",
+                                                    "@co",contraseña.Text,
+                                                    "@id",userId);
+            }
 
 
             parent.doQuery();

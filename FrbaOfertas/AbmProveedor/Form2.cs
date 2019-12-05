@@ -69,6 +69,14 @@ namespace FrbaOfertas.AbmProveedor
             //hacer una modificacion setea los nulls de mail y codigoPostal a "" y 0, arreglarlo implica no usar los parameters
             //estos (que son una cagada). No sé si vale la pena molestarse por eso igual
 
+
+            if (contraseña.Text != "")
+            {
+                util.execCommand("UPDATE Usuario SET contraseña=@co WHERE proveedor=@id",
+                                                    "@co", contraseña.Text,
+                                                    "@id", userId);
+            }
+
             parent.doQuery();
             Close();
 

@@ -20,7 +20,7 @@ namespace FrbaOfertas
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var user = util.tableQuery( "SELECT contraseña,habilitado,rol FROM Usuario WHERE nombre = \'"+nombre.Text+"\'");
+            var user = util.tableQuery( "SELECT contraseña,habilitado,rol,id FROM Usuario WHERE nombre = \'"+nombre.Text+"\'");
 
             //@todo cuando se encripte la contraseña hay que encriptar el input del usuario para poder comparar
 
@@ -42,7 +42,7 @@ namespace FrbaOfertas
                         string rolIdOrNull = user.Rows[0].ItemArray[2].ToString();
                         if (rolIdOrNull == "") rolIdOrNull = "null";
 
-                        var main=new Main(rolIdOrNull);
+                        var main=new Main(user.Rows[0].ItemArray[3].ToString(), rolIdOrNull);
                         Hide();
                         main.Closed += (s, args) => Close();
                         main.Show();

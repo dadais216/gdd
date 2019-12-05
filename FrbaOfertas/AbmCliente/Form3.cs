@@ -49,6 +49,7 @@ namespace FrbaOfertas.AbmCliente
 
                 //@TODO el ToString hace mierda el formato de datetime, lo tengo que arreglar a mano?
                 //command.Parameters.AddWithValue("@fe", textBox14.Text);
+
                 finished = true;
             }
             catch (SqlException er)

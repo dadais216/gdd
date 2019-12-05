@@ -46,6 +46,8 @@
             this.fnac = new System.Windows.Forms.TextBox();
             this.label15 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
+            this.contraseña = new System.Windows.Forms.TextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label8
@@ -154,7 +156,7 @@
             // label14
             // 
             this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(12, 393);
+            this.label14.Location = new System.Drawing.Point(12, 380);
             this.label14.Name = "label14";
             this.label14.Size = new System.Drawing.Size(88, 13);
             this.label14.TabIndex = 12;
@@ -162,7 +164,7 @@
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(6, 451);
+            this.button2.Location = new System.Drawing.Point(6, 482);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(263, 62);
             this.button2.TabIndex = 14;
@@ -172,7 +174,7 @@
             // 
             // fnac
             // 
-            this.fnac.Location = new System.Drawing.Point(9, 409);
+            this.fnac.Location = new System.Drawing.Point(9, 396);
             this.fnac.Name = "fnac";
             this.fnac.Size = new System.Drawing.Size(260, 20);
             this.fnac.TabIndex = 16;
@@ -188,7 +190,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(6, 519);
+            this.button1.Location = new System.Drawing.Point(6, 550);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(263, 62);
             this.button1.TabIndex = 17;
@@ -196,9 +198,27 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.Button1_Click);
             // 
+            // contraseña
+            // 
+            this.contraseña.Location = new System.Drawing.Point(6, 445);
+            this.contraseña.Name = "contraseña";
+            this.contraseña.Size = new System.Drawing.Size(260, 20);
+            this.contraseña.TabIndex = 37;
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(9, 429);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(233, 13);
+            this.label1.TabIndex = 36;
+            this.label1.Text = "contraseña nueva (dejar vacio para no cambiar)";
+            // 
             // Form2
             // 
-            this.ClientSize = new System.Drawing.Size(284, 591);
+            this.ClientSize = new System.Drawing.Size(284, 624);
+            this.Controls.Add(this.contraseña);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.fnac);
             this.Controls.Add(this.label15);
@@ -243,5 +263,7 @@
         private System.Windows.Forms.TextBox fnac;
         private System.Windows.Forms.Label label15;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.TextBox contraseña;
+        private System.Windows.Forms.Label label1;
     }
 }

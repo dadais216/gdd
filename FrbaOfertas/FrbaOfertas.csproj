@@ -99,6 +99,12 @@
     <Compile Include="AbmRol\Form3.Designer.cs">
       <DependentUpon>Form3.cs</DependentUpon>
     </Compile>
+    <Compile Include="CambioContraseña.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CambioContraseña.Designer.cs">
+      <DependentUpon>CambioContraseña.cs</DependentUpon>
+    </Compile>
     <Compile Include="Registro.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -182,6 +188,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="AbmRol\Form3.resx">
       <DependentUpon>Form3.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CambioContraseña.resx">
+      <DependentUpon>CambioContraseña.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CragaCredito\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

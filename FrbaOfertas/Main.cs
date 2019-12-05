@@ -13,18 +13,15 @@ namespace FrbaOfertas
 {
     public partial class Main : Form
     {
-
-        public Main(string rolIdOrNull)
+        string userId;
+        public Main(string userId_,string rolIdOrNull)
         {
+            userId = userId_;
             InitializeComponent();
 
-            string query = "SELECT nombre FROM "+
-                           "Funcionalidad f JOIN RolxFuncionalidad rf ON f.id = rf.funcionalidad "+
-                           "WHERE rf.rol = "+rolIdOrNull;
-
-            SqlDataAdapter adp = new SqlDataAdapter(query, Program.con);
-            DataTable table = new DataTable();
-            adp.Fill(table);
+            var table = util.tableQuery("SELECT nombre FROM " +
+                           "Funcionalidad f JOIN RolxFuncionalidad rf ON f.id = rf.funcionalidad " +
+                           "WHERE rf.rol = " + rolIdOrNull);
 
             for (int i = 0; i < table.Rows.Count; i++)
             {
@@ -62,5 +59,9 @@ namespace FrbaOfertas
             }
         }
 
+        private void Button1_Click(object sender, EventArgs e)
+        {
+            new CambioContraseña(userId).Show();
+        }
     }
 }
