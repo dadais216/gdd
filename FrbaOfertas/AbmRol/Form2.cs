@@ -106,7 +106,8 @@ namespace FrbaOfertas.AbmRol
 
             if (rolName != nombre.Text)
             {
-                util.execCommand("UPDATE Rol SET nombre = \'" + nombre.Text + "\' WHERE id = " + rolId);
+                util.execCommand("UPDATE Rol SET nombre = @no WHERE id = " + rolId,
+                                    "@no",nombre.Text);
             }
 
             parent.doQuery();

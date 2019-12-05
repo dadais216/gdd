@@ -25,9 +25,12 @@ namespace FrbaOfertas
 
 
             con.Open(); // a veces falla el login no sé por que
-
+#if false 
             Application.Run(new Login());
-            
+#else //salto el login porque rompe las bolas
+            Application.Run(new Main("1", "4"));
+#endif
+
         }
     }
 }
