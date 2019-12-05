@@ -20,7 +20,8 @@ namespace FrbaOfertas
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var user = util.tableQuery( "SELECT contraseña,habilitado,rol,id FROM Usuario WHERE nombre = \'"+nombre.Text+"\'");
+            var user = util.tableQuery( "SELECT contraseña,habilitado,rol,id FROM Usuario WHERE nombre = @no", 
+                                        "@no",nombre.Text);
 
             //@todo cuando se encripte la contraseña hay que encriptar el input del usuario para poder comparar
 
@@ -36,7 +37,7 @@ namespace FrbaOfertas
                     {
                         util.execCommand("UPDATE Usuario SET " +
                                                 "fallosLogin = 0 " +
-                                         "WHERE nombre = \'" + nombre.Text + "\'");
+                                         "WHERE nombre = @no", "@no", nombre.Text);
 
                         //medio choto esto, por ahi es mejor tener un rol vacio
                         string rolIdOrNull = user.Rows[0].ItemArray[2].ToString();
@@ -54,7 +55,7 @@ namespace FrbaOfertas
                         util.execCommand("UPDATE Usuario SET " +
                                                 "fallosLogin = fallosLogin + 1, "+
                                                 "habilitado = (CASE WHEN fallosLogin > 2 THEN 0 ELSE habilitado END) " +
-                                         "WHERE nombre = \'" + nombre.Text + "\'");
+                                         "WHERE nombre = @no", "@no", nombre.Text);
                         //fallosLogin > 2 para que sean 3 intentos y despues falle. La comparacion toma el valor desactualizado
                         //intento 1 fallosLogin 1 0>2=>false
                         //intento 2 fallosLogin 2 1>2=>false

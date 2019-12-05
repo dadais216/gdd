@@ -26,7 +26,9 @@ namespace FrbaOfertas
                 var table = util.tableQuery("SELECT contraseña FROM Usuario WHERE id = " + userId);
                 if ((string)table.Rows[0].ItemArray[0] == anterior.Text)
                 {
-                    util.execCommand("UPDATE Usuario SET contraseña = \'" + nueva.Text + "\' WHERE id= " + userId);
+                    util.execCommand("UPDATE Usuario SET contraseña = @nu WHERE id= " + userId,
+                                        "@nu",nueva.Text);
+                    Close();
                 }
                 else
                 {

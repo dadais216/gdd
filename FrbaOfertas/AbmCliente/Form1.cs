@@ -20,34 +20,37 @@ namespace FrbaOfertas.AbmCliente
         }
 
 
-        string query;
+        SqlCommand query;
         private void Button1_Click(object sender, EventArgs e)
         {
+            query = new SqlCommand();
+            query.Connection = Program.con;
             //pido cada uno en vez de usar * por si hay un cambio de columnas, que no explote nada 
-            query = "SELECT id,dni,nombre,apellido,direccion,telefono,mail,fecha_Nac,ciudad,saldo FROM Cliente ";
+            query.CommandText = "SELECT id,dni,nombre,apellido,direccion,telefono,mail,fecha_Nac,ciudad,saldo FROM Cliente ";
 
             bool filterBefore = false;
-            var addFilter = new Action<TextBox,string,string>((text,filterQueryBeg,filterQueryEnd) =>
+            var addFilter = new Action<string,TextBox,string,string>((param,text,filterQueryBeg,filterQueryEnd) =>
               {
                   if (text.Text != "")
                   {
                       if (filterBefore)
                       {
-                          query += "AND ";
+                          query.CommandText += "AND ";
                       }
                       else
                       {
-                          query += "WHERE ";
+                          query.CommandText += "WHERE ";
                           filterBefore = true;
                       }
-                      query += filterQueryBeg + text.Text + filterQueryEnd;
+                      query.CommandText += filterQueryBeg + param + filterQueryEnd;
+                      query.Parameters.AddWithValue(param,text.Text);
                   }
               });
 
-            addFilter(textBox1,"nombre LIKE \'%","%\' ");
-            addFilter(textBox2, "apellido LIKE \'%", "%\' ");
-            addFilter(textBox3, "dni = "," ");
-            addFilter(textBox4, "mail LIKE \'%", "%\' ");
+            addFilter("@no",textBox1,"nombre LIKE '%'+","+'%' ");
+            addFilter("@ap",textBox2, "apellido LIKE '%'+", "+'%' ");
+            addFilter("@dn",textBox3, "dni = "," ");
+            addFilter("@ma",textBox4, "mail LIKE '%'+", "+'%' ");
 
             doQuery();
         }
@@ -56,7 +59,9 @@ namespace FrbaOfertas.AbmCliente
         {
             try
             {
-                var table=util.tableQuery(query);
+                var adp=new SqlDataAdapter(query);
+                var table = new DataTable();
+                adp.Fill(table);
 
                 //esta gilada esta para no mostrar ids pero traermelos en un mismo query
 

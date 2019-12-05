@@ -80,8 +80,7 @@ namespace FrbaOfertas.AbmRol
 
         private void Button2_Click(object sender, EventArgs e)
         {
-            var command = new SqlCommand("DELETE FROM RolxFuncionalidad WHERE rol = "+rolId, Program.con);
-            command.ExecuteNonQuery();
+            util.execCommand("DELETE FROM RolxFuncionalidad WHERE rol = " + rolId);
 
             string query = "INSERT INTO RolxFuncionalidad (rol,funcionalidad) VALUES ";
 
@@ -102,14 +101,12 @@ namespace FrbaOfertas.AbmRol
 
             if (oneValIn)
             {
-                command = new SqlCommand(query, Program.con);
-                command.ExecuteNonQuery();
+                util.execCommand(query);
             }
 
             if (rolName != nombre.Text)
             {
-                command = new SqlCommand("UPDATE Rol SET nombre = \'" + nombre.Text + "\' WHERE id = " + rolId, Program.con);
-                command.ExecuteNonQuery();
+                util.execCommand("UPDATE Rol SET nombre = \'" + nombre.Text + "\' WHERE id = " + rolId);
             }
 
             parent.doQuery();
@@ -118,16 +115,11 @@ namespace FrbaOfertas.AbmRol
 
         private void Button1_Click(object sender, EventArgs e)
         {
-
-            var command = new SqlCommand("UPDATE Rol SET habilitado = " + (habilitado ? "0":"1")
-                                         + " WHERE id = " + rolId, Program.con);
-            command.ExecuteNonQuery();
-
+            util.execCommand("UPDATE Rol SET habilitado = " + (habilitado ? "0":"1")
+                                         + " WHERE id = " + rolId);
             if (habilitado)
             {
-                command= new SqlCommand("UPDATE Usuario SET rol = null WHERE rol = "+rolId,Program.con);
-                command.ExecuteNonQuery();
-
+                util.execCommand("UPDATE Usuario SET rol = null WHERE rol = "+rolId);
                 //dejar usuarios sin rol es sospechoso. 
                 //@todo hacer un rol vacio sin funcionalidades, y asignar a eso?
             }

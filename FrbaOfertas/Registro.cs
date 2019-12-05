@@ -27,7 +27,7 @@ namespace FrbaOfertas
                 info.Text = "insertar usuario y contraseña antes de seguir";
                 return false;
             }
-            if(util.tableQuery("SELECT 1 FROM Usuario WHERE nombre = \'" + nombre.Text + "\'").Rows.Count != 0)
+            if(util.tableQuery("SELECT 1 FROM Usuario WHERE nombre = @no", "@no", nombre.Text).Rows.Count != 0)
             {
                 info.Text = "ese nombre de usuario ya fue tomado";
                 return false;
@@ -56,9 +56,10 @@ namespace FrbaOfertas
                     var id = util.tableQuery("SELECT @@IDENTITY").Rows[0].ItemArray[0].ToString();
 
                     util.execCommand("INSERT INTO Usuario (nombre,contraseña,rol,cliente,proveedor)" +
-                                        "VALUES (\'"+nombre.Text+ "\',\'" + contraseña.Text + "\'," +
-                                        "(SELECT id FROM Rol WHERE nombre='Cliente')," + 
-                                        id + ",null)");
+                                        "VALUES (@no,@co," +
+                                        "(SELECT id FROM Rol WHERE nombre='Cliente')," + id + ",null)",
+                                        "@no",nombre.Text,
+                                        "@co",contraseña.Text);
                     Close();
                 };
                 creador.Show();
@@ -83,9 +84,10 @@ namespace FrbaOfertas
                     var id = util.tableQuery("SELECT @@IDENTITY").Rows[0].ItemArray[0].ToString();
 
                     util.execCommand("INSERT INTO Usuario (nombre,contraseña,rol,cliente,proveedor)" +
-                                        "VALUES (\'" + nombre.Text + "\',\'" + contraseña.Text + "\'," +
-                                        "(SELECT id FROM Rol WHERE nombre='Proveedor')," +
-                                        "null,"+id+")");
+                                        "VALUES (@no,@co," +
+                                        "(SELECT id FROM Rol WHERE nombre='Proveedor'), null,"+id+")",
+                                        "@no",nombre.Text,
+                                        "@co",contraseña.Text);
                     Close();
                 };
                 creador.Show();

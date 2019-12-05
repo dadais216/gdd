@@ -10,9 +10,15 @@ namespace FrbaOfertas
 {
     static public class util
     {
-        static public DataTable tableQuery(string s)
+        static public DataTable tableQuery(string s, params string[] parameters)
         {
-            SqlDataAdapter adp = new SqlDataAdapter(s, Program.con);
+            var command = new SqlCommand(s, Program.con);
+            for (int i = 0; i < parameters.Length; i += 2)
+            {
+                command.Parameters.AddWithValue(parameters[i], parameters[i + 1]);
+            }
+
+            SqlDataAdapter adp = new SqlDataAdapter(command);
             DataTable table = new DataTable();
 
             adp.Fill(table);
@@ -27,5 +33,9 @@ namespace FrbaOfertas
             }
             command.ExecuteNonQuery();
         }
+        //en vez de tomar pares (@val,val) podria tomar solo los valores y asignarlos a los @ segun el orden
+        //que esten en el query original. No lo hago porque seguro que la manipulacion de strings aca es horrible,
+        //y manejar queries que nombren un mismo @ mas de una vez seria incomodo si no se sabe como esta implementado.
+        //igual es algo que me parece mejor, aunque en este tp no creo que cambie mucho
     }
 }

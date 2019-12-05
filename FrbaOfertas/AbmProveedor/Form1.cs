@@ -20,32 +20,35 @@ namespace FrbaOfertas.AbmProveedor
         }
 
 
-        string query;
+        SqlCommand query;
         private void Button1_Click(object sender, EventArgs e)
         {
-            query = "SELECT id,RS,dom,ciudad,telefono,CUIT,mail,codigoPostal,rubro,contacto FROM Proveedor ";
+            query = new SqlCommand();
+            query.Connection = Program.con;
+            query.CommandText = "SELECT id,RS,dom,ciudad,telefono,CUIT,mail,codigoPostal,rubro,contacto FROM Proveedor ";
 
             bool filterBefore = false;
-            var addFilter = new Action<TextBox, string, string>((text, filterQueryBeg, filterQueryEnd) =>
+            var addFilter = new Action<string,TextBox, string, string>((param,text, filterQueryBeg, filterQueryEnd) =>
             {
                 if (text.Text != "")
                 {
                     if (filterBefore)
                     {
-                        query += "AND ";
+                        query.CommandText += "AND ";
                     }
                     else
                     {
-                        query += "WHERE ";
+                        query.CommandText += "WHERE ";
                         filterBefore = true;
                     }
-                    query += filterQueryBeg + text.Text + filterQueryEnd;
+                    query.CommandText += filterQueryBeg + param + filterQueryEnd;
+                    query.Parameters.AddWithValue(param, text.Text);
                 }
             });
 
-            addFilter(textBox1, "RS LIKE \'%", "%\' ");
-            addFilter(textBox3, "CUIT = ", " ");
-            addFilter(textBox4, "mail LIKE \'%", "%\' ");
+            addFilter("@rs",textBox1, "RS LIKE '%'+", "+'%' ");
+            addFilter("@cu",textBox3, "CUIT = ", " ");
+            addFilter("@ma",textBox4, "mail LIKE '%'+", "+'%' ");
 
             doQuery();
         }
@@ -54,7 +57,9 @@ namespace FrbaOfertas.AbmProveedor
         {
             try
             {
-                var table = util.tableQuery(query);
+                var adp = new SqlDataAdapter(query);
+                var table = new DataTable();
+                adp.Fill(table);
 
                 //esta gilada esta para no mostrar ids pero traermelos en un mismo query
 

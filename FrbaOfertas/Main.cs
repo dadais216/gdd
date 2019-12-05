@@ -61,7 +61,7 @@ namespace FrbaOfertas
 
         private void Button1_Click(object sender, EventArgs e)
         {
-            new CambioContraseña(userId).Show();
+            new CambioContraseña(userId).Show();   
         }
     }
 }

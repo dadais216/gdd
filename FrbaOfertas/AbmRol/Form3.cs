@@ -55,12 +55,11 @@ namespace FrbaOfertas.AbmRol
 
         private void Button2_Click(object sender, EventArgs e)
         {
-            var command = new SqlCommand("INSERT INTO Rol (nombre) VALUES (\'" + nombre.Text + "\')", Program.con);
-            command.ExecuteNonQuery();
+            util.execCommand("INSERT INTO Rol (nombre) VALUES (@no)",
+                                "@no",nombre.Text);
 
-            SqlDataAdapter adp = new SqlDataAdapter("SELECT id FROM Rol WHERE nombre = \'" + nombre.Text + "\'", Program.con);
-            DataTable table = new DataTable();
-            adp.Fill(table);
+            var table = util.tableQuery("SELECT id FROM Rol WHERE nombre = @no",
+                                "@no", nombre.Text);
 
             string rolId = table.Rows[0].ItemArray[0].ToString();
 
@@ -83,8 +82,7 @@ namespace FrbaOfertas.AbmRol
 
             if (oneValIn)
             {
-                command = new SqlCommand(query, Program.con);
-                command.ExecuteNonQuery();
+                util.execCommand(query);
             }
 
             parent.doQuery();
