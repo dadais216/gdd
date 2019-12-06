@@ -17,9 +17,9 @@ namespace FrbaOfertas.CragaCredito
         {
             InitializeComponent();
         }
-        private void Button1_Click(object sender, EventArgs e)
+        private void ButtonCargar_Click(object sender, EventArgs e)
         {
-            var command = new SqlCommand("INSERT INTO Cliente " +
+            /*var command = new SqlCommand("INSERT INTO Cliente " +
                 "(Carga_Credito,Carga_Fecha,Tipo_Pago_Desc) " +
                 "VALUES (@monto,@fechaCredito,@tipopago)", Program.con);
             command.Parameters.AddWithValue("@monto", monto.Text);
@@ -50,7 +50,27 @@ namespace FrbaOfertas.CragaCredito
 
                 newForm.Show();
             }
-            Close();
+            Close();*/
+        }
+
+        private void tiposPago_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+
+        }
+
+        private void tarjetas_SelectionChangeCommitted(object sender, EventArgs e)
+        {
+
+        }
+
+        private void monto_KeyPress(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
