@@ -3,15 +3,18 @@
 CREATE TABLE Cliente(
 	id INT IDENTITY(1,1) PRIMARY KEY,
 	dni NUMERIC(18,0) NOT NULL,
-	nombre NVARCHAR(255) NOT NULL,
-	apellido NVARCHAR(255) NOT NULL,
-	direccion NVARCHAR(255) NOT NULL,
+	nombre VARCHAR(255) NOT NULL,
+	apellido VARCHAR(255) NOT NULL,
+	direccion VARCHAR(255) NOT NULL,
 	telefono NUMERIC(18,0) NOT NULL, /*UNIQUE?*/
-	mail NVARCHAR(255) NOT NULL, /*UNIQUE hay dos minas que comparte mail, no sé si considerarlo un problema*/
+	mail VARCHAR(255) NOT NULL, /*UNIQUE hay dos minas que comparte mail, no sé si considerarlo un problema*/
 	fecha_Nac DATETIME, /*deberia ser NOT NULL pero no solucione el tema de la conversion*/
-	ciudad NVARCHAR(255) NOT NULL,
+	ciudad VARCHAR(255) NOT NULL,
 	saldo DECIMAL(32,2) NOT NULL DEFAULT 0,
-	UNIQUE(nombre,apellido,dni,direccion,telefono,mail,fecha_Nac,ciudad)
+	UNIQUE(nombre,apellido,dni,telefono,mail,fecha_Nac) 
+	--no pongo todos los valores porque el unique funciona con un index, y los index no soportan mas de 900 bytes.
+	--puede que sea mejor idea manejar la no duplicidad con un trigger? los 2 tienen sus ventajas y desventajas,
+	--pero creo que me quedo con este.
 	--deberia ser todo NOT NULL?
 )
 INSERT INTO Cliente (dni, nombre, apellido, direccion, telefono, mail, fecha_Nac, ciudad)
@@ -23,7 +26,7 @@ CREATE TABLE Carga(
 	cliente INT REFERENCES Cliente(id),
 	credito NUMERIC(18,2), --seria redundante ponerle NOT NULL a estos?
 	fecha DATETIME,
-	tipo_Pago_Desc NVARCHAR(100), -- ni idea de que es esto pero es algo de carga. Podria ser un enum
+	tipo_Pago_Desc VARCHAR(100), -- ni idea de que es esto pero es algo de carga. Podria ser un enum
 	)
 
 INSERT INTO Carga
@@ -33,15 +36,15 @@ WHERE Carga_Credito IS NOT NULL
 
 CREATE TABLE Proveedor(
 	id INT IDENTITY(1,1) PRIMARY KEY,
-	RS NVARCHAR(100) UNIQUE, --no uso esto como PK porque es mas lento y solo es unico dentro de un pais
-	dom NVARCHAR(255),
-	ciudad NVARCHAR(255),
+	RS VARCHAR(100) UNIQUE, --no uso esto como PK porque es mas lento y solo es unico dentro de un pais
+	dom VARCHAR(255),
+	ciudad VARCHAR(255),
 	telefono NUMERIC(18,0),
-	CUIT NVARCHAR(16) UNIQUE,
-	rubro NVARCHAR(32),
-	mail NVARCHAR(255) DEFAULT null,
+	CUIT VARCHAR(16) UNIQUE,
+	rubro VARCHAR(32),
+	mail VARCHAR(255) DEFAULT null,
 	codigoPostal INT DEFAULT null, 
-	contacto NVARCHAR(255) DEFAULT null,
+	contacto VARCHAR(255) DEFAULT null,
 	--estoy casi seguro de que el rs y el cuit no son unicos globalmente, pero lo pide el enunciado
 	--la tabla maestra no tiene mail ni codigoPostal ni contacto, pero se da a entender que son datos que tienen
 	--los proveedores y que se van a agregar mas adelante
@@ -53,8 +56,8 @@ FROM gd_esquema.Maestra
 WHERE Provee_RS IS NOT NULL
 
 CREATE TABLE Oferta(
-	codigo NVARCHAR(50) PRIMARY KEY, --hay ofertas iguales con codigos distintos, sospechoso
-	descripcion NVARCHAR(255),
+	codigo VARCHAR(50) PRIMARY KEY, --hay ofertas iguales con codigos distintos, sospechoso
+	descripcion VARCHAR(255),
 	cantidad NUMERIC(18,0), --es el stock
 	fecha DATETIME NOT NULL,
 	fecha_Venc DATETIME NOT NULL,
@@ -80,7 +83,7 @@ WHERE Factura_Nro IS NOT NULL
 CREATE TABLE Compra_Oferta(
 	id INT IDENTITY(1,1) PRIMARY KEY, --no estoy seguro de si la combinacion de las 3 FK es una PK
 	cliente INT REFERENCES Cliente(id),
-	oferta NVARCHAR(50) REFERENCES Oferta(codigo),
+	oferta VARCHAR(50) REFERENCES Oferta(codigo),
 	factura NUMERIC(18,0) REFERENCES Factura(nro),
 	fecha_Compra DATETIME,
 	fecha_Entrega DATETIME,
@@ -111,12 +114,12 @@ B.Oferta_Entregado_Fecha IS NOT NULL
 
 CREATE TABLE Funcionalidad(
 	id int IDENTITY(1,1) PRIMARY KEY,
-	nombre nvarchar(40),
+	nombre varchar(40),
 )
 
 CREATE TABLE Rol(
 	id int IDENTITY(1,1) PRIMARY KEY,
-	nombre nvarchar(40),
+	nombre varchar(40),
 	habilitado bit DEFAULT 1,
 )
 
@@ -175,8 +178,8 @@ haya 2 sociedades con el mismo nombre pero no se dio
 
 CREATE TABLE Usuario(
 	id INT IDENTITY(1,1) PRIMARY KEY, -- estario bueno que la PK sea (cliente,proveedor), pero sql no se banca que parte de una pk sea null
-	nombre VARCHAR(128) NOT NULL UNIQUE, --este podria ser la PK
-	contraseña VARCHAR(128) NOT NULL,
+	nombre VARCHAR(128) NOT NULL UNIQUE, --este podria ser la PK, pero *creo* que es mas lento
+	contraseña BINARY(32) NOT NULL,
 	rol INT FOREIGN KEY REFERENCES Rol(id),
 	fallosLogin INT DEFAULT 0,
 	habilitado BIT DEFAULT 1,
@@ -186,13 +189,56 @@ CREATE TABLE Usuario(
 	--si es que eso existe en sql ni idea
 )
 
---@todo contraseña
-INSERT INTO Usuario (nombre,contraseña,rol,cliente,proveedor)
-SELECT CONCAT(nombre,' ',apellido),'1234',(SELECT id FROM Rol WHERE nombre='Cliente'),id,null
-FROM Cliente
+--tabla temporal donde se guardan las contraseñas autogeneradas para los usuarios, para entregarselas
+--a estos. La idea es que cambien esta contraseña provisional por una de verdad.
+--Sin hacer esta tabla se le estaria asignando contraseñas aleatorias a todos los usuarios, que no conoce nadie
+CREATE TABLE contraseñasMigracion(
+	id INT PRIMARY KEY FOREIGN KEY REFERENCES Usuario(id),
+	contraseñaDesnuda VARCHAR(128)
+)
 
-INSERT INTO Usuario (nombre,contraseña,rol,cliente,proveedor)
-SELECT RS,'1234',(SELECT id FROM Rol WHERE nombre='Proveedor'),null,id
-FROM Proveedor
+DECLARE @nombre VARCHAR(128)
+DECLARE @apellido VARCHAR(128)
+DECLARE @id INT
+DECLARE @rol INT
+DECLARE @contraseñaDesnuda VARCHAR(64)
+SET @rol = (SELECT id FROM Rol WHERE nombre='Cliente');
+
+DECLARE cur CURSOR FOR (SELECT nombre,apellido,id FROM Cliente);
+OPEN cur  
+FETCH NEXT FROM cur INTO @nombre,@apellido,@id
+WHILE @@FETCH_STATUS = 0  
+BEGIN  
+	
+	SET @contraseñaDesnuda = CONVERT(varchar(64),ABS(CHECKSUM(NewId())));
+
+	INSERT INTO Usuario (nombre,contraseña,rol,cliente,proveedor) VALUES
+	(CONCAT(@nombre,' ',@apellido),HASHBYTES('SHA2_256',@contraseñaDesnuda),@rol,@id,null)
+	
+	INSERT INTO contraseñasMigracion VALUES (@@IDENTITY ,@contraseñaDesnuda)
+	FETCH NEXT FROM cur INTO @nombre,@apellido,@id
+END 
+CLOSE cur  
+DEALLOCATE cur 
+
+DECLARE @rs VARCHAR(100)
+SET @rol = (SELECT id FROM Rol WHERE nombre='Proveedor');
+
+DECLARE cur CURSOR FOR (SELECT RS,id FROM Proveedor);
+OPEN cur  
+FETCH NEXT FROM cur INTO @RS,@id
+WHILE @@FETCH_STATUS = 0  
+BEGIN  
+	
+	SET @contraseñaDesnuda = CONVERT(varchar(64),ABS(CHECKSUM(NewId())));
+
+	INSERT INTO Usuario (nombre,contraseña,rol,cliente,proveedor) VALUES
+	(@RS,HASHBYTES('SHA2_256',@contraseñaDesnuda),@rol,null,@id)
+	
+	INSERT INTO contraseñasMigracion VALUES (@@IDENTITY ,@contraseñaDesnuda)
+	FETCH NEXT FROM cur INTO @RS,@id
+END 
+CLOSE cur  
+DEALLOCATE cur 
 
 --@TODO habria que meter todo en el esquema gd_esquema?

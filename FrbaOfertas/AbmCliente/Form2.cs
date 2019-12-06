@@ -62,9 +62,7 @@ namespace FrbaOfertas.AbmCliente
 
             if (contraseña.Text != "")
             {
-                util.execCommand("UPDATE Usuario SET contraseña=@co WHERE cliente=@id",
-                                                    "@co",contraseña.Text,
-                                                    "@id",userId);
+                CambioContraseña.cambiarContraseña(contraseña.Text,userId);
             }
 
 

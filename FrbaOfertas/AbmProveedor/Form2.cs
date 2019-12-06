@@ -72,9 +72,7 @@ namespace FrbaOfertas.AbmProveedor
 
             if (contraseña.Text != "")
             {
-                util.execCommand("UPDATE Usuario SET contraseña=@co WHERE proveedor=@id",
-                                                    "@co", contraseña.Text,
-                                                    "@id", userId);
+                CambioContraseña.cambiarContraseña(contraseña.Text,userId);
             }
 
             parent.doQuery();

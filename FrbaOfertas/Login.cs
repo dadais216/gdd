@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -23,8 +24,6 @@ namespace FrbaOfertas
             var user = util.tableQuery( "SELECT contraseña,habilitado,rol,id FROM Usuario WHERE nombre = @no", 
                                         "@no",nombre.Text);
 
-            //@todo cuando se encripte la contraseña hay que encriptar el input del usuario para poder comparar
-
             if (user.Rows.Count == 0)
             {
                 info.Text = "usuario no existe";
@@ -33,7 +32,10 @@ namespace FrbaOfertas
             {
                 if ((bool)user.Rows[0].ItemArray[1])
                 {
-                    if ((string)user.Rows[0].ItemArray[0] == contraseña.Text)
+                    byte[] inputBytes= util.hashString(contraseña.Text);
+                    byte[] passBytes = (byte[])user.Rows[0].ItemArray[0];
+
+                    if (inputBytes.SequenceEqual(passBytes))
                     {
                         util.execCommand("UPDATE Usuario SET " +
                                                 "fallosLogin = 0 " +

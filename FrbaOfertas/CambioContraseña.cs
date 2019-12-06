@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -24,10 +25,12 @@ namespace FrbaOfertas
             if (nueva.Text != "")
             {
                 var table = util.tableQuery("SELECT contraseña FROM Usuario WHERE id = " + userId);
-                if ((string)table.Rows[0].ItemArray[0] == anterior.Text)
+                if (((byte[])table.Rows[0].ItemArray[0])
+                        .SequenceEqual(
+                                        util.hashString(anterior.Text)))
                 {
-                    util.execCommand("UPDATE Usuario SET contraseña = @nu WHERE id= " + userId,
-                                        "@nu",nueva.Text);
+                    cambiarContraseña(nueva.Text,userId);
+
                     Close();
                 }
                 else
@@ -39,6 +42,18 @@ namespace FrbaOfertas
             {
                 label2.Text = "la contraseña no puede estar vacia";
             }
+        }
+
+        static public void cambiarContraseña(string nueva,string id)
+        {
+            var command = new SqlCommand("UPDATE Usuario SET contraseña = HASHBYTES('SHA2_256',@nu) WHERE id= " + id, Program.con);
+            command.Parameters.Add(new SqlParameter
+            {
+                SqlDbType = SqlDbType.VarChar, //c# pasa por default unicode, osea nvarchar
+                ParameterName = "@nu",
+                Value = nueva
+            });
+            command.ExecuteNonQuery();
         }
     }
 }

@@ -1,4 +1,5 @@
 
+DROP TABLE contraseñasMigracion;
 DROP TABLE Usuario;
 DROP TABLE Carga;
 DROP TABLE Proveedor;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -37,5 +38,10 @@ namespace FrbaOfertas
         //que esten en el query original. No lo hago porque seguro que la manipulacion de strings aca es horrible,
         //y manejar queries que nombren un mismo @ mas de una vez seria incomodo si no se sabe como esta implementado.
         //igual es algo que me parece mejor, aunque en este tp no creo que cambie mucho
+
+        static public byte[] hashString(string s)
+        {
+            return new SHA256Managed().ComputeHash(Encoding.UTF8.GetBytes(s));
+        } 
     }
 }
