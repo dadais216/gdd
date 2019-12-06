@@ -21,12 +21,17 @@ INSERT INTO Cliente (dni, nombre, apellido, direccion, telefono, mail, fecha_Nac
 SELECT DISTINCT Cli_Dni, Cli_Nombre, Cli_Apellido, Cli_Direccion, Cli_Telefono, Cli_Mail, Cli_Fecha_Nac, Cli_Ciudad
 FROM gd_esquema.Maestra 
 
+CREATE TABLE Tipo_Pago(
+	id INT IDENTITY(1,1) PRIMARY KEY,
+	tipo_Pago_Desc NVARCHAR(100),
+	)
+
 CREATE TABLE Carga(
 	id INT IDENTITY(1,1) PRIMARY KEY,
 	cliente INT REFERENCES Cliente(id),
 	credito NUMERIC(18,2), --seria redundante ponerle NOT NULL a estos?
 	fecha DATETIME,
-	tipo_Pago_Desc VARCHAR(100), -- ni idea de que es esto pero es algo de carga. Podria ser un enum
+	tipo_Pago INT REFERENCES Tipo_Pago(id), -- ni idea de que es esto pero es algo de carga. Podria ser un enum
 	)
 
 INSERT INTO Carga
