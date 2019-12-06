@@ -43,5 +43,19 @@ namespace FrbaOfertas
         {
             return new SHA256Managed().ComputeHash(Encoding.UTF8.GetBytes(s));
         } 
+
+        static public string flipDayMonth(string s)
+        {//probablemente haya una libreria que haya esto pero es una boludes ni ganas de ponerme a buscar
+            var c=s.ToCharArray();
+            char temp0 = c[0];
+            char temp1 = c[1];
+
+            c[0] = c[3];
+            c[1] = c[4];
+            c[3] = temp0;
+            c[4] = temp1;
+
+            return new string(c);
+        }
     }
 }

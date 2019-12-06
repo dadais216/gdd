@@ -27,7 +27,7 @@ namespace FrbaOfertas.AbmCliente
             direccion.Text = cells[3].Value.ToString();
             telefono.Text = cells[4].Value.ToString();
             mail.Text = cells[5].Value.ToString();
-            fnac.Text = cells[6].Value.ToString();
+            fnac.Text = ((DateTime)cells[6].Value).ToString("d");
             ciudad.Text = cells[7].Value.ToString();
 
 
@@ -43,23 +43,25 @@ namespace FrbaOfertas.AbmCliente
 
         private void Button2_Click(object sender, EventArgs e)
         {
-            util.execCommand("UPDATE Cliente SET dni=@dn,nombre=@no,apellido=@ap,direccion=@di, " +
-                                                            "telefono=@te,mail=@ma,ciudad=@ci " + //"Cli_Fecha_Nac=@fe"+
-                                                            "WHERE id=@id",
-                                                            "@no", nombre.Text,
-                                                            "@ap", apellido.Text,
-                                                            "@dn", dni.Text,
-                                                            "@di", direccion.Text,
-                                                            "@te", telefono.Text,
-                                                            "@ma", mail.Text,
-                                                            "@ci", ciudad.Text,
-                                                            "@id", userId);
-
-
-            //el ToString hace mierda el formato de datetime, lo tengo que arreglar a mano?
-            //command.Parameters.AddWithValue("@fe", textBox14.Text);
-            //@todo
-
+            try
+            {
+                util.execCommand("UPDATE Cliente SET dni=@dn,nombre=@no,apellido=@ap,direccion=@di, " +
+                                                                "telefono=@te,mail=@ma,ciudad=@ci, fecha_Nac=@fe " +
+                                                                "WHERE id=@id",
+                                                                "@no", nombre.Text,
+                                                                "@ap", apellido.Text,
+                                                                "@dn", dni.Text,
+                                                                "@di", direccion.Text,
+                                                                "@te", telefono.Text,
+                                                                "@ma", mail.Text,
+                                                                "@ci", ciudad.Text,
+                                                                "@fe", util.flipDayMonth(fnac.Text),
+                                                                "@id", userId);
+            } catch (Exception _)
+            {
+                //se puso una letra en un campo de numero o una fecha absurda
+                new ErrorWindow("datos mal ingresados").Show();
+            }
             if (contraseña.Text != "")
             {
                 CambioContraseña.cambiarContraseña(contraseña.Text,userId);

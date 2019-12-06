@@ -60,12 +60,6 @@ namespace FrbaOfertas.AbmProveedor
                                                             "@no", contacto.Text,
                                                             "@id", userId);
 
-
-            //el ToString hace mierda el formato de datetime, lo tengo que arreglar a mano?
-            //command.Parameters.AddWithValue("@fe", textBox14.Text);
-            //@todo
-
-
             //hacer una modificacion setea los nulls de mail y codigoPostal a "" y 0, arreglarlo implica no usar los parameters
             //estos (que son una cagada). No sé si vale la pena molestarse por eso igual
 

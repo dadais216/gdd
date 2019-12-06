@@ -12,15 +12,12 @@ namespace FrbaOfertas
 {
     public partial class ErrorWindow : Form
     {
-        public ErrorWindow()
+        public ErrorWindow(string s)
         {
             InitializeComponent();
+            textBox1.Text = s;
         }
 
-        public void setText(string t)
-        {
-            textBox1.Text = t;
-        }
         private void Button1_Click(object sender, EventArgs e)
         {
             Close();

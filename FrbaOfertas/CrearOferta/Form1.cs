@@ -41,19 +41,14 @@ namespace FrbaOfertas.CrearOferta
             }
             catch (SqlException er)
             {
-                var newForm = new ErrorWindow();
-
-                Console.WriteLine(er.Message + " >>>>>>>" + er.Number);
                 if (er.Number == 2627)
                 {
-                    newForm.setText("Una oferta con esos datos ya existe");
+                    new ErrorWindow("un usuario con esos datos ya existe").Show();
                 }
                 else
                 {
-                    newForm.setText("Datos faltantes o mal ingresados"); //tira el mismo error para datos vacios y malos sql
+                    new ErrorWindow("datos faltantes o mal ingresados").Show(); //tira el mismo error para datos vacios y malos sql
                 }
-
-                newForm.Show();
             }
             Close();
 

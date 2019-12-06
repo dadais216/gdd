@@ -25,7 +25,7 @@ namespace FrbaOfertas
 
 
             con.Open(); // a veces falla la conexion no sé por que
-#if true 
+#if false 
             Application.Run(new Login());
 #else //salto el login porque rompe las bolas
             Application.Run(new Main("1", "4"));

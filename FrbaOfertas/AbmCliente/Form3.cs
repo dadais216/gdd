@@ -29,14 +29,15 @@ namespace FrbaOfertas.AbmCliente
             try
             {
                 util.execCommand("INSERT INTO Cliente " +
-                                "(dni,nombre,apellido,direccion,telefono,mail,ciudad,saldo) " + //"Cli_Fecha_Nac=@fe+"
-                                "VALUES (@dn,@no,@ap,@di,@te,@ma,@ci,@saldoInicial)",
+                                "(dni,nombre,apellido,direccion,telefono,mail,fecha_Nac,ciudad,saldo) "+
+                                "VALUES (@dn,@no,@ap,@di,@te,@ma,@fe,@ci,@saldoInicial)",
                                 "@no", nombre.Text,
                                 "@ap", apellido.Text,
                                 "@dn", dni.Text,
                                 "@di", direccion.Text,
                                 "@te", telefono.Text,
                                 "@ma", mail.Text,
+                                "@fe", util.flipDayMonth(fnac.Text),
                                 "@ci", ciudad.Text,
                                 "@saldoInicial", 200.ToString());
 
@@ -44,29 +45,22 @@ namespace FrbaOfertas.AbmCliente
                 //que se estan migrando. Podria hacerse con defualt metiendo la regla despues de hacer la migracion, pero en el 
                 //tp no podemos controlar que pasa antes y despues.
 
-                //@TODO se podria registar la carga de bienvenida como una carga
-
-
-                //@TODO el ToString hace mierda el formato de datetime, lo tengo que arreglar a mano?
-                //command.Parameters.AddWithValue("@fe", textBox14.Text);
+                //@TODO se podria registar la carga de bienvenida como una carga?
 
                 finished = true;
             }
             catch (SqlException er)
             {
-                var newForm = new ErrorWindow();
-
-                Console.WriteLine(er.Message+" >>>>>>>"+er.Number);
+                Console.WriteLine(er.Message + " >>>>>>>" + er.Number);
                 if (er.Number == 2627)
                 {
-                    newForm.setText("un usuario con esos datos ya existe");
+                    new ErrorWindow("un usuario con esos datos ya existe").Show();
                 }
                 else
                 {
-                    newForm.setText("datos faltantes o mal ingresados"); //tira el mismo error para datos vacios y malos sql
+                    new ErrorWindow("datos faltantes o mal ingresados").Show(); //tira el mismo error para datos vacios y malos sql
                 }
 
-                newForm.Show();
             }
             Close();
 
