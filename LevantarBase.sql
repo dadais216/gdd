@@ -101,7 +101,7 @@ INSERT INTO Compra_Oferta (
 	fecha_Compra,
 	fecha_Entrega
 )
-SELECT	(SELECT id FROM Cliente C WHERE dni = A.Cli_Dni) as cliente, -- get cli id from here to create fk
+SELECT	(SELECT id FROM Cliente C WHERE dni = A.Cli_Dni) as cliente,
 		A.Oferta_Codigo,
 		A.Factura_Nro,
 		A.Oferta_Fecha_Compra,
@@ -113,10 +113,6 @@ A.Oferta_Codigo=B.Oferta_Codigo
 AND B.Oferta_Entregado_Fecha IS NOT NULL
 AND B.Cli_Dni = A.Cli_Dni
 
-
-
-
---no estoy seguro de si resolver esto con un muchos a muchos normalizado es la mejor idea
 
 CREATE TABLE Funcionalidad(
 	id int IDENTITY(1,1) PRIMARY KEY,
@@ -248,3 +244,15 @@ CLOSE cur
 DEALLOCATE cur 
 
 --@TODO habria que meter todo en el esquema gd_esquema?
+
+-- Funciones
+-- Dado el precio de ahora y el precio de antes. Calcula el descuento.
+-- Devuelve valor entre 0 y 1. Usar FORMAT(func(), 'p') para imprimir lindo
+CREATE FUNCTION descuento(@precio_venta NUMERIC(18,2), @precio_original NUMERIC(18,2))
+RETURNS NUMERIC(18, 2)
+AS
+BEGIN
+	RETURN (@precio_original - @precio_venta)
+			/
+			NULLIF(@precio_venta, 0)
+END
