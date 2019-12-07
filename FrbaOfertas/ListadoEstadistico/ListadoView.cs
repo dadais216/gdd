@@ -19,16 +19,12 @@ namespace FrbaOfertas.ListadoEstadistico
         public ListadoView()
         {
             InitializeComponent();
-            selectSemestreCombo.Items.Add("1° Trimestre: Enero-Marzo");
-            selectSemestreCombo.Items.Add("4° Trimestre: Octubre-Diciembre");
+            selectSemestreCombo.Items.Add("1° Semestre 2018");
+            selectSemestreCombo.Items.Add("2° Semestre 2018");
+            selectSemestreCombo.Items.Add("1° Semestre 2019");
+            selectSemestreCombo.Items.Add("2° Semestre 2019");
         }
 
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
- 
         private void BestRent_Click(object sender, EventArgs e)
         {
             query = new SqlCommand();

@@ -74,7 +74,6 @@
             this.selectSemestre.Size = new System.Drawing.Size(322, 37);
             this.selectSemestre.TabIndex = 3;
             this.selectSemestre.Text = "Seleccionar semestre";
-            this.selectSemestre.Click += new System.EventHandler(this.label1_Click);
             // 
             // selectSemestreCombo
             // 
