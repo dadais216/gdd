@@ -28,33 +28,33 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.BestRent = new System.Windows.Forms.Button();
-            this.bestValue = new System.Windows.Forms.Button();
+            this.BestDiscounts = new System.Windows.Forms.Button();
+            this.mostFacturado = new System.Windows.Forms.Button();
             this.TablaListado = new System.Windows.Forms.DataGridView();
             this.selectSemestre = new System.Windows.Forms.Label();
             this.selectSemestreCombo = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.TablaListado)).BeginInit();
             this.SuspendLayout();
             // 
-            // BestRent
+            // BestDiscounts
             // 
-            this.BestRent.Location = new System.Drawing.Point(866, 161);
-            this.BestRent.Name = "BestRent";
-            this.BestRent.Size = new System.Drawing.Size(350, 76);
-            this.BestRent.TabIndex = 0;
-            this.BestRent.Text = "Best Rent";
-            this.BestRent.UseVisualStyleBackColor = true;
-            this.BestRent.Click += new System.EventHandler(this.BestRent_Click);
+            this.BestDiscounts.Location = new System.Drawing.Point(866, 161);
+            this.BestDiscounts.Name = "BestDiscounts";
+            this.BestDiscounts.Size = new System.Drawing.Size(350, 76);
+            this.BestDiscounts.TabIndex = 0;
+            this.BestDiscounts.Text = "Best Discounts";
+            this.BestDiscounts.UseVisualStyleBackColor = true;
+            this.BestDiscounts.Click += new System.EventHandler(this.BestRent_Click);
             // 
-            // bestValue
+            // mostFacturado
             // 
-            this.bestValue.Location = new System.Drawing.Point(55, 161);
-            this.bestValue.Name = "bestValue";
-            this.bestValue.Size = new System.Drawing.Size(350, 76);
-            this.bestValue.TabIndex = 1;
-            this.bestValue.Text = "Best Value";
-            this.bestValue.UseVisualStyleBackColor = true;
-            this.bestValue.Click += new System.EventHandler(this.bestValue_Click);
+            this.mostFacturado.Location = new System.Drawing.Point(55, 161);
+            this.mostFacturado.Name = "mostFacturado";
+            this.mostFacturado.Size = new System.Drawing.Size(350, 76);
+            this.mostFacturado.TabIndex = 1;
+            this.mostFacturado.Text = "Mayor Facturacion";
+            this.mostFacturado.UseVisualStyleBackColor = true;
+            this.mostFacturado.Click += new System.EventHandler(this.mostFacturadoClick);
             // 
             // TablaListado
             // 
@@ -91,8 +91,8 @@
             this.Controls.Add(this.selectSemestreCombo);
             this.Controls.Add(this.selectSemestre);
             this.Controls.Add(this.TablaListado);
-            this.Controls.Add(this.bestValue);
-            this.Controls.Add(this.BestRent);
+            this.Controls.Add(this.mostFacturado);
+            this.Controls.Add(this.BestDiscounts);
             this.Name = "ListadoView";
             this.Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)(this.TablaListado)).EndInit();
@@ -103,8 +103,8 @@
 
         #endregion
 
-        private System.Windows.Forms.Button BestRent;
-        private System.Windows.Forms.Button bestValue;
+        private System.Windows.Forms.Button BestDiscounts;
+        private System.Windows.Forms.Button mostFacturado;
         private System.Windows.Forms.DataGridView TablaListado;
         private System.Windows.Forms.Label selectSemestre;
         private System.Windows.Forms.ComboBox selectSemestreCombo;
