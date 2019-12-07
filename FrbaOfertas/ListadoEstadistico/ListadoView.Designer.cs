@@ -38,7 +38,7 @@
             // 
             // BestRent
             // 
-            this.BestRent.Location = new System.Drawing.Point(1183, 161);
+            this.BestRent.Location = new System.Drawing.Point(866, 161);
             this.BestRent.Name = "BestRent";
             this.BestRent.Size = new System.Drawing.Size(350, 76);
             this.BestRent.TabIndex = 0;
@@ -62,7 +62,7 @@
             this.TablaListado.Location = new System.Drawing.Point(55, 274);
             this.TablaListado.Name = "TablaListado";
             this.TablaListado.RowTemplate.Height = 33;
-            this.TablaListado.Size = new System.Drawing.Size(1478, 502);
+            this.TablaListado.Size = new System.Drawing.Size(1161, 502);
             this.TablaListado.TabIndex = 2;
             // 
             // selectSemestre
@@ -79,16 +79,16 @@
             // selectSemestreCombo
             // 
             this.selectSemestreCombo.FormattingEnabled = true;
-            this.selectSemestreCombo.Location = new System.Drawing.Point(810, 56);
+            this.selectSemestreCombo.Location = new System.Drawing.Point(596, 62);
             this.selectSemestreCombo.Name = "selectSemestreCombo";
-            this.selectSemestreCombo.Size = new System.Drawing.Size(730, 33);
+            this.selectSemestreCombo.Size = new System.Drawing.Size(620, 33);
             this.selectSemestreCombo.TabIndex = 4;
             // 
             // ListadoView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1619, 834);
+            this.ClientSize = new System.Drawing.Size(1250, 834);
             this.Controls.Add(this.selectSemestreCombo);
             this.Controls.Add(this.selectSemestre);
             this.Controls.Add(this.TablaListado);

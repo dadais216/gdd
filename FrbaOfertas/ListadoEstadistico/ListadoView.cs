@@ -14,10 +14,13 @@ namespace FrbaOfertas.ListadoEstadistico
     public partial class ListadoView : Form
     {
         string[] userIds;
+        SqlCommand query;
 
         public ListadoView()
         {
             InitializeComponent();
+            selectSemestreCombo.Items.Add("1° Trimestre: Enero-Marzo");
+            selectSemestreCombo.Items.Add("4° Trimestre: Octubre-Diciembre");
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -25,7 +28,6 @@ namespace FrbaOfertas.ListadoEstadistico
 
         }
 
-        SqlCommand query;
  
         private void BestRent_Click(object sender, EventArgs e)
         {
@@ -35,6 +37,13 @@ namespace FrbaOfertas.ListadoEstadistico
             doQuery();
         }
 
+        private void bestValue_Click(object sender, EventArgs e)
+        {
+            query = new SqlCommand();
+            query.Connection = Program.con;
+            query.CommandText = "SELECT id,dni,nombre,apellido FROM Cliente ";
+            doQuery();
+        }
 
 
         public void doQuery()
@@ -63,14 +72,6 @@ namespace FrbaOfertas.ListadoEstadistico
                 TablaListado.DataSource = new DataTable();
             }
 
-        }
-
-        private void bestValue_Click(object sender, EventArgs e)
-        {
-            query = new SqlCommand();
-            query.Connection = Program.con;
-            query.CommandText = "SELECT id,dni,nombre,apellido FROM Cliente ";
-            doQuery();
         }
 
     }
