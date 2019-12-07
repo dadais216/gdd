@@ -27,19 +27,25 @@ namespace FrbaOfertas.ListadoEstadistico
         }
 
         private void BestRent_Click(object sender, EventArgs e)
-        {
+        {   
+            // Mejores descuentos
             query = new SqlCommand();
             query.Connection = Program.con;
-            query.CommandText = "SELECT id, nombre FROM Cliente ";
-            doQuery();
-            System.Diagnostics.Debug.WriteLine("--");
-            System.Diagnostics.Debug.WriteLine(selectSemestreCombo.SelectedItem);
-            System.Diagnostics.Debug.WriteLine(selectSemestreCombo.SelectedIndex);
-
+            query.CommandText = @"
+            SELECT TOP 10 Proveedor.RS AS Proveedor,
+            FORMAT(AVG(dbo.descuento(Oferta.precio, Oferta.precio_Ficticio)), 'p') as DESCUENTOS_PROMEDIO
+            FROM Oferta
+            JOIN Proveedor ON Proveedor.id = Oferta.proveedor
+            WHERE Oferta.fecha > '1990-01-01' AND Oferta.fecha_Venc < '2300-01-01'
+            GROUP BY Proveedor.RS
+            ORDER BY AVG(dbo.descuento(Oferta.precio, Oferta.precio_Ficticio)) DESC
+            ";
+            FillTable();
         }
 
-        private void bestValue_Click(object sender, EventArgs e)
+        private void mostFacturadoClick(object sender, EventArgs e)
         {
+            // Mas Facturado
             query = new SqlCommand();
             query.Connection = Program.con;
             query.CommandText = "SELECT id,dni,nombre,apellido FROM Cliente ";
@@ -47,6 +53,14 @@ namespace FrbaOfertas.ListadoEstadistico
             System.Diagnostics.Debug.WriteLine(selectSemestreCombo.SelectedIndex);
         }
 
+        public void FillTable() {
+            var adapter = new SqlDataAdapter(query);
+            var table = new DataTable();
+            adapter.Fill(table);
+            TablaListado.DataSource = table;
+            TablaListado.AutoResizeColumns();     
+
+        }
 
         public void doQuery()
         {
