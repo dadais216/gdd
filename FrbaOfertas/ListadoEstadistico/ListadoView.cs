@@ -40,7 +40,7 @@ namespace FrbaOfertas.ListadoEstadistico
             GROUP BY Proveedor.RS
             ORDER BY AVG(dbo.descuento(Oferta.precio, Oferta.precio_Ficticio)) DESC
             ";
-            FillTable();
+            PopulateTableWithQuery();
         }
 
         private void mostFacturadoClick(object sender, EventArgs e)
@@ -48,12 +48,21 @@ namespace FrbaOfertas.ListadoEstadistico
             // Mas Facturado
             query = new SqlCommand();
             query.Connection = Program.con;
-            query.CommandText = "SELECT id,dni,nombre,apellido FROM Cliente ";
-            doQuery();
+            query.CommandText = @"
+            SELECT TOP 5 Proveedor.RS, SUM(Oferta.precio) AS FACTURACION
+            FROM Compra_Oferta
+            JOIN Oferta ON Compra_Oferta.oferta = Oferta.codigo
+            JOIN Proveedor ON Oferta.proveedor = Proveedor.id
+            WHERE Oferta.fecha > '1990-01-01' AND Oferta.fecha_Venc < '2300-01-01'
+            GROUP BY Proveedor.RS
+            ORDER BY 2 DESC
+            ";
+            PopulateTableWithQuery();
             System.Diagnostics.Debug.WriteLine(selectSemestreCombo.SelectedIndex);
         }
 
-        public void FillTable() {
+        public void PopulateTableWithQuery()
+        {
             var adapter = new SqlDataAdapter(query);
             var table = new DataTable();
             adapter.Fill(table);
@@ -61,35 +70,5 @@ namespace FrbaOfertas.ListadoEstadistico
             TablaListado.AutoResizeColumns();     
 
         }
-
-        public void doQuery()
-        {
-            try
-            {
-                var adp = new SqlDataAdapter(query);
-                var table = new DataTable();
-                adp.Fill(table);
-
-                //esta gilada esta para no mostrar ids pero traermelos en un mismo query
-
-                userIds = new string[table.Rows.Count];
-
-                for (int i = 0; i < table.Rows.Count; i++)
-                {
-                    userIds[i] = table.Rows[i].ItemArray[0].ToString();
-                }
-
-                table.Columns.RemoveAt(0);
-                TablaListado.DataSource = table;
-            }
-            catch (System.Data.SqlClient.SqlException e)
-            {
-                //esto creo que solo pasa cuando se pone una letra en dni, tambien se podria solucionar ahi
-                TablaListado.DataSource = new DataTable();
-            }
-
-        }
-
-
     }
 }
