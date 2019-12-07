@@ -1,6 +1,6 @@
 ﻿namespace FrbaOfertas.ListadoEstadistico
 {
-    partial class Form1
+    partial class ListadoView
     {
         /// <summary>
         /// Required designer variable.
@@ -44,6 +44,7 @@
             this.BestRent.TabIndex = 0;
             this.BestRent.Text = "Best Rent";
             this.BestRent.UseVisualStyleBackColor = true;
+            this.BestRent.Click += new System.EventHandler(this.BestRent_Click);
             // 
             // bestValue
             // 
@@ -53,6 +54,7 @@
             this.bestValue.TabIndex = 1;
             this.bestValue.Text = "Best Value";
             this.bestValue.UseVisualStyleBackColor = true;
+            this.bestValue.Click += new System.EventHandler(this.bestValue_Click);
             // 
             // TablaListado
             // 
@@ -77,12 +79,12 @@
             // selectSemestreCombo
             // 
             this.selectSemestreCombo.FormattingEnabled = true;
-            this.selectSemestreCombo.Location = new System.Drawing.Point(815, 56);
+            this.selectSemestreCombo.Location = new System.Drawing.Point(810, 56);
             this.selectSemestreCombo.Name = "selectSemestreCombo";
-            this.selectSemestreCombo.Size = new System.Drawing.Size(718, 33);
+            this.selectSemestreCombo.Size = new System.Drawing.Size(730, 33);
             this.selectSemestreCombo.TabIndex = 4;
             // 
-            // Form1
+            // ListadoView
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 25F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -92,7 +94,7 @@
             this.Controls.Add(this.TablaListado);
             this.Controls.Add(this.bestValue);
             this.Controls.Add(this.BestRent);
-            this.Name = "Form1";
+            this.Name = "ListadoView";
             this.Text = "Form1";
             ((System.ComponentModel.ISupportInitialize)(this.TablaListado)).EndInit();
             this.ResumeLayout(false);
