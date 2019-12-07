@@ -23,6 +23,7 @@ namespace FrbaOfertas.ListadoEstadistico
             selectSemestreCombo.Items.Add("2° Semestre 2018");
             selectSemestreCombo.Items.Add("1° Semestre 2019");
             selectSemestreCombo.Items.Add("2° Semestre 2019");
+            selectSemestreCombo.SelectedIndex = 0;
         }
 
         private void BestRent_Click(object sender, EventArgs e)
@@ -31,6 +32,10 @@ namespace FrbaOfertas.ListadoEstadistico
             query.Connection = Program.con;
             query.CommandText = "SELECT id, nombre FROM Cliente ";
             doQuery();
+            System.Diagnostics.Debug.WriteLine("--");
+            System.Diagnostics.Debug.WriteLine(selectSemestreCombo.SelectedItem);
+            System.Diagnostics.Debug.WriteLine(selectSemestreCombo.SelectedIndex);
+
         }
 
         private void bestValue_Click(object sender, EventArgs e)
@@ -39,6 +44,7 @@ namespace FrbaOfertas.ListadoEstadistico
             query.Connection = Program.con;
             query.CommandText = "SELECT id,dni,nombre,apellido FROM Cliente ";
             doQuery();
+            System.Diagnostics.Debug.WriteLine(selectSemestreCombo.SelectedIndex);
         }
 
 
@@ -69,6 +75,7 @@ namespace FrbaOfertas.ListadoEstadistico
             }
 
         }
+
 
     }
 }

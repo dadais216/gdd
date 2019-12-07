@@ -86,32 +86,33 @@ FROM gd_esquema.Maestra m
 WHERE Factura_Nro IS NOT NULL
 
 CREATE TABLE Compra_Oferta(
-	id INT IDENTITY(1,1) PRIMARY KEY, --no estoy seguro de si la combinacion de las 3 FK es una PK
+	id INT IDENTITY(1,1) PRIMARY KEY,
 	cliente INT REFERENCES Cliente(id),
 	oferta VARCHAR(50) REFERENCES Oferta(codigo),
 	factura NUMERIC(18,0) REFERENCES Factura(nro),
 	fecha_Compra DATETIME,
 	fecha_Entrega DATETIME,
+)
 
-	--en la tabla maestra hay 3 tipos de filas,
-	--unas tienen la factura (indica la compra)
-	--otras tienen la entrega (indica entrega)
-	-- (hay la misma cantidad de estos 2)
-	--y otra que no tienen ni la factura ni la entrega. Por ahora las ignoro porque no me dicen nada
-	)
+INSERT INTO Compra_Oferta (
+	cliente,
+	oferta,
+	factura,
+	fecha_Compra,
+	fecha_Entrega
+)
+SELECT	(SELECT id FROM Cliente C WHERE dni = A.Cli_Dni) as cliente, -- get cli id from here to create fk
+		A.Oferta_Codigo,
+		A.Factura_Nro,
+		A.Oferta_Fecha_Compra,
+		B.Oferta_Entregado_Fecha
+FROM gd_esquema.Maestra A
+JOIN gd_esquema.Maestra B ON
+A.Factura_Nro IS NOT NULL AND A.Factura_Fecha IS NOT NULL AND
+A.Oferta_Codigo=B.Oferta_Codigo
+AND B.Oferta_Entregado_Fecha IS NOT NULL
+AND B.Cli_Dni = A.Cli_Dni
 
-/*
-SELECT A.Cli_Dni, A.Oferta_Codigo,A.Factura_Nro,A.Oferta_Fecha_Compra,B.Oferta_Entregado_Fecha 
-FROM gd_esquema.Maestra A INNER JOIN gd_esquema.Maestra B 
-ON A.Oferta_Codigo IS NOT NULL AND
-A.Oferta_Fecha_Compra=B.Oferta_Fecha_Compra AND 
-A.Cli_Dni=B.Cli_Dni AND
-A.Factura_Nro IS NOT NULL AND 
-B.Oferta_Entregado_Fecha IS NOT NULL 
---la idea de este query es juntar los registros de factura y entregado
---no es perfecto porque no tengo un identificador que me separe esos dos registros
---osea si un cliente pide la misma oferta el mismo dia van a generarse 2 registros de mas
-*/
 
 
 
