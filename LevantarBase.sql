@@ -8,7 +8,7 @@ CREATE TABLE Cliente(
 	direccion VARCHAR(255) NOT NULL,
 	telefono NUMERIC(18,0) NOT NULL, /*UNIQUE?*/
 	mail VARCHAR(255) NOT NULL, /*UNIQUE hay dos minas que comparte mail, no sé si considerarlo un problema*/
-	fecha_Nac DATETIME, /*deberia ser NOT NULL pero no solucione el tema de la conversion*/
+	fecha_Nac DATE, /*deberia ser NOT NULL pero no solucione el tema de la conversion*/
 	ciudad VARCHAR(255) NOT NULL,
 	saldo DECIMAL(32,2) NOT NULL DEFAULT 0,
 	UNIQUE(nombre,apellido,dni,telefono,mail,fecha_Nac) 
@@ -31,11 +31,11 @@ CREATE TABLE Carga(
 	cliente INT REFERENCES Cliente(id),
 	credito NUMERIC(18,2), --seria redundante ponerle NOT NULL a estos?
 	fecha DATETIME,
-	tipo_Pago INT REFERENCES Tipo_Pago(id), -- ni idea de que es esto pero es algo de carga. Podria ser un enum
+	--tipo_Pago INT REFERENCES Tipo_Pago(id), -- ni idea de que es esto pero es algo de carga. Podria ser un enum
 	)
 
 INSERT INTO Carga
-SELECT (SELECT id FROM Cliente WHERE dni=Cli_Dni),Carga_Credito,Carga_Fecha,Tipo_Pago_Desc
+SELECT (SELECT id FROM Cliente WHERE dni=Cli_Dni),Carga_Credito,Carga_Fecha--,Tipo_Pago_Desc
 FROM gd_esquema.Maestra AS M
 WHERE Carga_Credito IS NOT NULL
 
@@ -64,8 +64,8 @@ CREATE TABLE Oferta(
 	codigo VARCHAR(50) PRIMARY KEY, --hay ofertas iguales con codigos distintos, sospechoso
 	descripcion VARCHAR(255),
 	cantidad NUMERIC(18,0), --es el stock
-	fecha DATETIME NOT NULL,
-	fecha_Venc DATETIME NOT NULL,
+	fecha DATE NOT NULL,
+	fecha_Venc DATE NOT NULL,
 	precio NUMERIC(18,2) NOT NULL,
 	precio_Ficticio NUMERIC(18,2) NOT NULL,
 	proveedor INT REFERENCES Proveedor(id)
@@ -99,23 +99,24 @@ CREATE TABLE Compra_Oferta(
 	-- (hay la misma cantidad de estos 2)
 	--y otra que no tienen ni la factura ni la entrega. Por ahora las ignoro porque no me dicen nada
 	)
-
 /*
-SELECT A.Cli_Dni, A.Oferta_Codigo,A.Factura_Nro,A.Oferta_Fecha_Compra,B.Oferta_Entregado_Fecha 
-FROM gd_esquema.Maestra A INNER JOIN gd_esquema.Maestra B 
-ON A.Oferta_Codigo IS NOT NULL AND
-A.Oferta_Fecha_Compra=B.Oferta_Fecha_Compra AND 
-A.Cli_Dni=B.Cli_Dni AND
-A.Factura_Nro IS NOT NULL AND 
-B.Oferta_Entregado_Fecha IS NOT NULL 
---la idea de este query es juntar los registros de factura y entregado
---no es perfecto porque no tengo un identificador que me separe esos dos registros
---osea si un cliente pide la misma oferta el mismo dia van a generarse 2 registros de mas
+haciendo
+SELECT Cli_Dni,Oferta_Codigo,COUNT(*) FROM gd_esquema.Maestra
+WHERE Oferta_Codigo IS NOT NULL
+GROUP BY Cli_Dni,Oferta_Codigo
+se puede ver que no hay registros de facturacion y entrega para todas las compra ventas.
+
+En un principio pense en primero llenar la tabla con todas las compra ventas y despues ir haciendo
+updates con joins para conseguir la factura y entrega de los que la tengan.
+Pero me di cuenta de que poniendo un max se hace lo que quiero, que es dejar el null cuando no hay
+registros y dejar el registro cuando esta, ya que solo hay 2 casos, o esta el registro o no esta.
 */
 
+INSERT INTO Compra_Oferta
+SELECT (SELECT id FROM Cliente WHERE dni=Cli_Dni),Oferta_Codigo,MAX(Factura_Nro),MAX(Oferta_Fecha_Compra),MAX(Oferta_Entregado_Fecha) FROM gd_esquema.Maestra
+WHERE Oferta_Codigo IS NOT NULL
+GROUP BY Cli_Dni,Oferta_Codigo
 
-
---no estoy seguro de si resolver esto con un muchos a muchos normalizado es la mejor idea
 
 CREATE TABLE Funcionalidad(
 	id int IDENTITY(1,1) PRIMARY KEY,
