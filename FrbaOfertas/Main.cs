@@ -54,8 +54,8 @@ namespace FrbaOfertas
                 case "carga credito": new CragaCredito.Form1().Show(); break;
                 case "confeccion y publicacion de oferta": new CrearOferta.Form1().Show(); break;
                 case "facturacion a proveedor": new Facturar.Form1().Show(); break;
-                case "listado estadistico": new ListadoEstadistico.Form1().Show(); break;
-                case "consumo oferta": new ListadoEstadistico.Form1().Show(); break;
+                case "listado estadistico": new ListadoEstadistico.ListadoView().Show(); break;
+                case "consumo oferta": new ListadoEstadistico.ListadoView().Show(); break;
             }
         }
 

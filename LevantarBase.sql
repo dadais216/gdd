@@ -7,7 +7,7 @@ CREATE TABLE Cliente(
 	apellido VARCHAR(255) NOT NULL,
 	direccion VARCHAR(255) NOT NULL,
 	telefono NUMERIC(18,0) NOT NULL, /*UNIQUE?*/
-	mail VARCHAR(255) NOT NULL, /*UNIQUE hay dos minas que comparte mail, no sé si considerarlo un problema*/
+	mail VARCHAR(255) NOT NULL, /*UNIQUE hay dos minas que comparte mail, no sÃ© si considerarlo un problema*/
 	fecha_Nac DATE, /*deberia ser NOT NULL pero no solucione el tema de la conversion*/
 	ciudad VARCHAR(255) NOT NULL,
 	saldo DECIMAL(32,2) NOT NULL DEFAULT 0,
@@ -97,13 +97,34 @@ query que filtre segun los datos de la factura (proveedor y fechas). Como es alg
 hacer en ese sistema no vemos necesario gastar recursos en soportarlo.
 
 CREATE TABLE Compra_Oferta(
-	id INT IDENTITY(1,1) PRIMARY KEY, --no estoy seguro de si la combinacion de las 3 FK es una PK
+	id INT IDENTITY(1,1) PRIMARY KEY,
 	cliente INT REFERENCES Cliente(id),
 	oferta VARCHAR(50) REFERENCES Oferta(codigo),
 	factura NUMERIC(18,0) REFERENCES Factura(nro),
 	fecha_Compra DATETIME,
 	fecha_Entrega DATETIME,
+)
 
+/*
+INSERT INTO Compra_Oferta (
+	cliente,
+	oferta,
+	factura,
+	fecha_Compra,
+	fecha_Entrega
+)
+SELECT	(SELECT id FROM Cliente C WHERE dni = A.Cli_Dni) as cliente,
+		A.Oferta_Codigo,
+		A.Factura_Nro,
+		A.Oferta_Fecha_Compra,
+		B.Oferta_Entregado_Fecha
+FROM gd_esquema.Maestra A
+JOIN gd_esquema.Maestra B ON
+A.Factura_Nro IS NOT NULL AND A.Factura_Fecha IS NOT NULL AND
+A.Oferta_Codigo=B.Oferta_Codigo
+AND B.Oferta_Entregado_Fecha IS NOT NULL
+AND B.Cli_Dni = A.Cli_Dni
+*/
 	--en la tabla maestra hay 3 tipos de filas,
 	--unas tienen la factura (indica la compra)
 	--otras tienen la entrega (indica entrega)
@@ -245,7 +266,7 @@ haya 2 sociedades con el mismo nombre pero no se dio
 CREATE TABLE Usuario(
 	id INT IDENTITY(1,1) PRIMARY KEY, -- estario bueno que la PK sea (cliente,proveedor), pero sql no se banca que parte de una pk sea null
 	nombre VARCHAR(128) NOT NULL UNIQUE, --este podria ser la PK, pero *creo* que es mas lento
-	contraseña BINARY(32) NOT NULL,
+	contraseÃ±a BINARY(32) NOT NULL,
 	rol INT FOREIGN KEY REFERENCES Rol(id),
 	fallosLogin INT DEFAULT 0,
 	habilitado BIT DEFAULT 1,
@@ -255,19 +276,19 @@ CREATE TABLE Usuario(
 	--si es que eso existe en sql ni idea
 )
 
---tabla temporal donde se guardan las contraseñas autogeneradas para los usuarios, para entregarselas
---a estos. La idea es que cambien esta contraseña provisional por una de verdad.
---Sin hacer esta tabla se le estaria asignando contraseñas aleatorias a todos los usuarios, que no conoce nadie
-CREATE TABLE contraseñasMigracion(
+--tabla temporal donde se guardan las contraseÃ±as autogeneradas para los usuarios, para entregarselas
+--a estos. La idea es que cambien esta contraseÃ±a provisional por una de verdad.
+--Sin hacer esta tabla se le estaria asignando contraseÃ±as aleatorias a todos los usuarios, que no conoce nadie
+CREATE TABLE contraseÃ±asMigracion(
 	id INT PRIMARY KEY FOREIGN KEY REFERENCES Usuario(id),
-	contraseñaDesnuda VARCHAR(128)
+	contraseÃ±aDesnuda VARCHAR(128)
 )
 
 DECLARE @nombre VARCHAR(128)
 DECLARE @apellido VARCHAR(128)
 DECLARE @id INT
 DECLARE @rol INT
-DECLARE @contraseñaDesnuda VARCHAR(64)
+DECLARE @contraseÃ±aDesnuda VARCHAR(64)
 SET @rol = (SELECT id FROM Rol WHERE nombre='Cliente');
 
 DECLARE cur CURSOR FOR (SELECT nombre,apellido,id FROM Cliente);
@@ -276,12 +297,12 @@ FETCH NEXT FROM cur INTO @nombre,@apellido,@id
 WHILE @@FETCH_STATUS = 0  
 BEGIN  
 	
-	SET @contraseñaDesnuda = CONVERT(varchar(64),ABS(CHECKSUM(NewId())));
+	SET @contraseÃ±aDesnuda = CONVERT(varchar(64),ABS(CHECKSUM(NewId())));
 
-	INSERT INTO Usuario (nombre,contraseña,rol,cliente,proveedor) VALUES
-	(CONCAT(@nombre,' ',@apellido),HASHBYTES('SHA2_256',@contraseñaDesnuda),@rol,@id,null)
+	INSERT INTO Usuario (nombre,contraseÃ±a,rol,cliente,proveedor) VALUES
+	(CONCAT(@nombre,' ',@apellido),HASHBYTES('SHA2_256',@contraseÃ±aDesnuda),@rol,@id,null)
 	
-	INSERT INTO contraseñasMigracion VALUES (@@IDENTITY ,@contraseñaDesnuda)
+	INSERT INTO contraseÃ±asMigracion VALUES (@@IDENTITY ,@contraseÃ±aDesnuda)
 	FETCH NEXT FROM cur INTO @nombre,@apellido,@id
 END 
 CLOSE cur  
@@ -296,15 +317,27 @@ FETCH NEXT FROM cur INTO @RS,@id
 WHILE @@FETCH_STATUS = 0  
 BEGIN  
 	
-	SET @contraseñaDesnuda = CONVERT(varchar(64),ABS(CHECKSUM(NewId())));
+	SET @contraseÃ±aDesnuda = CONVERT(varchar(64),ABS(CHECKSUM(NewId())));
 
-	INSERT INTO Usuario (nombre,contraseña,rol,cliente,proveedor) VALUES
-	(@RS,HASHBYTES('SHA2_256',@contraseñaDesnuda),@rol,null,@id)
+	INSERT INTO Usuario (nombre,contraseÃ±a,rol,cliente,proveedor) VALUES
+	(@RS,HASHBYTES('SHA2_256',@contraseÃ±aDesnuda),@rol,null,@id)
 	
-	INSERT INTO contraseñasMigracion VALUES (@@IDENTITY ,@contraseñaDesnuda)
+	INSERT INTO contraseÃ±asMigracion VALUES (@@IDENTITY ,@contraseÃ±aDesnuda)
 	FETCH NEXT FROM cur INTO @RS,@id
 END 
 CLOSE cur  
 DEALLOCATE cur 
 
 --@TODO habria que meter todo en el esquema gd_esquema?
+
+-- Funciones
+-- Dado el precio de ahora y el precio de antes. Calcula el descuento.
+-- Devuelve valor entre 0 y 1. Usar FORMAT(func(), 'p') para imprimir lindo
+CREATE FUNCTION descuento(@precio_venta NUMERIC(18,2), @precio_original NUMERIC(18,2))
+RETURNS NUMERIC(18, 2)
+AS
+BEGIN
+	RETURN (@precio_original - @precio_venta)
+			/
+			NULLIF(@precio_venta, 0)
+END
