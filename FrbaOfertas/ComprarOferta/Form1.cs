@@ -13,14 +13,16 @@ namespace FrbaOfertas.ComprarOferta
 {
     public partial class Form1 : Form
     {
-        string rolId, userId,fecha;
+        string rolId, userId, fecha;
         public Form1(string rolId_,string userId_)
         {
             rolId = rolId_;
             userId = userId_;
             InitializeComponent();
 
-            fecha= ConfigurationManager.AppSettings["fecha"];
+            var date=DateTime.Parse(ConfigurationManager.AppSettings["fecha"]);
+
+            fecha = date.Month.ToString() + "/" + date.Day.ToString() + "/" + date.Year.ToString();
 
             doQuery();
         }
