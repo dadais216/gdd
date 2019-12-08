@@ -57,5 +57,10 @@ namespace FrbaOfertas
 
             return new string(c);
         }
+
+        static public object getVal(string s)
+        {
+            return tableQuery(s).Rows[0].ItemArray[0];
+        }
     }
 }

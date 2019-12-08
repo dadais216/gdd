@@ -33,6 +33,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Windows.Forms.DataVisualization" />
     <Reference Include="System.Xml.Linq" />
@@ -104,6 +105,18 @@
     </Compile>
     <Compile Include="CambioContraseña.Designer.cs">
       <DependentUpon>CambioContraseña.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ComprarOferta\codigoCompra.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ComprarOferta\codigoCompra.Designer.cs">
+      <DependentUpon>codigoCompra.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ComprarOferta\Confirm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ComprarOferta\Confirm.Designer.cs">
+      <DependentUpon>Confirm.cs</DependentUpon>
     </Compile>
     <Compile Include="Registro.cs">
       <SubType>Form</SubType>
@@ -191,6 +204,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CambioContraseña.resx">
       <DependentUpon>CambioContraseña.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ComprarOferta\codigoCompra.resx">
+      <DependentUpon>codigoCompra.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ComprarOferta\Confirm.resx">
+      <DependentUpon>Confirm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ComprarOferta\Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CragaCredito\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>

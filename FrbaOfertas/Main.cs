@@ -14,14 +14,16 @@ namespace FrbaOfertas
     public partial class Main : Form
     {
         string userId;
-        public Main(string userId_,string rolIdOrNull)
+        string rolId; //tecnicamente puede ser null pero se usa desde funcionalidades, lo que te asegura que no es null
+        public Main(string userId_,string rolIdOrNull_)
         {
             userId = userId_;
+            rolId = rolIdOrNull_;
             InitializeComponent();
 
             var table = util.tableQuery("SELECT nombre FROM " +
                            "Funcionalidad f JOIN RolxFuncionalidad rf ON f.id = rf.funcionalidad " +
-                           "WHERE rf.rol = " + rolIdOrNull);
+                           "WHERE rf.rol = " + rolIdOrNull_);
 
             for (int i = 0; i < table.Rows.Count; i++)
             {
@@ -50,7 +52,7 @@ namespace FrbaOfertas
                 case "abm cliente": new AbmCliente.Form1().Show();break;
                 case "abm proveedor": new AbmProveedor.Form1().Show();break;
                 case "abm rol": new AbmRol.Form1().Show(); break;
-                case "compra oferta": new ComprarOferta.Form1().Show(); break;
+                case "compra oferta": new ComprarOferta.Form1(rolId,userId).Show(); break;
                 case "carga credito": new CragaCredito.Form1().Show(); break;
                 case "confeccion y publicacion de oferta": new CrearOferta.Form1().Show(); break;
                 case "facturacion a proveedor": new Facturar.Form1().Show(); break;

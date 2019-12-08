@@ -12,7 +12,7 @@ namespace FrbaOfertas
         /// <summary>
         /// Punto de entrada principal para la aplicación.
         /// </summary>
-
+        /// 
 
         static string connectionString = "Data Source= localhost\\SQLSERVER2012;" +
                                   "Initial Catalog = GD2C2019; " +
@@ -28,7 +28,12 @@ namespace FrbaOfertas
 #if false 
             Application.Run(new Login());
 #else //salto el login porque rompe las bolas
+#if false
             Application.Run(new Main("1", "4"));
+#else
+            util.execCommand("UPDATE Cliente SET saldo=5000 WHERE id=1");
+            Application.Run(new Main("1","1"));
+#endif
 #endif
 
         }
