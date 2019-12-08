@@ -1,5 +1,7 @@
 
 DROP TABLE contraseñasMigracion;
+DROP TABLE Cupon;
+DROP TABLE Tipo_Pago;
 DROP TABLE Usuario;
 DROP TABLE Carga;
 DROP TABLE Proveedor;
@@ -10,3 +12,5 @@ DROP TABLE Cliente;
 DROP TABLE RolxFuncionalidad;
 DROP TABLE Funcionalidad;
 DROP TABLE Rol;
+
+--
