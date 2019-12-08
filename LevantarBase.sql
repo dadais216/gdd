@@ -266,7 +266,7 @@ haya 2 sociedades con el mismo nombre pero no se dio
 CREATE TABLE Usuario(
 	id INT IDENTITY(1,1) PRIMARY KEY, -- estario bueno que la PK sea (cliente,proveedor), pero sql no se banca que parte de una pk sea null
 	nombre VARCHAR(128) NOT NULL UNIQUE, --este podria ser la PK, pero *creo* que es mas lento
-	contraseña BINARY(32) NOT NULL,
+	contrase�a BINARY(32) NOT NULL,
 	rol INT FOREIGN KEY REFERENCES Rol(id),
 	fallosLogin INT DEFAULT 0,
 	habilitado BIT DEFAULT 1,
@@ -279,16 +279,16 @@ CREATE TABLE Usuario(
 --tabla temporal donde se guardan las contraseñas autogeneradas para los usuarios, para entregarselas
 --a estos. La idea es que cambien esta contraseña provisional por una de verdad.
 --Sin hacer esta tabla se le estaria asignando contraseñas aleatorias a todos los usuarios, que no conoce nadie
-CREATE TABLE contraseñasMigracion(
+CREATE TABLE contrase�asMigracion(
 	id INT PRIMARY KEY FOREIGN KEY REFERENCES Usuario(id),
-	contraseñaDesnuda VARCHAR(128)
+	contrase�aDesnuda VARCHAR(128)
 )
 
 DECLARE @nombre VARCHAR(128)
 DECLARE @apellido VARCHAR(128)
 DECLARE @id INT
 DECLARE @rol INT
-DECLARE @contraseñaDesnuda VARCHAR(64)
+DECLARE @contrase�aDesnuda VARCHAR(64)
 SET @rol = (SELECT id FROM Rol WHERE nombre='Cliente');
 
 DECLARE cur CURSOR FOR (SELECT nombre,apellido,id FROM Cliente);
@@ -297,12 +297,12 @@ FETCH NEXT FROM cur INTO @nombre,@apellido,@id
 WHILE @@FETCH_STATUS = 0  
 BEGIN  
 	
-	SET @contraseñaDesnuda = CONVERT(varchar(64),ABS(CHECKSUM(NewId())));
+	SET @contrase�aDesnuda = CONVERT(varchar(64),ABS(CHECKSUM(NewId())));
 
-	INSERT INTO Usuario (nombre,contraseña,rol,cliente,proveedor) VALUES
-	(CONCAT(@nombre,' ',@apellido),HASHBYTES('SHA2_256',@contraseñaDesnuda),@rol,@id,null)
+	INSERT INTO Usuario (nombre,contrase�a,rol,cliente,proveedor) VALUES
+	(CONCAT(@nombre,' ',@apellido),HASHBYTES('SHA2_256',@contrase�aDesnuda),@rol,@id,null)
 	
-	INSERT INTO contraseñasMigracion VALUES (@@IDENTITY ,@contraseñaDesnuda)
+	INSERT INTO contrase�asMigracion VALUES (@@IDENTITY ,@contrase�aDesnuda)
 	FETCH NEXT FROM cur INTO @nombre,@apellido,@id
 END 
 CLOSE cur  
@@ -317,25 +317,25 @@ FETCH NEXT FROM cur INTO @RS,@id
 WHILE @@FETCH_STATUS = 0  
 BEGIN  
 	
-	SET @contraseñaDesnuda = CONVERT(varchar(64),ABS(CHECKSUM(NewId())));
+	SET @contrase�aDesnuda = CONVERT(varchar(64),ABS(CHECKSUM(NewId())));
 
-	INSERT INTO Usuario (nombre,contraseña,rol,cliente,proveedor) VALUES
-	(@RS,HASHBYTES('SHA2_256',@contraseñaDesnuda),@rol,null,@id)
+	INSERT INTO Usuario (nombre,contrase�a,rol,cliente,proveedor) VALUES
+	(@RS,HASHBYTES('SHA2_256',@contrase�aDesnuda),@rol,null,@id)
 	
-	INSERT INTO contraseñasMigracion VALUES (@@IDENTITY ,@contraseñaDesnuda)
+	INSERT INTO contrase�asMigracion VALUES (@@IDENTITY ,@contrase�aDesnuda)
 	FETCH NEXT FROM cur INTO @RS,@id
 END 
 CLOSE cur  
-DEALLOCATE cur 
+DEALLOCATE cur ;
 
-<<<<<<< HEAD
---@TODO habria que meter todo en el esquema gd_esquema?
-=======
+
 --@TODO habria que meter todo en el esquema gd_esquema?
 
 -- Funciones
 -- Dado el precio de ahora y el precio de antes. Calcula el descuento.
 -- Devuelve valor entre 0 y 1. Usar FORMAT(func(), 'p') para imprimir lindo
+
+GO -- los go estos estan para solucionar un error raro ('CREATE FUNCTION' must be the first statement in a query batch)
 CREATE FUNCTION descuento(@precio_venta NUMERIC(18,2), @precio_original NUMERIC(18,2))
 RETURNS NUMERIC(18, 2)
 AS
@@ -344,4 +344,4 @@ BEGIN
 			/
 			NULLIF(@precio_venta, 0)
 END
->>>>>>> d047098f49d863cc132a5bb824450009076466be
+GO
