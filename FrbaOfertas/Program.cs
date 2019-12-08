@@ -28,7 +28,7 @@ namespace FrbaOfertas
 #if false 
             Application.Run(new Login());
 #else //salto el login porque rompe las bolas
-#if false
+#if true
             Application.Run(new Main("1", "4"));
 #else
             util.execCommand("UPDATE Cliente SET saldo=5000 WHERE id=1");

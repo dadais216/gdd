@@ -64,8 +64,8 @@ namespace FrbaOfertas.ListadoEstadistico
             SqlParameter endDate    = new SqlParameter();
             startDate.ParameterName = "@startDate";
             endDate.ParameterName   = "@endDate";
-            startDate.Value         = before.ToShortDateString();
-			endDate.Value           = moment.ToShortDateString();
+            startDate.Value = before;//.ToShortDateString();
+            endDate.Value = moment;//.ToShortDateString();
 
             query.Parameters.Add(startDate);
             query.Parameters.Add(endDate);
@@ -110,8 +110,8 @@ namespace FrbaOfertas.ListadoEstadistico
             SqlParameter endDate = new SqlParameter();
             startDate.ParameterName = "@startDate";
             endDate.ParameterName = "@endDate";
-            startDate.Value = before.ToShortDateString();
-            endDate.Value = moment.ToShortDateString();
+            startDate.Value = before;//.ToShortDateString();
+            endDate.Value = moment;//.ToShortDateString();
 
             query.Parameters.Add(startDate);
             query.Parameters.Add(endDate);
