@@ -42,7 +42,7 @@
             this.BestDiscounts.Name = "BestDiscounts";
             this.BestDiscounts.Size = new System.Drawing.Size(350, 76);
             this.BestDiscounts.TabIndex = 0;
-            this.BestDiscounts.Text = "Best Discounts";
+            this.BestDiscounts.Text = "Mejores Descuentos";
             this.BestDiscounts.UseVisualStyleBackColor = true;
             this.BestDiscounts.Click += new System.EventHandler(this.BestRent_Click);
             // 
