@@ -155,6 +155,7 @@ CREATE TABLE Compra_Oferta(
 	cliente INT REFERENCES Cliente(id),
 	oferta VARCHAR(50) REFERENCES Oferta(codigo),
 	fecha_Compra DATETIME,
+	fueCanjeado BIT DEFAULT 0,
 	fecha_Entrega DATETIME,
 
 	--en la tabla maestra hay 3 tipos de filas,
@@ -179,7 +180,7 @@ o esta el valor unico o hay null. Que sea un max especificamente no significa na
 Cargo el valor de entrega porque hace mas simple construir la tabla de cupones, despues se lo saco
 */
 INSERT INTO Compra_Oferta
-SELECT (SELECT id FROM Cliente WHERE dni=Cli_Dni),Oferta_Codigo,MAX(Oferta_Fecha_Compra),MAX(Oferta_Entregado_Fecha) FROM gd_esquema.Maestra
+SELECT (SELECT id FROM Cliente WHERE dni=Cli_Dni),Oferta_Codigo,MAX(Oferta_Fecha_Compra),0,MAX(Oferta_Entregado_Fecha) FROM gd_esquema.Maestra
 WHERE Oferta_Codigo IS NOT NULL
 GROUP BY Cli_Dni,Oferta_Codigo
 
@@ -194,7 +195,13 @@ SELECT cliente,fecha_Entrega FROM Compra_Oferta
 WHERE fecha_Entrega IS NOT null
 
 ALTER TABLE Compra_Oferta DROP COLUMN fecha_Entrega
-
+/*
+se podrian juntar la compra oferta con el cupon, porque lo modelamos para que sea una relacion 1 a 1.
+El id de la tabla seria el codigo cupon, que no significaria nada en compras sin cupon
+Y se ahorraria tener el campo 'fue canjeado' en compra oferta
+Y se tendria la informacion de de que compra oferta nacio el cupon.
+No lo hago para no alejarme mucho de lo que parece querer el tp, igual no es nada muy loco
+*/
 
 
 
@@ -233,8 +240,8 @@ VALUES ('cliente'),('proveedor'),('administrador'),('administrador general');
 --SELECT * FROM Funcionalidad;
 
 INSERT INTO RolxFuncionalidad (rol,funcionalidad) --hay alguna forma mejor de hacer esto? 
-VALUES  (1,4),(1,6),(1,7),
-		(2,5),
+VALUES  (1,4),(1,6),
+		(2,5),(2,7),
 		(3,1),(3,2),(3,3),(3,8),(3,9);
 INSERT INTO RolxFuncionalidad (rol,funcionalidad)
 (SELECT 4,id FROM Funcionalidad);

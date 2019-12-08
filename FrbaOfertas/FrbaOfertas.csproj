@@ -118,6 +118,18 @@
     <Compile Include="ComprarOferta\Confirm.Designer.cs">
       <DependentUpon>Confirm.cs</DependentUpon>
     </Compile>
+    <Compile Include="ConsumoOferta\Confirm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConsumoOferta\Confirm.Designer.cs">
+      <DependentUpon>Confirm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ConsumoOferta\Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConsumoOferta\Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
     <Compile Include="ListadoEstadistico\ListadoView.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -212,6 +224,12 @@
       <DependentUpon>Confirm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="ComprarOferta\Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ConsumoOferta\Confirm.resx">
+      <DependentUpon>Confirm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ConsumoOferta\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="CragaCredito\Form1.resx">

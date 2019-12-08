@@ -54,7 +54,7 @@ namespace FrbaOfertas.ComprarOferta
         private void doQuery()
         {
             dataGridView1.DataSource = util.tableQuery("SELECT descripcion,precio AS precioOferta ,precio_Ficticio AS precioOriginal,cantidad, codigo FROM Oferta " +
-                                                        "WHERE '" + fecha + "' BETWEEN fecha AND fecha_Venc");
+                                                        "WHERE '" + fecha + "' BETWEEN fecha AND fecha_Venc AND cantidad > 0");
         }
     }
 }
