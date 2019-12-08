@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
+using System.Diagnostics;
+using System.Configuration;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -13,17 +15,19 @@ namespace FrbaOfertas.ListadoEstadistico
 {
     public partial class ListadoView : Form
     {
-        string[] userIds;
         SqlCommand query;
+        DateTime now;
+        DateTime lastSemester;
 
         public ListadoView()
         {
             InitializeComponent();
-            selectSemestreCombo.Items.Add("1° Semestre 2018");
-            selectSemestreCombo.Items.Add("2° Semestre 2018");
-            selectSemestreCombo.Items.Add("1° Semestre 2019");
-            selectSemestreCombo.Items.Add("2° Semestre 2019");
-            selectSemestreCombo.SelectedIndex = 0;
+            now = DateTime.Parse(ConfigurationManager.AppSettings["fecha"]);
+            lastSemester = now.AddMonths(-6);
+
+            selectSemestreCombo.Items.Add("Semestre Actual");
+            selectSemestreCombo.Items.Add("Semestre Anterior");
+            selectSemestreCombo.SelectedIndex = 0;  // Por default, mostrar semestre actual
         }
 
         private void BestRent_Click(object sender, EventArgs e)
@@ -32,20 +36,46 @@ namespace FrbaOfertas.ListadoEstadistico
             query = new SqlCommand();
             query.Connection = Program.con;
             query.CommandText = @"
-            SELECT TOP 10 Proveedor.RS AS Proveedor,
+            SELECT TOP 5 Proveedor.RS AS Proveedor,
             FORMAT(AVG(dbo.descuento(Oferta.precio, Oferta.precio_Ficticio)), 'p') as DESCUENTOS_PROMEDIO
             FROM Oferta
             JOIN Proveedor ON Proveedor.id = Oferta.proveedor
-            WHERE Oferta.fecha > '1990-01-01' AND Oferta.fecha_Venc < '2300-01-01'
+            WHERE Oferta.fecha > @startDate AND Oferta.fecha_Venc < @endDate
             GROUP BY Proveedor.RS
             ORDER BY AVG(dbo.descuento(Oferta.precio, Oferta.precio_Ficticio)) DESC
             ";
+
+            DateTime moment;
+            DateTime before;
+            int chosenSemestre = int.Parse(selectSemestreCombo.SelectedIndex.ToString());
+            if (chosenSemestre == 0) {
+                // Semestre actual
+                moment = now;
+                before = lastSemester;
+            }
+            else {
+                // Setear las variables para los filtros al semestre anterior
+                moment = lastSemester;
+                before = moment.AddMonths(-6);
+            }
+              
+    		// Defino parametros de filtro
+			SqlParameter startDate  = new SqlParameter();
+            SqlParameter endDate    = new SqlParameter();
+            startDate.ParameterName = "@startDate";
+            endDate.ParameterName   = "@endDate";
+            startDate.Value         = before.ToShortDateString();
+			endDate.Value           = moment.ToShortDateString();
+
+            query.Parameters.Add(startDate);
+            query.Parameters.Add(endDate);
+
             PopulateTableWithQuery();
         }
 
         private void mostFacturadoClick(object sender, EventArgs e)
         {
-            // Mas Facturado
+            // Armo query de proveedores que mas facturaron
             query = new SqlCommand();
             query.Connection = Program.con;
             query.CommandText = @"
@@ -53,12 +83,41 @@ namespace FrbaOfertas.ListadoEstadistico
             FROM Compra_Oferta
             JOIN Oferta ON Compra_Oferta.oferta = Oferta.codigo
             JOIN Proveedor ON Oferta.proveedor = Proveedor.id
-            WHERE Oferta.fecha > '1990-01-01' AND Oferta.fecha_Venc < '2300-01-01'
+            WHERE Oferta.fecha > @startDate AND Oferta.fecha_Venc < @endDate
             GROUP BY Proveedor.RS
             ORDER BY 2 DESC
             ";
+
+            DateTime moment;
+            DateTime before;
+            int chosenSemestre = int.Parse(selectSemestreCombo.SelectedIndex.ToString());
+            if (chosenSemestre == 0)
+            {
+                // Semestre actual
+                moment = now;
+                before = lastSemester;
+            }
+            else
+            {
+                // Setear las variables para los filtros al semestre anterior
+                moment = lastSemester;
+                before = moment.AddMonths(-6);
+            }
+
+
+            // Defino parametros de filtro
+            SqlParameter startDate = new SqlParameter();
+            SqlParameter endDate = new SqlParameter();
+            startDate.ParameterName = "@startDate";
+            endDate.ParameterName = "@endDate";
+            startDate.Value = before.ToShortDateString();
+            endDate.Value = moment.ToShortDateString();
+
+            query.Parameters.Add(startDate);
+            query.Parameters.Add(endDate);
+
+
             PopulateTableWithQuery();
-            System.Diagnostics.Debug.WriteLine(selectSemestreCombo.SelectedIndex);
         }
 
         public void PopulateTableWithQuery()
