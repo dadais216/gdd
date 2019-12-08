@@ -59,7 +59,13 @@ namespace FrbaOfertas.Facturar
 
         private void facturarButton_Click(object sender, EventArgs e)
         {
-            // if datagrid is empty do nothing.
+            foreach (DataGridViewRow row in TablaProveedores.Rows)
+            {
+                // Crear factura 
+                // Modificar cada row de las compra oferta con fk a la factura creada.
+                // Sumar los precios totales
+                // More code here
+            }
         }
 
         private void listarFacturas_Click(object sender, EventArgs e)
@@ -81,27 +87,32 @@ namespace FrbaOfertas.Facturar
                 JOIN Oferta ON Compra_Oferta.oferta = Oferta.codigo
                 JOIN Proveedor ON Proveedor.id = Oferta.proveedor
                 JOIN Cliente ON Cliente.id = Compra_Oferta.cliente
-                WHERE Proveedor.RS = 'Proveedor N°16S.R.L.' AND 
-	                  Compra_Oferta.fecha_Compra < '2099-01-01' AND
-	                  Compra_Oferta.fecha_Compra > '1990-01-01'
-                ORDER BY 3 ASC
+                WHERE Proveedor.RS = @proveedor AND 
+	                  Compra_Oferta.fecha_Compra < @endDate AND
+	                  Compra_Oferta.fecha_Compra > @startDate
+                ORDER BY 1 ASC
                 ",
                 Program.con
             );
 
-            // Defino parametros de filtro
-            //SqlParameter startDate = new SqlParameter();
-            //SqlParameter endDate = new SqlParameter();
-            //startDate.ParameterName = "@startDate";
-            //endDate.ParameterName = "@endDate";
-            //startDate.Value = before;
-            //endDate.Value = moment;
+            // Defino proveedor y fechas para la query SQL
+            SqlParameter startDate = new SqlParameter();
+            SqlParameter endDate = new SqlParameter();
+            SqlParameter proveedor = new SqlParameter();
+            startDate.ParameterName = "@startDate";
+            endDate.ParameterName = "@endDate";
+            proveedor.ParameterName = "@proveedor";
 
-            //query.Parameters.Add(startDate);
-            //query.Parameters.Add(endDate);
+            startDate.Value = start;
+            endDate.Value = end;
+            proveedor.Value = chosenProveedor;
+
+            query.Parameters.Add(startDate);
+            query.Parameters.Add(endDate);
+            query.Parameters.Add(proveedor);
 
             PopulateTableWithQuery(query);
-            facturarButton.Enabled = true;
+            facturarButton.Enabled = true; // enable button now that there's a list of compras
         }
 
         public void PopulateTableWithQuery(SqlCommand query)
