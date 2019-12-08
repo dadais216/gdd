@@ -69,9 +69,16 @@ CREATE TABLE Oferta(
 	precio NUMERIC(18,2) NOT NULL,
 	precio_Ficticio NUMERIC(18,2) NOT NULL,
 	proveedor INT REFERENCES Proveedor(id)
-	)
+)
 INSERT INTO Oferta
-SELECT DISTINCT Oferta_Codigo, Oferta_Descripcion, Oferta_Cantidad, Oferta_Fecha, Oferta_Fecha_Venc, Oferta_Precio, Oferta_Precio_Ficticio, (SELECT id FROM Proveedor p WHERE p.RS=m.Provee_RS)
+SELECT DISTINCT Oferta_Codigo,
+				Oferta_Descripcion,
+				Oferta_Cantidad,
+				Oferta_Fecha, 
+				Oferta_Fecha_Venc, 
+				Oferta_Precio, 
+				Oferta_Precio_Ficticio,
+				(SELECT id FROM Proveedor p WHERE p.RS=m.Provee_RS)
 FROM gd_esquema.Maestra m
 WHERE Oferta_Codigo IS NOT NULL 
 
@@ -86,51 +93,7 @@ FROM gd_esquema.Maestra m
 WHERE Factura_Nro IS NOT NULL
 
 /*
-la idea inicial era que compra_oferta tenga la factura a la que pertence y la fecha en que sus cupones
-fueron entregados, de ahi esta formulacion
-Despues decidimos manejar los cupones aparte, y las facturas tambien. 
-Las compra oferta podrian tener un campo de factura a la que pertence, pero mantenerlo es costoso y no
-parece util,  ademas de que es medio incomodo. Las compra ofertas se generarian con ese campo vacio
-y se setearia al momento de generar la factura. Como es incomodo, no se pide y no se necesita decidimos
-no hacerlo. Si se necesita saber si una compra oferta pertenece a una factura se puede obtener con un
-query que filtre segun los datos de la factura (proveedor y fechas). Como es algo que no se necesita
-hacer en ese sistema no vemos necesario gastar recursos en soportarlo.
 
-CREATE TABLE Compra_Oferta(
-	id INT IDENTITY(1,1) PRIMARY KEY,
-	cliente INT REFERENCES Cliente(id),
-	oferta VARCHAR(50) REFERENCES Oferta(codigo),
-	factura NUMERIC(18,0) REFERENCES Factura(nro),
-	fecha_Compra DATETIME,
-	fecha_Entrega DATETIME,
-)
-
-/*
-INSERT INTO Compra_Oferta (
-	cliente,
-	oferta,
-	factura,
-	fecha_Compra,
-	fecha_Entrega
-)
-SELECT	(SELECT id FROM Cliente C WHERE dni = A.Cli_Dni) as cliente,
-		A.Oferta_Codigo,
-		A.Factura_Nro,
-		A.Oferta_Fecha_Compra,
-		B.Oferta_Entregado_Fecha
-FROM gd_esquema.Maestra A
-JOIN gd_esquema.Maestra B ON
-A.Factura_Nro IS NOT NULL AND A.Factura_Fecha IS NOT NULL AND
-A.Oferta_Codigo=B.Oferta_Codigo
-AND B.Oferta_Entregado_Fecha IS NOT NULL
-AND B.Cli_Dni = A.Cli_Dni
-*/
-	--en la tabla maestra hay 3 tipos de filas,
-	--unas tienen la factura (indica la compra)
-	--otras tienen la entrega (indica entrega)
-	--y otros de la compra en si
-	)
-/*
 haciendo
 SELECT Cli_Dni,Oferta_Codigo,COUNT(*) FROM gd_esquema.Maestra
 WHERE Oferta_Codigo IS NOT NULL
@@ -141,29 +104,7 @@ En un principio pense en primero llenar la tabla con todas las compra ventas y d
 updates con joins para conseguir la factura y entrega de los que la tengan.
 Pero me di cuenta de que poniendo un max se hace lo que quiero, que es dejar el null cuando no hay
 registros y dejar el registro cuando esta, ya que solo hay 2 casos, o esta el registro o no esta.
-*/
 
-
-INSERT INTO Compra_Oferta
-SELECT (SELECT id FROM Cliente WHERE dni=Cli_Dni),Oferta_Codigo,MAX(Factura_Nro),MAX(Oferta_Fecha_Compra),MAX(Oferta_Entregado_Fecha) FROM gd_esquema.Maestra
-WHERE Oferta_Codigo IS NOT NULL
-GROUP BY Cli_Dni,Oferta_Codigo
-
-*/
-CREATE TABLE Compra_Oferta(
-	id INT IDENTITY(1,1) PRIMARY KEY, --no estoy seguro de si la combinacion de las 3 FK es una PK
-	cliente INT REFERENCES Cliente(id),
-	oferta VARCHAR(50) REFERENCES Oferta(codigo),
-	fecha_Compra DATETIME,
-	fecha_Entrega DATETIME,
-
-	--en la tabla maestra hay 3 tipos de filas,
-	--unas tienen la factura (indica la compra)
-	--otras tienen la entrega (indica entrega)
-	--y otros de la compra en si
-	)
-
-/*
 probando
 SELECT (SELECT id FROM Cliente WHERE dni=Cli_Dni),Oferta_Codigo,COUNT(*) FROM gd_esquema.Maestra
 WHERE Oferta_Codigo IS NOT NULL
@@ -171,17 +112,35 @@ GROUP BY Cli_Dni,Oferta_Codigo
 el count da siempre 1 o 3, 1 cuando solo hubo una compra, 3 cuando ademas de la compra hubo una entrega y una factura.
 
 puede verse que solo hay una combinacion de cada cliente con codigo oferta (ningun cliente compro una oferta 2 veces),
-lo que es conveniente porque simplifica el query para cargar compras.
+lo que es conveniente porque simplifica el query para cargar compras ya que se puede agrupar por cliente y codigo.
+y hacer un max para poder traer los otros campos y no se queje por el group by 
 
 El max se encarga de dejar el valor que exista, e ignorar nulls, ya que solo hay dos casos posibles,
 o esta el valor unico o hay null. Que sea un max especificamente no significa nada.
 
 Cargo el valor de entrega porque hace mas simple construir la tabla de cupones, despues se lo saco
+
 */
+CREATE TABLE Compra_Oferta(
+	id INT IDENTITY(1,1) PRIMARY KEY,
+	cliente INT REFERENCES Cliente(id),
+	oferta VARCHAR(50) REFERENCES Oferta(codigo),
+	factura NUMERIC(18,0) REFERENCES Factura(nro),
+	fecha_Compra DATETIME,
+	fecha_Entrega DATETIME,
+)
+
 INSERT INTO Compra_Oferta
-SELECT (SELECT id FROM Cliente WHERE dni=Cli_Dni),Oferta_Codigo,MAX(Oferta_Fecha_Compra),MAX(Oferta_Entregado_Fecha) FROM gd_esquema.Maestra
+SELECT  (SELECT id FROM Cliente WHERE dni=Cli_Dni) AS cliente,
+		Oferta_Codigo,
+		MAX(Factura_Nro),
+		MAX(Oferta_Fecha_Compra),
+		MAX(Oferta_Entregado_Fecha) 
+FROM gd_esquema.Maestra
 WHERE Oferta_Codigo IS NOT NULL
 GROUP BY Cli_Dni,Oferta_Codigo
+
+
 
 CREATE TABLE Cupon(
 	codigo INT IDENTITY(1000,1) PRIMARY KEY, --podria ser algo mas complejo esto, o podria no serlo
@@ -190,13 +149,11 @@ CREATE TABLE Cupon(
 )
 
 INSERT INTO Cupon
-SELECT cliente,fecha_Entrega FROM Compra_Oferta
+SELECT cliente,fecha_Entrega 
+FROM Compra_Oferta
 WHERE fecha_Entrega IS NOT null
 
 ALTER TABLE Compra_Oferta DROP COLUMN fecha_Entrega
-
-
-
 
 
 CREATE TABLE Funcionalidad(
