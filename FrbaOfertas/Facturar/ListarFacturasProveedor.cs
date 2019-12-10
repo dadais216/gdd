@@ -137,9 +137,15 @@ namespace FrbaOfertas.Facturar
             montoFacturaQuery.Parameters.Add(endd);
             montoFacturaQuery.Parameters.Add(prov);
 
-            montoFactura = montoFacturaQuery.ExecuteScalar().ToString();
-            montoTotalLabel.Text = "Monto total = " + montoFactura;
-            montoTotalLabel.Enabled = true;
+            object dbresp = montoFacturaQuery.ExecuteScalar();
+            if (dbresp == null)
+            {
+                montoTotalLabel.Text = "Monto total = 0";
+            }
+            else {
+                montoTotalLabel.Text = "Monto total = " + dbresp.ToString();
+                montoTotalLabel.Enabled = true;                
+            }
         }
 
         public void PopulateTableWithQuery(SqlCommand query)
