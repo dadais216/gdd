@@ -12,5 +12,4 @@ DROP TABLE Cliente;
 DROP TABLE RolxFuncionalidad;
 DROP TABLE Funcionalidad;
 DROP TABLE Rol;
-
---
+DROP FUNCTION descuento;

@@ -22,6 +22,7 @@ namespace FrbaOfertas.Facturar
          Se informara el importe de la factura y su numero.
         */
         string chosenProveedor;
+        string montoFactura;
 
         public ListarFacturasProveedor()
         {
@@ -57,17 +58,6 @@ namespace FrbaOfertas.Facturar
             return proveedores;
         }
 
-        private void facturarButton_Click(object sender, EventArgs e)
-        {
-            foreach (DataGridViewRow row in TablaProveedores.Rows)
-            {
-                // Crear factura 
-                // Modificar cada row de las compra oferta con fk a la factura creada.
-                // Sumar los precios totales
-                // More code here
-            }
-        }
-
         private void listarFacturas_Click(object sender, EventArgs e)
         {
             // Obtener parametros de DESDE, HASTA y proveedor.
@@ -78,11 +68,13 @@ namespace FrbaOfertas.Facturar
             // Create query for proveedores filtering by proveedor and fechas
             SqlCommand query = new SqlCommand(
                 @"
-                SELECT  Cliente.nombre AS CLIENTE,
+                SELECT  Proveedor.RS,
+                        Cliente.nombre AS CLIENTE,
 		                Oferta.codigo AS COD_OFERTA,
 		                Oferta.precio AS PRECIO,
 		                Oferta.fecha AS FECHA,
-		                Oferta.fecha_Venc AS VENCIMIENTO
+		                Oferta.fecha_Venc AS VENCIMIENTO,
+                        Compra_Oferta.id AS TICKET
                 FROM Compra_Oferta
                 JOIN Oferta ON Compra_Oferta.oferta = Oferta.codigo
                 JOIN Proveedor ON Proveedor.id = Oferta.proveedor
@@ -113,6 +105,40 @@ namespace FrbaOfertas.Facturar
 
             PopulateTableWithQuery(query);
             facturarButton.Enabled = true; // enable button now that there's a list of compras
+
+            // Calculate monto total
+            SqlCommand montoFacturaQuery = new SqlCommand(
+                @"
+                SELECT  SUM(Oferta.precio)
+                FROM Compra_Oferta
+                JOIN Oferta ON Compra_Oferta.oferta = Oferta.codigo
+                JOIN Proveedor ON Proveedor.id = Oferta.proveedor
+                WHERE Proveedor.RS = @proveedor AND
+                      Compra_Oferta.factura IS NULL AND 
+	                  Compra_Oferta.fecha_Compra < @end AND
+	                  Compra_Oferta.fecha_Compra > @start
+
+                GROUP BY Proveedor.id
+                ",
+                Program.con
+            );
+            SqlParameter startd = new SqlParameter();
+            SqlParameter endd = new SqlParameter();
+            SqlParameter prov = new SqlParameter();
+            startd.ParameterName = "@start";
+            endd.ParameterName = "@end";
+            prov.ParameterName = "@proveedor";
+            startd.Value = start;
+            endd.Value = end;
+            prov.Value = chosenProveedor;
+
+            montoFacturaQuery.Parameters.Add(startd);
+            montoFacturaQuery.Parameters.Add(endd);
+            montoFacturaQuery.Parameters.Add(prov);
+
+            montoFactura = montoFacturaQuery.ExecuteScalar().ToString();
+            montoTotalLabel.Text = "Monto total = " + montoFactura;
+            montoTotalLabel.Enabled = true;
         }
 
         public void PopulateTableWithQuery(SqlCommand query)
@@ -120,9 +146,64 @@ namespace FrbaOfertas.Facturar
             var adapter = new SqlDataAdapter(query);
             var table = new DataTable();
             adapter.Fill(table);
-            TablaProveedores.DataSource = table;
-            TablaProveedores.AutoResizeColumns();
+            TablaFacturacion.DataSource = table;
+            TablaFacturacion.AutoResizeColumns();
 
         }
+
+        private void facturarButton_Click(object sender, EventArgs e)
+        {
+            List<string> compra_ids = new List<string> {};
+            foreach (DataGridViewRow compra in TablaFacturacion.Rows)
+            {
+                compra_ids.Add(compra.Cells["TICKET"].Value.ToString());
+            }
+
+            // Create Factura
+            // Asociar compras a factura
+            string msg = "Desea confirmar la facturacíon para el proveedor " + chosenProveedor+"?";
+            DialogResult confirm = MessageBox.Show(msg, "Confirmar operación", MessageBoxButtons.YesNo);
+            if (confirm == DialogResult.Yes) {
+                crearFactura(compra_ids);
+            }
+
+            // Debug.WriteLine(compra_ids);
+            // Crear row en factura
+            // Obtener todos los ids de compra oferta
+            // UPDATE Compra_Oferta SET factura = Factura.nro
+        }
+
+        private void crearFactura(List<string> compra_ids)
+        {
+
+            // Creo factura de proveedor
+            SqlCommand insertarFactura = new SqlCommand(
+                @"
+                INSERT INTO Factura output INSERTED.nro
+                VALUES (
+                       GETDATE(),
+                       (SELECT id FROM Proveedor WHERE RS=@proveedor)
+                )
+                ",
+                Program.con
+            );
+            insertarFactura.Parameters.AddWithValue("@proveedor", chosenProveedor);
+            int factura = Convert.ToInt32(insertarFactura.ExecuteScalar());
+            // Seteo la factura de todas las compras afectadas
+            SqlCommand actualizarCompras = new SqlCommand(
+                @"
+                UPDATE Compra_Oferta 
+                SET factura=@factura
+                WHERE Compra_Oferta IN (@compra_ids);
+                ",
+                Program.con
+            );
+            insertarFactura.Parameters.AddWithValue("@factura", factura);
+            string compras = String.Join(", ", compra_ids.ToArray());
+            insertarFactura.Parameters.AddWithValue("@compra_ids", compras);
+            
+            MessageBox.Show("Facturacion exitosa", "Exito");
+        }
+
     }
 }

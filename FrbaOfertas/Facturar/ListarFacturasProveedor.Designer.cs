@@ -34,10 +34,11 @@
             this.hastaPicker = new System.Windows.Forms.DateTimePicker();
             this.ventasDesdeLabel = new System.Windows.Forms.Label();
             this.ventasHastaLabel = new System.Windows.Forms.Label();
-            this.TablaProveedores = new System.Windows.Forms.DataGridView();
+            this.TablaFacturacion = new System.Windows.Forms.DataGridView();
             this.listarFacturas = new System.Windows.Forms.Button();
             this.facturarButton = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.TablaProveedores)).BeginInit();
+            this.montoTotalLabel = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.TablaFacturacion)).BeginInit();
             this.SuspendLayout();
             // 
             // selectProveedor
@@ -94,14 +95,16 @@
             this.ventasHastaLabel.TabIndex = 5;
             this.ventasHastaLabel.Text = "Ventas hasta";
             // 
-            // TablaProveedores
+            // TablaFacturacion
             // 
-            this.TablaProveedores.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.TablaProveedores.Location = new System.Drawing.Point(27, 240);
-            this.TablaProveedores.Name = "TablaProveedores";
-            this.TablaProveedores.RowTemplate.Height = 33;
-            this.TablaProveedores.Size = new System.Drawing.Size(1432, 512);
-            this.TablaProveedores.TabIndex = 6;
+            this.TablaFacturacion.AllowUserToAddRows = false;
+            this.TablaFacturacion.AllowUserToDeleteRows = false;
+            this.TablaFacturacion.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.TablaFacturacion.Location = new System.Drawing.Point(27, 240);
+            this.TablaFacturacion.Name = "TablaFacturacion";
+            this.TablaFacturacion.RowTemplate.Height = 33;
+            this.TablaFacturacion.Size = new System.Drawing.Size(1432, 512);
+            this.TablaFacturacion.TabIndex = 6;
             // 
             // listarFacturas
             // 
@@ -115,13 +118,24 @@
             // 
             // facturarButton
             // 
-            this.facturarButton.Location = new System.Drawing.Point(1209, 777);
+            this.facturarButton.Location = new System.Drawing.Point(1177, 771);
             this.facturarButton.Name = "facturarButton";
-            this.facturarButton.Size = new System.Drawing.Size(250, 46);
+            this.facturarButton.Size = new System.Drawing.Size(282, 60);
             this.facturarButton.TabIndex = 8;
             this.facturarButton.Text = "Facturar";
             this.facturarButton.UseVisualStyleBackColor = true;
             this.facturarButton.Click += new System.EventHandler(this.facturarButton_Click);
+            // 
+            // montoTotalLabel
+            // 
+            this.montoTotalLabel.AutoSize = true;
+            this.montoTotalLabel.Enabled = false;
+            this.montoTotalLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.montoTotalLabel.Location = new System.Drawing.Point(36, 788);
+            this.montoTotalLabel.Name = "montoTotalLabel";
+            this.montoTotalLabel.Size = new System.Drawing.Size(141, 29);
+            this.montoTotalLabel.TabIndex = 9;
+            this.montoTotalLabel.Text = "Monto Total";
             // 
             // ListarFacturasProveedor
             // 
@@ -129,9 +143,10 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(1553, 857);
+            this.Controls.Add(this.montoTotalLabel);
             this.Controls.Add(this.facturarButton);
             this.Controls.Add(this.listarFacturas);
-            this.Controls.Add(this.TablaProveedores);
+            this.Controls.Add(this.TablaFacturacion);
             this.Controls.Add(this.ventasHastaLabel);
             this.Controls.Add(this.ventasDesdeLabel);
             this.Controls.Add(this.hastaPicker);
@@ -140,7 +155,7 @@
             this.Controls.Add(this.selectProveedor);
             this.Name = "ListarFacturasProveedor";
             this.Text = "Form1";
-            ((System.ComponentModel.ISupportInitialize)(this.TablaProveedores)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.TablaFacturacion)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -154,8 +169,9 @@
         private System.Windows.Forms.DateTimePicker hastaPicker;
         private System.Windows.Forms.Label ventasDesdeLabel;
         private System.Windows.Forms.Label ventasHastaLabel;
-        private System.Windows.Forms.DataGridView TablaProveedores;
+        private System.Windows.Forms.DataGridView TablaFacturacion;
         private System.Windows.Forms.Button listarFacturas;
         private System.Windows.Forms.Button facturarButton;
+        private System.Windows.Forms.Label montoTotalLabel;
     }
 }

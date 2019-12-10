@@ -82,16 +82,20 @@ SELECT DISTINCT Oferta_Codigo,
 FROM gd_esquema.Maestra m
 WHERE Oferta_Codigo IS NOT NULL 
 
+-- Esto es necesario porque los futuros nro de factura van a ser autogenerados pero los de la migracion no
+-- SQL se queja cuando le metes de prepo una pk a una tabla. y te exige que le apses el flag IDENTITY_INSERT
+-- Tambiex hace obligatorio que pongas las columnas despues del INSERT INTO TABLA (campo1, campo2) como para que quede bien claro que la estas cagando
+SET IDENTITY_INSERT Factura ON 
 CREATE TABLE Factura(
-	nro NUMERIC(18,0) PRIMARY KEY,
+	nro NUMERIC(18,0) IDENTITY(200000, 1) PRIMARY KEY,
 	fecha DATETIME,
 	proveedor INT REFERENCES Proveedor(id)
-	)
-INSERT INTO Factura
+)
+INSERT INTO Factura (nro, fecha, proveedor)
 SELECT DISTINCT Factura_Nro,Factura_Fecha,(SELECT id FROM Proveedor p WHERE p.RS=m.Provee_RS) 
 FROM gd_esquema.Maestra m 
 WHERE Factura_Nro IS NOT NULL
-
+SET IDENTITY_INSERT Factura OFF -- A partir de ahora el nro de la factura va a ser autogenerado.
 /*
 
 haciendo
@@ -121,16 +125,16 @@ o esta el valor unico o hay null. Que sea un max especificamente no significa na
 Cargo el valor de entrega porque hace mas simple construir la tabla de cupones, despues se lo saco
 
 */
+
 CREATE TABLE Compra_Oferta(
 	id INT IDENTITY(1,1) PRIMARY KEY,
 	cliente INT REFERENCES Cliente(id),
 	oferta VARCHAR(50) REFERENCES Oferta(codigo),
 	factura NUMERIC(18,0) REFERENCES Factura(nro),
 	fecha_Compra DATETIME,
-	fecha_Entrega DATETIME,
+	fecha_Entrega DATETIME
 )
-
-INSERT INTO Compra_Oferta
+INSERT INTO Compra_Oferta (cliente, oferta, factura, fecha_Compra, fecha_Entrega)
 SELECT  (SELECT id FROM Cliente WHERE dni=Cli_Dni) AS cliente,
 		Oferta_Codigo,
 		MAX(Factura_Nro),
@@ -139,8 +143,6 @@ SELECT  (SELECT id FROM Cliente WHERE dni=Cli_Dni) AS cliente,
 FROM gd_esquema.Maestra
 WHERE Oferta_Codigo IS NOT NULL
 GROUP BY Cli_Dni,Oferta_Codigo
-
-
 
 CREATE TABLE Cupon(
 	codigo INT IDENTITY(1000,1) PRIMARY KEY, --podria ser algo mas complejo esto, o podria no serlo
@@ -153,7 +155,7 @@ SELECT cliente,fecha_Entrega
 FROM Compra_Oferta
 WHERE fecha_Entrega IS NOT null
 
-ALTER TABLE Compra_Oferta DROP COLUMN fecha_Entrega
+-- ALTER TABLE Compra_Oferta DROP COLUMN fecha_Entrega
 
 
 CREATE TABLE Funcionalidad(

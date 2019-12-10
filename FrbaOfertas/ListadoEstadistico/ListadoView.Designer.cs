@@ -58,6 +58,8 @@
             // 
             // TablaListado
             // 
+            this.TablaListado.AllowUserToAddRows = false;
+            this.TablaListado.AllowUserToDeleteRows = false;
             this.TablaListado.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.TablaListado.Location = new System.Drawing.Point(55, 274);
             this.TablaListado.Name = "TablaListado";
