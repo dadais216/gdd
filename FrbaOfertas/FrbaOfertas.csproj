@@ -108,6 +108,7 @@
     <Compile Include="CambioContraseña.Designer.cs">
       <DependentUpon>CambioContraseña.cs</DependentUpon>
     </Compile>
+    <Compile Include="SqlUtil.cs" />
     <Compile Include="ComprarOferta\codigoCompra.cs">
       <SubType>Form</SubType>
     </Compile>

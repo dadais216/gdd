@@ -80,6 +80,7 @@ namespace FrbaOfertas.Facturar
                 JOIN Proveedor ON Proveedor.id = Oferta.proveedor
                 JOIN Cliente ON Cliente.id = Compra_Oferta.cliente
                 WHERE Proveedor.RS = @proveedor AND 
+                      Compra_Oferta.factura IS NULL AND
 	                  Compra_Oferta.fecha_Compra < @endDate AND
 	                  Compra_Oferta.fecha_Compra > @startDate
                 ORDER BY 1 ASC
@@ -189,21 +190,58 @@ namespace FrbaOfertas.Facturar
             );
             insertarFactura.Parameters.AddWithValue("@proveedor", chosenProveedor);
             int factura = Convert.ToInt32(insertarFactura.ExecuteScalar());
-            // Seteo la factura de todas las compras afectadas
-            SqlCommand actualizarCompras = new SqlCommand(
-                @"
+            SqlCommand updateCompras = buildComprasUpdateQuery(factura.ToString(), compra_ids);
+            int affectedRows = updateCompras.ExecuteNonQuery();
+            if (compra_ids.Count() == affectedRows) {
+                MessageBox.Show("Facturacion exitosa", "Exito");
+            }
+            else {
+                MessageBox.Show("Algo salió mal. Reintente", "Error");
+            }
+            facturarButton.Enabled = false;
+            // clean datagrid view or disable facturar
+        }
+
+        private string buildComprasInClause(SqlCommand q,  List<string> compra_ids) 
+        {
+            StringBuilder in_clause = new StringBuilder();
+            int i = 1;
+
+            foreach (string compra_id in compra_ids)
+            {
+                string uniqueId = i.ToString();
+                // Append parameter with unique id and comma
+                in_clause.Append("@compraid" + uniqueId + ",");
+                // Set value of created parameter
+                q.Parameters.AddWithValue("@compraid" + uniqueId, compra_id);
+
+                i++;
+            }
+            string result = in_clause.ToString();
+            int lastCommaIndex = result.LastIndexOf(',');
+            string trueResult = result.Remove(lastCommaIndex);
+
+            return trueResult;
+        }
+
+        private SqlCommand buildComprasUpdateQuery(string factura, List<string> compras)
+        {
+            string parameterPrefix = "compra_id";
+            string querystr = @"
                 UPDATE Compra_Oferta 
                 SET factura=@factura
-                WHERE Compra_Oferta IN (@compra_ids);
-                ",
-                Program.con
-            );
-            insertarFactura.Parameters.AddWithValue("@factura", factura);
-            string compras = String.Join(", ", compra_ids.ToArray());
-            insertarFactura.Parameters.AddWithValue("@compra_ids", compras);
-            
-            MessageBox.Show("Facturacion exitosa", "Exito");
+                WHERE Compra_Oferta.id IN ({0})
+                ";
+
+            querystr = SqlWhereInParamBuilder.BuildWhereInClause(querystr, parameterPrefix, compras);
+
+            SqlCommand sqlquery = new SqlCommand(querystr, Program.con);
+            sqlquery.AddParamsToCommand(parameterPrefix, compras);
+            sqlquery.Parameters.AddWithValue("@factura", factura);
+
+            return sqlquery;
         }
+
 
     }
 }
