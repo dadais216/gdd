@@ -14,6 +14,7 @@ namespace FrbaOfertas.ComprarOferta
     public partial class Form1 : Form
     {
         string rolId, userId, fecha;
+        string clienteId; decimal saldo;
         public Form1(string rolId_,string userId_)
         {
             rolId = rolId_;
@@ -24,7 +25,15 @@ namespace FrbaOfertas.ComprarOferta
 
             fecha = date.Month.ToString() + "/" + date.Day.ToString() + "/" + date.Year.ToString();
 
+            clienteId = util.getVal("SELECT cliente FROM Usuario WHERE id= " + userId).ToString();
             doQuery();
+        }
+
+        private void actualizarSaldo()
+        {
+            saldo = (decimal)util.getVal("SELECT saldo FROM Cliente WHERE id= " + clienteId);
+            //se podria mantener el estado de saldo desde la aplicacion para no tener que hacer este query pero neh
+            label1.Text = "Saldo: " + saldo.ToString();
         }
 
         private void DataGridView1_CellClick_1(object sender, DataGridViewCellEventArgs e)
@@ -37,8 +46,6 @@ namespace FrbaOfertas.ComprarOferta
                 return;
             }
 
-            string clienteId = util.getVal("SELECT cliente FROM Usuario WHERE id= "+userId).ToString();
-            decimal saldo = (decimal)util.getVal("SELECT saldo FROM Cliente WHERE id= "+clienteId);
 
             if (saldo < (decimal)dataGridView1.Rows[e.RowIndex].Cells[1].Value)
             {
@@ -53,6 +60,7 @@ namespace FrbaOfertas.ComprarOferta
 
         private void doQuery()
         {
+            actualizarSaldo();
             dataGridView1.DataSource = util.tableQuery("SELECT descripcion,precio AS precioOferta ,precio_Ficticio AS precioOriginal,cantidad, codigo FROM Oferta " +
                                                         "WHERE '" + fecha + "' BETWEEN fecha AND fecha_Venc AND cantidad > 0");
         }

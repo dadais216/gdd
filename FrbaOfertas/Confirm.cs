@@ -24,7 +24,7 @@ namespace FrbaOfertas.ConsumoOferta
             fecha = date.Month.ToString() + "/" + date.Day.ToString() + "/" + date.Year.ToString();
 
             InitializeComponent();
-            label1.Text = "¿canjear " + cells[2].Value.ToString() + " a "+ cells[0].Value.ToString() + "?";
+            label1.Text = "¿canjear " + cells[2].Value.ToString() + "a"+ cells[0].Value.ToString() + "?";
         }
 
         private void Button1_Click(object sender, EventArgs e)

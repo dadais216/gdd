@@ -15,6 +15,7 @@ namespace FrbaOfertas.ComprarOferta
         string codigo;
         string userId;
         string fecha;
+        string precio;
         public Confirm(DataGridViewCellCollection cells,string userId_,string fecha_)
         {
             userId = userId_;
@@ -22,6 +23,7 @@ namespace FrbaOfertas.ComprarOferta
             InitializeComponent();
             label1.Text = "¿comprar " + cells[0].Value.ToString()+ " ?";
             codigo = cells[4].Value.ToString();
+            precio = cells[1].Value.ToString().Replace(',','.');
         }
 
         private void Button1_Click(object sender, EventArgs e)
@@ -29,8 +31,9 @@ namespace FrbaOfertas.ComprarOferta
             //moverlo a un procedure seria mejor porque ahorra el envio pero ni ganas
             util.execCommand(@"
             BEGIN TRANSACTION
-            INSERT INTO Compra_Oferta VALUES ("+userId+",'"+codigo+"',"+fecha+@",0)
+            INSERT INTO Compra_Oferta (cliente,oferta,fecha_Compra) VALUES ("+userId+",'"+codigo+"',"+fecha+@")
             UPDATE Oferta SET cantidad=cantidad-1 WHERE codigo='"+codigo+@"'
+            UPDATE Cliente SET saldo = saldo - "+precio+@"
             COMMIT TRANSACTION
             ");
             var form=new codigoCompra(util.getVal("SELECT @@IDENTITY").ToString());

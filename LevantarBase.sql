@@ -82,15 +82,16 @@ SELECT DISTINCT Oferta_Codigo,
 FROM gd_esquema.Maestra m
 WHERE Oferta_Codigo IS NOT NULL 
 
--- Esto es necesario porque los futuros nro de factura van a ser autogenerados pero los de la migracion no
--- SQL se queja cuando le metes de prepo una pk a una tabla. y te exige que le apses el flag IDENTITY_INSERT
--- Tambiex hace obligatorio que pongas las columnas despues del INSERT INTO TABLA (campo1, campo2) como para que quede bien claro que la estas cagando
-SET IDENTITY_INSERT Factura ON 
+
 CREATE TABLE Factura(
 	nro NUMERIC(18,0) IDENTITY(200000, 1) PRIMARY KEY,
 	fecha DATETIME,
 	proveedor INT REFERENCES Proveedor(id)
 )
+-- Esto es necesario porque los futuros nro de factura van a ser autogenerados pero los de la migracion no
+-- SQL se queja cuando le metes de prepo una pk a una tabla. y te exige que le apses el flag IDENTITY_INSERT
+-- Tambiex hace obligatorio que pongas las columnas despues del INSERT INTO TABLA (campo1, campo2) como para que quede bien claro que la estas cagando
+SET IDENTITY_INSERT Factura ON 
 INSERT INTO Factura (nro, fecha, proveedor)
 SELECT DISTINCT Factura_Nro,Factura_Fecha,(SELECT id FROM Proveedor p WHERE p.RS=m.Provee_RS) 
 FROM gd_esquema.Maestra m 
@@ -115,7 +116,6 @@ CREATE TABLE Compra_Oferta(
 	cliente INT REFERENCES Cliente(id),
 	oferta VARCHAR(50) REFERENCES Oferta(codigo),
 	fecha_Compra DATETIME,
-	fueCanjeado BIT DEFAULT 0,
 	fecha_Entrega DATETIME,
 
 	--en la tabla maestra hay 3 tipos de filas,
@@ -140,13 +140,16 @@ o esta el valor unico o hay null. Que sea un max especificamente no significa na
 
 Cargo el valor de entrega porque hace mas simple construir la tabla de cupones, despues se lo saco
 
-*/
+*/*/
+
+
 CREATE TABLE Compra_Oferta(
 	id INT IDENTITY(1,1) PRIMARY KEY,
 	cliente INT REFERENCES Cliente(id),
 	oferta VARCHAR(50) REFERENCES Oferta(codigo),
-	factura NUMERIC(18,0) REFERENCES Factura(nro),
+	factura NUMERIC(18,0) REFERENCES Factura(nro) DEFAULT null,
 	fecha_Compra DATETIME,
+	fueCanjeado BIT DEFAULT 0,
 	fecha_Entrega DATETIME
 )
 INSERT INTO Compra_Oferta (cliente, oferta, factura, fecha_Compra, fecha_Entrega)

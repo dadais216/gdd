@@ -31,6 +31,9 @@ namespace FrbaOfertas
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+            Console.WriteLine("!!!!\n\n\n\n");
+            Console.WriteLine(connectionStr);
+            Console.WriteLine("!!!!\n\n\n\n");
 
             con.Open(); // a veces falla la conexion no sé por que
 #if false
@@ -40,7 +43,7 @@ namespace FrbaOfertas
             Application.Run(new Main("1", "4"));
 #else
 #if false
-            util.execCommand("UPDATE Cliente SET saldo=5000 WHERE id=1");
+            util.execCommand("UPDATE Cliente SET saldo=300 WHERE id=1");
             Application.Run(new Main("1","1"));
 #else
             Application.Run(new Main("252","2"));
