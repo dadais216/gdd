@@ -19,7 +19,7 @@ cualquier falta puede ser motivo de sanción y/o pérdida de contrato/s.
 
 ## **Diagrama Entidad Relación (DER):**
 
-![GitHub Pago_Agil](/images/DER_Ofertas.png)
+![DER](/images/DER_Ofertas.png)
 
 ## **Integrantes:**
 
