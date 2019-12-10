@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
@@ -19,38 +20,70 @@ namespace FrbaOfertas.CragaCredito
         }
         private void ButtonCargar_Click(object sender, EventArgs e)
         {
-            /*var command = new SqlCommand("INSERT INTO Cliente " +
-                "(Carga_Credito,Carga_Fecha,Tipo_Pago_Desc) " +
-                "VALUES (@monto,@fechaCredito,@tipopago)", Program.con);
-            command.Parameters.AddWithValue("@monto", monto.Text);
-            //command.Parameters.AddWithValue("@fechaCredito", fechacredito.Text);
-            //La fecha tiene que ser del archivo de configuracion de la aplicacion
-            command.Parameters.AddWithValue("@tipopago", tipopago.Text);
-            //el tipo de pago tiene que salir de la tabla 
+            SqlCommand cmd = new SqlCommand();
 
-            //para agregar el id de cliente habra que hacer un join?
+            if (sonCamposValidos())
+            {
+                
+            }
+            
+        }
+
+        private bool sonCamposValidos()
+        {
+            bool sonNumericos = true;
 
             try
             {
-                command.ExecuteNonQuery();
+                Convert.ToInt32(numeroTarjeta.Text);
             }
-            catch (SqlException er)
+            catch (Exception e)
             {
-                var newForm = new ErrorWindow();
-
-                Console.WriteLine(er.Message + " >>>>>>>" + er.Number);
-                if (er.Number == 2627)
-                {
-                    newForm.setText("Un credito con esos datos ya existe");
-                }
-                else
-                {
-                    newForm.setText("Datos faltantes o mal ingresados");
-                }
-
-                newForm.Show();
+                MessageBox.Show("La cantidad de números de la tarjeta de credito sobrepasa a la cantidad esperada");
+                sonNumericos = false;
             }
-            Close();*/
+
+            try
+            {
+                Convert.ToDouble(monto.Text);
+            }
+            catch (Exception e)
+            {
+                sonNumericos = false;
+            }
+
+
+            if (monto.Text == "" || numeroTarjeta.Text == "")
+            {
+                MessageBox.Show("No puede haber campos vacios");
+                return false;
+            }
+            if (tiposPago.SelectedItem.ToString().Equals(""))
+            {
+                MessageBox.Show("Debe seleccionar un tipo de pago");
+                return false;
+            }
+            if (sonNumericos && Convert.ToDouble(monto.Text) < 0)
+            {
+                MessageBox.Show("El monto a acreditar no puede ser negativo");
+                return false;
+            }
+
+            if (!sonNumericos)
+            {
+                MessageBox.Show("Campos numericos invalidos");
+                return false;
+            }
+
+            DateTime fechaDelDia = DateTime.Parse(ConfigurationManager.AppSettings["fecha_dia"]);
+            if (DateTime.Parse(vencimientoTarjeta.Text) < fechaDelDia)
+
+            {
+                MessageBox.Show("La tarjeta no puede estar vencida");
+                return false;
+            }
+
+            return true;
         }
 
         private void tiposPago_SelectionChangeCommitted(object sender, EventArgs e)
@@ -63,14 +96,24 @@ namespace FrbaOfertas.CragaCredito
 
         }
 
-        private void monto_KeyPress(object sender, EventArgs e)
+        private void monto_KeyPress(object sender, KeyPressEventArgs e)
         {
-
+            // Verificar que la tecla presionada no sea CTRL u otra tecla no numerica
+            if (!char.IsControl(e.KeyChar) && !char.IsDigit(e.KeyChar))
+            {
+                MessageBox.Show("Solo se permiten numeros Enteros", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                e.Handled = true;
+            }
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {
 
+        }
+
+        private void BtnCancelar_Click(object sender, EventArgs e)
+        {
+            this.Close();
         }
     }
 }

@@ -33,14 +33,18 @@ namespace FrbaOfertas
 
 
             con.Open(); // a veces falla la conexion no sé por que
-#if false 
+#if false
             Application.Run(new Login());
-#else //salto el login porque rompe las bolas
-#if true
+#else
+#if false//salto el login porque rompe las bolas
             Application.Run(new Main("1", "4"));
 #else
+#if false
             util.execCommand("UPDATE Cliente SET saldo=5000 WHERE id=1");
             Application.Run(new Main("1","1"));
+#else
+            Application.Run(new Main("252","2"));
+#endif
 #endif
 #endif
 

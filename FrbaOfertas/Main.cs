@@ -57,7 +57,7 @@ namespace FrbaOfertas
                 case "confeccion y publicacion de oferta": new CrearOferta.Form1().Show(); break;
                 case "facturacion a proveedor": new Facturar.ListarFacturasProveedor().Show(); break;
                 case "listado estadistico": new ListadoEstadistico.ListadoView().Show(); break;
-                case "consumo oferta": new ListadoEstadistico.ListadoView().Show(); break;
+                case "consumo oferta": new ConsumoOferta.Form1(userId).Show(); break;
             }
         }
 

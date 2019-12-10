@@ -29,7 +29,7 @@ namespace FrbaOfertas.ComprarOferta
             //moverlo a un procedure seria mejor porque ahorra el envio pero ni ganas
             util.execCommand(@"
             BEGIN TRANSACTION
-            INSERT INTO Compra_Oferta VALUES ("+userId+",'"+codigo+"',"+fecha+@")
+            INSERT INTO Compra_Oferta VALUES ("+userId+",'"+codigo+"',"+fecha+@",0)
             UPDATE Oferta SET cantidad=cantidad-1 WHERE codigo='"+codigo+@"'
             COMMIT TRANSACTION
             ");

@@ -109,6 +109,22 @@ updates con joins para conseguir la factura y entrega de los que la tengan.
 Pero me di cuenta de que poniendo un max se hace lo que quiero, que es dejar el null cuando no hay
 registros y dejar el registro cuando esta, ya que solo hay 2 casos, o esta el registro o no esta.
 
+
+CREATE TABLE Compra_Oferta(
+	id INT IDENTITY(1,1) PRIMARY KEY, --no estoy seguro de si la combinacion de las 3 FK es una PK
+	cliente INT REFERENCES Cliente(id),
+	oferta VARCHAR(50) REFERENCES Oferta(codigo),
+	fecha_Compra DATETIME,
+	fueCanjeado BIT DEFAULT 0,
+	fecha_Entrega DATETIME,
+
+	--en la tabla maestra hay 3 tipos de filas,
+	--unas tienen la factura (indica la compra)
+	--otras tienen la entrega (indica entrega)
+	--y otros de la compra en si
+	)
+
+/*
 probando
 SELECT (SELECT id FROM Cliente WHERE dni=Cli_Dni),Oferta_Codigo,COUNT(*) FROM gd_esquema.Maestra
 WHERE Oferta_Codigo IS NOT NULL
@@ -125,7 +141,6 @@ o esta el valor unico o hay null. Que sea un max especificamente no significa na
 Cargo el valor de entrega porque hace mas simple construir la tabla de cupones, despues se lo saco
 
 */
-
 CREATE TABLE Compra_Oferta(
 	id INT IDENTITY(1,1) PRIMARY KEY,
 	cliente INT REFERENCES Cliente(id),
@@ -155,7 +170,14 @@ SELECT cliente,fecha_Entrega
 FROM Compra_Oferta
 WHERE fecha_Entrega IS NOT null
 
--- ALTER TABLE Compra_Oferta DROP COLUMN fecha_Entrega
+ALTER TABLE Compra_Oferta DROP COLUMN fecha_Entrega
+/*
+se podrian juntar la compra oferta con el cupon, porque lo modelamos para que sea una relacion 1 a 1.
+El id de la tabla seria el codigo cupon, que no significaria nada en compras sin cupon
+Y se ahorraria tener el campo 'fue canjeado' en compra oferta
+Y se tendria la informacion de de que compra oferta nacio el cupon.
+No lo hago para no alejarme mucho de lo que parece querer el tp, igual no es nada muy loco
+*/
 
 
 CREATE TABLE Funcionalidad(
@@ -192,8 +214,8 @@ VALUES ('cliente'),('proveedor'),('administrador'),('administrador general');
 --SELECT * FROM Funcionalidad;
 
 INSERT INTO RolxFuncionalidad (rol,funcionalidad) --hay alguna forma mejor de hacer esto? 
-VALUES  (1,4),(1,6),(1,7),
-		(2,5),
+VALUES  (1,4),(1,6),
+		(2,5),(2,7),
 		(3,1),(3,2),(3,3),(3,8),(3,9);
 INSERT INTO RolxFuncionalidad (rol,funcionalidad)
 (SELECT 4,id FROM Funcionalidad);

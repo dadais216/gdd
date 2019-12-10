@@ -28,139 +28,220 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.desc = new System.Windows.Forms.TextBox();
-            this.label15 = new System.Windows.Forms.Label();
-            this.fechavenc = new System.Windows.Forms.ComboBox();
-            this.label14 = new System.Windows.Forms.Label();
-            this.preciooferta = new System.Windows.Forms.TextBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.preciolista = new System.Windows.Forms.TextBox();
-            this.label12 = new System.Windows.Forms.Label();
-            this.cantidaddisp = new System.Windows.Forms.TextBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.lblStock = new System.Windows.Forms.Label();
+            this.lblprecioListado = new System.Windows.Forms.Label();
+            this.lblPrecioOferta = new System.Windows.Forms.Label();
+            this.lblProveedor = new System.Windows.Forms.Label();
+            this.lblDescripcion = new System.Windows.Forms.Label();
+            this.lblVencimiento = new System.Windows.Forms.Label();
+            this.lblPublicacion = new System.Windows.Forms.Label();
+            this.calendarioPublicacion = new System.Windows.Forms.DateTimePicker();
+            this.calendarioVencimiento = new System.Windows.Forms.DateTimePicker();
+            this.stock = new System.Windows.Forms.TextBox();
+            this.precioListado = new System.Windows.Forms.TextBox();
+            this.precioOferta = new System.Windows.Forms.TextBox();
+            this.proveedor = new System.Windows.Forms.TextBox();
+            this.descripcion = new System.Windows.Forms.TextBox();
+            this.btnCancelar = new System.Windows.Forms.Button();
+            this.btnPublicar = new System.Windows.Forms.Button();
+            this.btnBuscar = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
-            // desc
+            // lblStock
             // 
-            this.desc.Location = new System.Drawing.Point(16, 39);
-            this.desc.Margin = new System.Windows.Forms.Padding(4);
-            this.desc.Name = "desc";
-            this.desc.Size = new System.Drawing.Size(345, 22);
-            this.desc.TabIndex = 32;
+            this.lblStock.AutoSize = true;
+            this.lblStock.Location = new System.Drawing.Point(21, 25);
+            this.lblStock.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblStock.Name = "lblStock";
+            this.lblStock.Size = new System.Drawing.Size(43, 17);
+            this.lblStock.TabIndex = 1;
+            this.lblStock.Text = "Stock";
             // 
-            // label15
+            // lblprecioAntiguo
             // 
-            this.label15.AutoSize = true;
-            this.label15.Location = new System.Drawing.Point(13, 83);
-            this.label15.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label15.Name = "label15";
-            this.label15.Size = new System.Drawing.Size(73, 17);
-            this.label15.TabIndex = 31;
-            this.label15.Text = "fechavenc";
+            this.lblprecioListado.AutoSize = true;
+            this.lblprecioListado.Location = new System.Drawing.Point(21, 71);
+            this.lblprecioListado.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblprecioListado.Name = "lblprecioAntiguo";
+            this.lblprecioListado.Size = new System.Drawing.Size(100, 17);
+            this.lblprecioListado.TabIndex = 3;
+            this.lblprecioListado.Text = "Precio Antiguo";
             // 
-            // fechavenc
+            // lblPrecioNuevo
             // 
-            this.fechavenc.Location = new System.Drawing.Point(16, 104);
-            this.fechavenc.Margin = new System.Windows.Forms.Padding(4);
-            this.fechavenc.Name = "fechavenc";
-            this.fechavenc.Size = new System.Drawing.Size(345, 24);
-            this.fechavenc.TabIndex = 30;
+            this.lblPrecioOferta.AutoSize = true;
+            this.lblPrecioOferta.Location = new System.Drawing.Point(21, 116);
+            this.lblPrecioOferta.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPrecioOferta.Name = "lblPrecioNuevo";
+            this.lblPrecioOferta.Size = new System.Drawing.Size(93, 17);
+            this.lblPrecioOferta.TabIndex = 4;
+            this.lblPrecioOferta.Text = "Precio Nuevo";
             // 
-            // label14
+            // lblProveedor
             // 
-            this.label14.AutoSize = true;
-            this.label14.Location = new System.Drawing.Point(13, 18);
-            this.label14.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(38, 17);
-            this.label14.TabIndex = 29;
-            this.label14.Text = "desc";
+            this.lblProveedor.AutoSize = true;
+            this.lblProveedor.Location = new System.Drawing.Point(21, 158);
+            this.lblProveedor.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblProveedor.Name = "lblProveedor";
+            this.lblProveedor.Size = new System.Drawing.Size(102, 17);
+            this.lblProveedor.TabIndex = 5;
+            this.lblProveedor.Text = "Proveedor Cuit";
             // 
-            // preciooferta
+            // lblDescripcion
             // 
-            this.preciooferta.Location = new System.Drawing.Point(16, 237);
-            this.preciooferta.Margin = new System.Windows.Forms.Padding(4);
-            this.preciooferta.Name = "preciooferta";
-            this.preciooferta.Size = new System.Drawing.Size(345, 22);
-            this.preciooferta.TabIndex = 28;
+            this.lblDescripcion.AutoSize = true;
+            this.lblDescripcion.Location = new System.Drawing.Point(21, 304);
+            this.lblDescripcion.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblDescripcion.Name = "lblDescripcion";
+            this.lblDescripcion.Size = new System.Drawing.Size(82, 17);
+            this.lblDescripcion.TabIndex = 6;
+            this.lblDescripcion.Text = "Descripción";
             // 
-            // label13
+            // lblVencimiento
             // 
-            this.label13.AutoSize = true;
-            this.label13.Location = new System.Drawing.Point(13, 285);
-            this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(88, 17);
-            this.label13.TabIndex = 27;
-            this.label13.Text = "cantidaddisp";
+            this.lblVencimiento.AutoSize = true;
+            this.lblVencimiento.Location = new System.Drawing.Point(21, 255);
+            this.lblVencimiento.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblVencimiento.Name = "lblVencimiento";
+            this.lblVencimiento.Size = new System.Drawing.Size(105, 17);
+            this.lblVencimiento.TabIndex = 7;
+            this.lblVencimiento.Text = "Fecha de venc.";
             // 
-            // preciolista
+            // lblPublicacion
             // 
-            this.preciolista.Location = new System.Drawing.Point(16, 166);
-            this.preciolista.Margin = new System.Windows.Forms.Padding(4);
-            this.preciolista.Name = "preciolista";
-            this.preciolista.Size = new System.Drawing.Size(345, 22);
-            this.preciolista.TabIndex = 26;
+            this.lblPublicacion.AutoSize = true;
+            this.lblPublicacion.Location = new System.Drawing.Point(21, 211);
+            this.lblPublicacion.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPublicacion.Name = "lblPublicacion";
+            this.lblPublicacion.Size = new System.Drawing.Size(102, 17);
+            this.lblPublicacion.TabIndex = 8;
+            this.lblPublicacion.Text = "Fecha de publ.";
             // 
-            // label12
+            // calendarioPublicacion
             // 
-            this.label12.AutoSize = true;
-            this.label12.Location = new System.Drawing.Point(13, 145);
-            this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(72, 17);
-            this.label12.TabIndex = 25;
-            this.label12.Text = "preciolista";
+            this.calendarioPublicacion.Location = new System.Drawing.Point(151, 211);
+            this.calendarioPublicacion.Margin = new System.Windows.Forms.Padding(4);
+            this.calendarioPublicacion.Name = "calendarioPublicacion";
+            this.calendarioPublicacion.Size = new System.Drawing.Size(265, 22);
+            this.calendarioPublicacion.TabIndex = 8;
             // 
-            // cantidaddisp
+            // calendarioVencimiento
             // 
-            this.cantidaddisp.Location = new System.Drawing.Point(16, 306);
-            this.cantidaddisp.Margin = new System.Windows.Forms.Padding(4);
-            this.cantidaddisp.Name = "cantidaddisp";
-            this.cantidaddisp.Size = new System.Drawing.Size(345, 22);
-            this.cantidaddisp.TabIndex = 24;
+            this.calendarioVencimiento.Location = new System.Drawing.Point(151, 250);
+            this.calendarioVencimiento.Margin = new System.Windows.Forms.Padding(4);
+            this.calendarioVencimiento.Name = "calendarioVencimiento";
+            this.calendarioVencimiento.Size = new System.Drawing.Size(265, 22);
+            this.calendarioVencimiento.TabIndex = 9;
             // 
-            // label11
+            // stock
             // 
-            this.label11.AutoSize = true;
-            this.label11.Location = new System.Drawing.Point(13, 216);
-            this.label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(84, 17);
-            this.label11.TabIndex = 23;
-            this.label11.Text = "preciooferta";
+            this.stock.Location = new System.Drawing.Point(151, 25);
+            this.stock.Margin = new System.Windows.Forms.Padding(4);
+            this.stock.MaxLength = 5;
+            this.stock.Name = "stock";
+            this.stock.Size = new System.Drawing.Size(265, 22);
+            this.stock.TabIndex = 2;
             // 
-            // button1
+            // precioAntiguo
             // 
-            this.button1.Location = new System.Drawing.Point(16, 352);
-            this.button1.Margin = new System.Windows.Forms.Padding(4);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(345, 87);
-            this.button1.TabIndex = 33;
-            this.button1.Text = "Agregar Oferta";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.Button1_Click);
+            this.precioListado.Location = new System.Drawing.Point(151, 68);
+            this.precioListado.Margin = new System.Windows.Forms.Padding(4);
+            this.precioListado.MaxLength = 18;
+            this.precioListado.Name = "txtPrecioAntiguo";
+            this.precioListado.Size = new System.Drawing.Size(265, 22);
+            this.precioListado.TabIndex = 4;
+            // 
+            // precioNuevo
+            // 
+            this.precioOferta.Location = new System.Drawing.Point(151, 111);
+            this.precioOferta.Margin = new System.Windows.Forms.Padding(4);
+            this.precioOferta.MaxLength = 18;
+            this.precioOferta.Name = "txtPrecioNuevo";
+            this.precioOferta.Size = new System.Drawing.Size(265, 22);
+            this.precioOferta.TabIndex = 5;
+            // 
+            // proveedor
+            // 
+            this.proveedor.Enabled = false;
+            this.proveedor.Location = new System.Drawing.Point(151, 155);
+            this.proveedor.Margin = new System.Windows.Forms.Padding(4);
+            this.proveedor.MaxLength = 20;
+            this.proveedor.Name = "txtProveedor";
+            this.proveedor.Size = new System.Drawing.Size(265, 22);
+            this.proveedor.TabIndex = 6;
+            // 
+            // descripcion
+            // 
+            this.descripcion.Location = new System.Drawing.Point(24, 335);
+            this.descripcion.Margin = new System.Windows.Forms.Padding(4);
+            this.descripcion.MaxLength = 255;
+            this.descripcion.Multiline = true;
+            this.descripcion.Name = "txtDescripcion";
+            this.descripcion.ScrollBars = System.Windows.Forms.ScrollBars.Both;
+            this.descripcion.Size = new System.Drawing.Size(392, 153);
+            this.descripcion.TabIndex = 7;
+            // 
+            // btnCancelar
+            // 
+            this.btnCancelar.Location = new System.Drawing.Point(24, 546);
+            this.btnCancelar.Margin = new System.Windows.Forms.Padding(4);
+            this.btnCancelar.Name = "btnCancelar";
+            this.btnCancelar.Size = new System.Drawing.Size(543, 31);
+            this.btnCancelar.TabIndex = 10;
+            this.btnCancelar.Text = "Cancelar";
+            this.btnCancelar.UseVisualStyleBackColor = true;
+            this.btnCancelar.Click += new System.EventHandler(this.btnCancelar_Click);
+            // 
+            // btnPublicar
+            // 
+            this.btnPublicar.Location = new System.Drawing.Point(24, 508);
+            this.btnPublicar.Margin = new System.Windows.Forms.Padding(4);
+            this.btnPublicar.Name = "btnPublicar";
+            this.btnPublicar.Size = new System.Drawing.Size(543, 30);
+            this.btnPublicar.TabIndex = 12;
+            this.btnPublicar.Text = "Publicar";
+            this.btnPublicar.UseVisualStyleBackColor = true;
+            this.btnPublicar.Click += new System.EventHandler(this.btnPublicar_Click);
+            // 
+            // btnBuscar
+            // 
+            this.btnBuscar.Location = new System.Drawing.Point(433, 152);
+            this.btnBuscar.Margin = new System.Windows.Forms.Padding(4);
+            this.btnBuscar.Name = "btnBuscar";
+            this.btnBuscar.Size = new System.Drawing.Size(134, 28);
+            this.btnBuscar.TabIndex = 11;
+            this.btnBuscar.Text = "Buscar proveedor";
+            this.btnBuscar.UseVisualStyleBackColor = true;
+            this.btnBuscar.Click += new System.EventHandler(this.btnBuscar_Click);
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(389, 463);
-            this.Controls.Add(this.button1);
-            this.Controls.Add(this.desc);
-            this.Controls.Add(this.label15);
-            this.Controls.Add(this.fechavenc);
-            this.Controls.Add(this.label14);
-            this.Controls.Add(this.preciooferta);
-            this.Controls.Add(this.label13);
-            this.Controls.Add(this.preciolista);
-            this.Controls.Add(this.label12);
-            this.Controls.Add(this.cantidaddisp);
-            this.Controls.Add(this.label11);
-            this.Margin = new System.Windows.Forms.Padding(4);
+            this.ClientSize = new System.Drawing.Size(591, 589);
+            this.Controls.Add(this.calendarioVencimiento);
+            this.Controls.Add(this.calendarioPublicacion);
+            this.Controls.Add(this.btnBuscar);
+            this.Controls.Add(this.btnPublicar);
+            this.Controls.Add(this.btnCancelar);
+            this.Controls.Add(this.descripcion);
+            this.Controls.Add(this.proveedor);
+            this.Controls.Add(this.precioOferta);
+            this.Controls.Add(this.precioListado);
+            this.Controls.Add(this.stock);
+            this.Controls.Add(this.lblDescripcion);
+            this.Controls.Add(this.lblProveedor);
+            this.Controls.Add(this.lblPrecioOferta);
+            this.Controls.Add(this.lblprecioListado);
+            this.Controls.Add(this.lblStock);
+            this.Controls.Add(this.lblVencimiento);
+            this.Controls.Add(this.lblPublicacion);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            this.Margin = new System.Windows.Forms.Padding(4, 2, 4, 2);
             this.Name = "Form1";
-            this.Text = "Form1";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.Text = "FRBA Ofertas - Crear Oferta";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -168,16 +249,22 @@
 
         #endregion
 
-        private System.Windows.Forms.TextBox desc;
-        private System.Windows.Forms.Label label15;
-        private System.Windows.Forms.ComboBox fechavenc;
-        private System.Windows.Forms.Label label14;
-        private System.Windows.Forms.TextBox preciooferta;
-        private System.Windows.Forms.Label label13;
-        private System.Windows.Forms.TextBox preciolista;
-        private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.TextBox cantidaddisp;
-        private System.Windows.Forms.Label label11;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label lblStock;
+        private System.Windows.Forms.Label lblprecioListado;
+        private System.Windows.Forms.Label lblPrecioOferta;
+        private System.Windows.Forms.Label lblProveedor;
+        private System.Windows.Forms.Label lblDescripcion;
+        private System.Windows.Forms.Label lblVencimiento;
+        private System.Windows.Forms.Label lblPublicacion;
+        private System.Windows.Forms.TextBox stock;
+        private System.Windows.Forms.TextBox precioListado;
+        private System.Windows.Forms.TextBox precioOferta;
+        private System.Windows.Forms.TextBox proveedor;
+        private System.Windows.Forms.TextBox descripcion;
+        private System.Windows.Forms.Button btnCancelar;
+        private System.Windows.Forms.Button btnPublicar;
+        private System.Windows.Forms.DateTimePicker calendarioPublicacion;
+        private System.Windows.Forms.DateTimePicker calendarioVencimiento;
+        private System.Windows.Forms.Button btnBuscar;
     }
 }
