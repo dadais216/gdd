@@ -105,8 +105,6 @@ namespace FrbaOfertas.Facturar
             query.Parameters.Add(proveedor);
 
             PopulateTableWithQuery(query);
-            facturarButton.Enabled = true; // enable button now that there's a list of compras
-
             // Calculate monto total
             SqlCommand montoFacturaQuery = new SqlCommand(
                 @"
@@ -144,7 +142,8 @@ namespace FrbaOfertas.Facturar
             }
             else {
                 montoTotalLabel.Text = "Monto total = " + dbresp.ToString();
-                montoTotalLabel.Enabled = true;                
+                montoTotalLabel.Enabled = true;
+                facturarButton.Enabled = true; // enable button now that there's a list of compras
             }
         }
 
