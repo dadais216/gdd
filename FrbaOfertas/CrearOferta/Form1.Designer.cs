@@ -29,8 +29,8 @@
         private void InitializeComponent()
         {
             this.lblStock = new System.Windows.Forms.Label();
-            this.lblprecioAntiguo = new System.Windows.Forms.Label();
-            this.lblPrecioNuevo = new System.Windows.Forms.Label();
+            this.lblprecioListado = new System.Windows.Forms.Label();
+            this.lblPrecioOferta = new System.Windows.Forms.Label();
             this.lblProveedor = new System.Windows.Forms.Label();
             this.lblDescripcion = new System.Windows.Forms.Label();
             this.lblVencimiento = new System.Windows.Forms.Label();
@@ -38,8 +38,8 @@
             this.calendarioPublicacion = new System.Windows.Forms.DateTimePicker();
             this.calendarioVencimiento = new System.Windows.Forms.DateTimePicker();
             this.stock = new System.Windows.Forms.TextBox();
-            this.precioAntiguo = new System.Windows.Forms.TextBox();
-            this.precioNuevo = new System.Windows.Forms.TextBox();
+            this.precioListado = new System.Windows.Forms.TextBox();
+            this.precioOferta = new System.Windows.Forms.TextBox();
             this.proveedor = new System.Windows.Forms.TextBox();
             this.descripcion = new System.Windows.Forms.TextBox();
             this.btnCancelar = new System.Windows.Forms.Button();
@@ -59,23 +59,23 @@
             // 
             // lblprecioAntiguo
             // 
-            this.lblprecioAntiguo.AutoSize = true;
-            this.lblprecioAntiguo.Location = new System.Drawing.Point(21, 71);
-            this.lblprecioAntiguo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblprecioAntiguo.Name = "lblprecioAntiguo";
-            this.lblprecioAntiguo.Size = new System.Drawing.Size(100, 17);
-            this.lblprecioAntiguo.TabIndex = 3;
-            this.lblprecioAntiguo.Text = "Precio Antiguo";
+            this.lblprecioListado.AutoSize = true;
+            this.lblprecioListado.Location = new System.Drawing.Point(21, 71);
+            this.lblprecioListado.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblprecioListado.Name = "lblprecioAntiguo";
+            this.lblprecioListado.Size = new System.Drawing.Size(100, 17);
+            this.lblprecioListado.TabIndex = 3;
+            this.lblprecioListado.Text = "Precio Antiguo";
             // 
             // lblPrecioNuevo
             // 
-            this.lblPrecioNuevo.AutoSize = true;
-            this.lblPrecioNuevo.Location = new System.Drawing.Point(21, 116);
-            this.lblPrecioNuevo.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblPrecioNuevo.Name = "lblPrecioNuevo";
-            this.lblPrecioNuevo.Size = new System.Drawing.Size(93, 17);
-            this.lblPrecioNuevo.TabIndex = 4;
-            this.lblPrecioNuevo.Text = "Precio Nuevo";
+            this.lblPrecioOferta.AutoSize = true;
+            this.lblPrecioOferta.Location = new System.Drawing.Point(21, 116);
+            this.lblPrecioOferta.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblPrecioOferta.Name = "lblPrecioNuevo";
+            this.lblPrecioOferta.Size = new System.Drawing.Size(93, 17);
+            this.lblPrecioOferta.TabIndex = 4;
+            this.lblPrecioOferta.Text = "Precio Nuevo";
             // 
             // lblProveedor
             // 
@@ -144,21 +144,21 @@
             // 
             // precioAntiguo
             // 
-            this.precioAntiguo.Location = new System.Drawing.Point(151, 68);
-            this.precioAntiguo.Margin = new System.Windows.Forms.Padding(4);
-            this.precioAntiguo.MaxLength = 18;
-            this.precioAntiguo.Name = "txtPrecioAntiguo";
-            this.precioAntiguo.Size = new System.Drawing.Size(265, 22);
-            this.precioAntiguo.TabIndex = 4;
+            this.precioListado.Location = new System.Drawing.Point(151, 68);
+            this.precioListado.Margin = new System.Windows.Forms.Padding(4);
+            this.precioListado.MaxLength = 18;
+            this.precioListado.Name = "txtPrecioAntiguo";
+            this.precioListado.Size = new System.Drawing.Size(265, 22);
+            this.precioListado.TabIndex = 4;
             // 
             // precioNuevo
             // 
-            this.precioNuevo.Location = new System.Drawing.Point(151, 111);
-            this.precioNuevo.Margin = new System.Windows.Forms.Padding(4);
-            this.precioNuevo.MaxLength = 18;
-            this.precioNuevo.Name = "txtPrecioNuevo";
-            this.precioNuevo.Size = new System.Drawing.Size(265, 22);
-            this.precioNuevo.TabIndex = 5;
+            this.precioOferta.Location = new System.Drawing.Point(151, 111);
+            this.precioOferta.Margin = new System.Windows.Forms.Padding(4);
+            this.precioOferta.MaxLength = 18;
+            this.precioOferta.Name = "txtPrecioNuevo";
+            this.precioOferta.Size = new System.Drawing.Size(265, 22);
+            this.precioOferta.TabIndex = 5;
             // 
             // proveedor
             // 
@@ -226,13 +226,13 @@
             this.Controls.Add(this.btnCancelar);
             this.Controls.Add(this.descripcion);
             this.Controls.Add(this.proveedor);
-            this.Controls.Add(this.precioNuevo);
-            this.Controls.Add(this.precioAntiguo);
+            this.Controls.Add(this.precioOferta);
+            this.Controls.Add(this.precioListado);
             this.Controls.Add(this.stock);
             this.Controls.Add(this.lblDescripcion);
             this.Controls.Add(this.lblProveedor);
-            this.Controls.Add(this.lblPrecioNuevo);
-            this.Controls.Add(this.lblprecioAntiguo);
+            this.Controls.Add(this.lblPrecioOferta);
+            this.Controls.Add(this.lblprecioListado);
             this.Controls.Add(this.lblStock);
             this.Controls.Add(this.lblVencimiento);
             this.Controls.Add(this.lblPublicacion);
@@ -250,15 +250,15 @@
         #endregion
 
         private System.Windows.Forms.Label lblStock;
-        private System.Windows.Forms.Label lblprecioAntiguo;
-        private System.Windows.Forms.Label lblPrecioNuevo;
+        private System.Windows.Forms.Label lblprecioListado;
+        private System.Windows.Forms.Label lblPrecioOferta;
         private System.Windows.Forms.Label lblProveedor;
         private System.Windows.Forms.Label lblDescripcion;
         private System.Windows.Forms.Label lblVencimiento;
         private System.Windows.Forms.Label lblPublicacion;
         private System.Windows.Forms.TextBox stock;
-        private System.Windows.Forms.TextBox precioAntiguo;
-        private System.Windows.Forms.TextBox precioNuevo;
+        private System.Windows.Forms.TextBox precioListado;
+        private System.Windows.Forms.TextBox precioOferta;
         private System.Windows.Forms.TextBox proveedor;
         private System.Windows.Forms.TextBox descripcion;
         private System.Windows.Forms.Button btnCancelar;
