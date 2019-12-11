@@ -23,19 +23,25 @@ FROM gd_esquema.Maestra
 
 CREATE TABLE Tipo_Pago(
 	id INT IDENTITY(1,1) PRIMARY KEY,
-	tipo_Pago_Desc NVARCHAR(100),
+	descripcion NVARCHAR(100),
 	)
+INSERT INTO Tipo_Pago
+SELECT DISTINCT Tipo_Pago_Desc
+FROM gd_esquema.Maestra
+WHERE Tipo_Pago_Desc IS NOT NULL
+
 
 CREATE TABLE Carga(
 	id INT IDENTITY(1,1) PRIMARY KEY,
 	cliente INT REFERENCES Cliente(id),
 	credito NUMERIC(18,2), --seria redundante ponerle NOT NULL a estos?
 	fecha DATETIME,
-	--tipo_Pago INT REFERENCES Tipo_Pago(id), -- ni idea de que es esto pero es algo de carga. Podria ser un enum
+	tipo_Pago INT REFERENCES Tipo_Pago(id), -- ni idea de que es esto pero es algo de carga. Podria ser un enum
 	)
 
 INSERT INTO Carga
-SELECT (SELECT id FROM Cliente WHERE dni=Cli_Dni),Carga_Credito,Carga_Fecha--,Tipo_Pago_Desc
+SELECT (SELECT id FROM Cliente WHERE dni=Cli_Dni),Carga_Credito,Carga_Fecha, 
+		(select id from Tipo_Pago where Tipo_Pago_Desc=Tipo_Pago.descripcion)
 FROM gd_esquema.Maestra AS M
 WHERE Carga_Credito IS NOT NULL
 
@@ -324,6 +330,8 @@ CREATE FUNCTION descuento(@precio_venta NUMERIC(18,2), @precio_original NUMERIC(
 RETURNS NUMERIC(18, 2)
 AS
 BEGIN
-	RETURN @precio_venta/NULLIF(@precio_original, 0)
+	RETURN (@precio_original - @precio_venta)
+			/
+			NULLIF(@precio_venta, 0)
 END
 GO
