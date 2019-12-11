@@ -23,6 +23,7 @@ namespace FrbaOfertas.Facturar
         */
         string chosenProveedor;
         string montoFactura;
+        DateTime fechaActual = DateTime.Parse(ConfigurationManager.AppSettings["fecha"]);
 
         public ListarFacturasProveedor()
         {
@@ -30,7 +31,7 @@ namespace FrbaOfertas.Facturar
             facturarButton.Enabled = false; // Si no hay resultados, no se puede facturar
 
             // Setear período a fecha de app - 3 meses.
-            string currentDate = ConfigurationManager.AppSettings["fecha"].ToString();
+            string currentDate = fechaActual.ToString();
             hastaPicker.Value = DateTime.Parse(currentDate); // Current date
             desdePicker.Value = DateTime.Parse(currentDate).AddMonths(-3); // 3 months before
 
@@ -187,13 +188,14 @@ namespace FrbaOfertas.Facturar
                 @"
                 INSERT INTO Factura output INSERTED.nro
                 VALUES (
-                       GETDATE(),
+                       @fecha,
                        (SELECT id FROM Proveedor WHERE RS=@proveedor)
                 )
                 ",
                 Program.con
             );
             insertarFactura.Parameters.AddWithValue("@proveedor", chosenProveedor);
+            insertarFactura.Parameters.AddWithValue("@fecha", fechaActual.ToString());
             int factura = Convert.ToInt32(insertarFactura.ExecuteScalar());
             SqlCommand updateCompras = buildComprasUpdateQuery(factura.ToString(), compra_ids);
             int affectedRows = updateCompras.ExecuteNonQuery();
