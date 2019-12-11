@@ -46,7 +46,7 @@ namespace FrbaOfertas
             util.execCommand("UPDATE Cliente SET saldo=300 WHERE id=1");
             Application.Run(new Main("1","1"));
 #else
-            Application.Run(new Main("252","2"));
+            Application.Run(new Main("1","4"));
 #endif
 #endif
 #endif

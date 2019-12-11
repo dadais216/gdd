@@ -324,8 +324,6 @@ CREATE FUNCTION descuento(@precio_venta NUMERIC(18,2), @precio_original NUMERIC(
 RETURNS NUMERIC(18, 2)
 AS
 BEGIN
-	RETURN (@precio_original - @precio_venta)
-			/
-			NULLIF(@precio_venta, 0)
+	RETURN @precio_venta/NULLIF(@precio_original, 0)
 END
 GO
