@@ -16,8 +16,11 @@ namespace FrbaOfertas.CragaCredito
     {
         DateTime fecha = Convert.ToDateTime(ConfigurationManager.AppSettings["fecha"]);
         string tipoPagoId = null;
-        public Form1()
+        string clienteId;
+
+        public Form1(string userId)
         {
+            clienteId = userId;
             InitializeComponent();
         }
 
@@ -129,7 +132,7 @@ namespace FrbaOfertas.CragaCredito
             var command = new SqlCommand("INSERT INTO Carga (cliente, credito, fecha, tipo_Pago) " +
                                             "VALUES (@cli,@cre,@fe,@tp)", Program.con);
 
-            //command.Parameters.AddWithValue("@cli", codigoStr); //cliente
+            command.Parameters.AddWithValue("@cli", clienteId);
             command.Parameters.AddWithValue("@cre", monto.Text);
             command.Parameters.AddWithValue("@fe", fecha);
             command.Parameters.AddWithValue("@tp", tipoPagoId);
