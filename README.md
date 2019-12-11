@@ -19,7 +19,7 @@ cualquier falta puede ser motivo de sanción y/o pérdida de contrato/s.
 
 ## **Diagrama Entidad Relación (DER):**
 
-![DER](/images/derv0.jpeg)
+![DER](/images/derv1.jpeg)
 
 ## **Integrantes:**
 
