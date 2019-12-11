@@ -25,6 +25,12 @@ namespace FrbaOfertas.ComprarOferta
 
             fecha = date.Month.ToString() + "/" + date.Day.ToString() + "/" + date.Year.ToString();
 
+            if (rolId != util.tableQuery("SELECT id FROM Rol WHERE nombre = 'Cliente'").Rows[0].ItemArray[0].ToString())
+            {
+                new ErrorWindow("un no cliente no puede comprar nada porque no tiene saldo en el sistema").Show();
+                return;
+            }
+
             clienteId = util.getVal("SELECT cliente FROM Usuario WHERE id= " + userId).ToString();
             doQuery();
         }
@@ -39,13 +45,6 @@ namespace FrbaOfertas.ComprarOferta
         private void DataGridView1_CellClick_1(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex == -1) return;
-
-            if (rolId != util.tableQuery("SELECT id FROM Rol WHERE nombre = 'Cliente'").Rows[0].ItemArray[0].ToString())
-            {
-                new ErrorWindow("un no cliente no puede comprar nada porque no tiene saldo en el sistema").Show();
-                return;
-            }
-
 
             if (saldo < (decimal)dataGridView1.Rows[e.RowIndex].Cells[1].Value)
             {

@@ -14,72 +14,54 @@ namespace FrbaOfertas.CrearOferta
 {
     public partial class Form1 : Form
     {
-        public Dictionary<string, string> datosProveedorSeleccionado = new Dictionary<string, string>();
-        DateTime fechaConfig = Convert.ToDateTime(ConfigurationManager.AppSettings["fecha"]);
-        private bool haySeleccionado = false;
+        DateTime fecha = Convert.ToDateTime(ConfigurationManager.AppSettings["fecha"]);
+        string proveedorId=null;
 
-        public Form1()
+        public Form1(string userId,string rolId)
         {
             InitializeComponent();
-            if (true/*rol de usuario > 2 , osea proveedor o administrador (el true lo puse para que no joda con el error)*/)
+
+            if (util.getVal("SELECT id FROM Rol WHERE nombre = 'Proveedor'").ToString()==rolId)
             {
-                btnBuscar.Hide();
-                proveedor.ReadOnly = true;
-                /*proveedor.Text = /*el id del proveedor;*/
-                /*datosProveedorSeleccionado = /*datos del proveedor;*/
+                lblProveedor.Hide();
+                CUIT.Hide();
+
+                proveedorId = util.getVal("SELECT proveedor FROM Usuario WHERE id=" + userId).ToString();
             }
-            calendarioPublicacion.MinDate = fechaConfig;
-            calendarioVencimiento.MinDate = fechaConfig;
+            calendarioPublicacion.MinDate = fecha;
+            calendarioVencimiento.MinDate = fecha;
         }
 
         private bool sonCamposValidos()
         {
-            bool sonNumericos = true;
-
-            try
-            {
-                Convert.ToDouble(precioOferta.Text);
-            }
-            catch (Exception e)
-            {
-                sonNumericos = false;
-            }
-
-            try
-            {
-                Convert.ToDouble(precioListado.Text);
-            }
-            catch (Exception e)
-            {
-                sonNumericos = false;
-            }
-
-
-            if (stock.Text == "" || precioListado.Text == "" || precioOferta.Text == "" || proveedor.Text == "" || descripcion.Text == "")
+            if (stock.Text == "" || precioListado.Text == "" || precioOferta.Text == "" 
+                || descripcion.Text == "" || proveedorId==null&&CUIT.Text=="")
             {
                 MessageBox.Show("No puede haber campos vacios");
                 return false;
             }
-            
-            if (sonNumericos && Convert.ToDouble(precioListado.Text) < 0 || sonNumericos && Convert.ToDouble(precioOferta.Text) < 0)
+            try
             {
-                MessageBox.Show("Hay precios de oferta negativos");
-                return false;
+                double oferta= Convert.ToDouble(precioOferta.Text);
+                double listado= Convert.ToDouble(precioListado.Text);
+                if (oferta < 0 || listado < 0 || Convert.ToDouble(stock.Text)<0)
+                    throw new Exception();
+                if (oferta > listado)
+                {
+                    MessageBox.Show("No es una oferta");
+                    return false;
+                }
             }
-
-            if (!sonNumericos)
+            catch (Exception e)
             {
                 MessageBox.Show("Campos numericos invalidos");
                 return false;
             }
-
-            DateTime fechaDelDia = DateTime.Parse(ConfigurationManager.AppSettings["fecha_dia"]);
             if (DateTime.Parse(calendarioVencimiento.Text) < DateTime.Parse(calendarioPublicacion.Text))
             {
                 MessageBox.Show("La oferta no puede estar vencida");
                 return false;
             }
-
             return true;
         }
 
@@ -87,47 +69,64 @@ namespace FrbaOfertas.CrearOferta
         {
             if (this.sonCamposValidos())
             {
-                util.execCommand("INSERT INTO Oferta (descripcion, cantidad, fecha, fecha_Venc, " +
-                                "precio, precio_Ficticio, proveedor) " +
-                                "VALUES (@de,@st,@fe,@fv,@pr,@pf,@pr)",
-                                
-                                "@de", descripcion.Text,
-                                "@st", stock.Text,
-                                "@fe", calendarioPublicacion.Text,
-                                "@fv", calendarioVencimiento.Text,
-                                "@pr", precioListado.Text,
-                                "@pf", precioOferta.Text,
-                                "@pr", proveedor.Text
-                                );
+                if (proveedorId == null)
+                {
+                    var table=util.tableQuery("SELECT id FROM Proveedor WHERE CUIT= @cu",
+                                            "@cu",CUIT.Text);
+                    if (table.Rows.Count == 0)
+                    {
+                        MessageBox.Show("no hay proveedor con ese CUIT");
+                        return;
+                    }
+                    proveedorId = table.Rows[0].ItemArray[0].ToString();
+                }
+
+                char[] codigo = new char[16];
+                string codigoStr;
+                while (true)
+                {
+                    var random = new Random();
+                    for (int i = 0; i < 16; i++)
+                    {
+                        switch (random.Next(0, 3))
+                        {
+                        case 0: codigo[i] = (char)random.Next(48, 58); break;
+                        case 1: codigo[i] = (char)random.Next(65, 91); break;
+                        case 2: codigo[i] = (char)random.Next(97, 123); break;
+                        }
+                    }
+
+                    codigoStr = new String(codigo);
+
+
+                    if (util.tableQuery("SELECT 1 FROM Oferta WHERE codigo = '" + codigoStr+ "'").Rows.Count == 0)
+                        //improbable que haya colisiones pero no esta de mas probar.
+                        break;
+
+                }
+
+                var command = new SqlCommand("INSERT INTO Oferta (codigo,descripcion, cantidad, fecha, fecha_Venc, " +
+                                            "precio, precio_Ficticio, proveedor) " +
+                                             "VALUES (@co,@de,@st,@fp,@fv,@po,@pl,@pr)", Program.con);
+
+
+                command.Parameters.AddWithValue("@co", codigoStr);
+                command.Parameters.AddWithValue("@de", descripcion.Text);
+                command.Parameters.AddWithValue("@st", stock.Text);
+                command.Parameters.AddWithValue("@fp", calendarioPublicacion.Value);
+                command.Parameters.AddWithValue("@fv", calendarioVencimiento.Value);
+                command.Parameters.AddWithValue("@po", precioOferta.Text);
+                command.Parameters.AddWithValue("@pl", precioListado.Text);
+                command.Parameters.AddWithValue("@pr", proveedorId);
+
+                command.ExecuteNonQuery();
+
+
+
+
+
                 this.Close();
             }
         }
-
-        private void btnCancelar_Click(object sender, EventArgs e)
-        {
-            this.Close();
-        }
-
-        private void btnBuscar_Click(object sender, EventArgs e)
-        {
-            /*Cursor = Cursors.WaitCursor;
-            using (BuscarProveedor ventanaBusqueda = new BuscarProveedor())
-            {
-                if (ventanaBusqueda.ShowDialog() == DialogResult.OK)
-                {
-                    this.datosProveedorSeleccionado = ventanaCreacion.datosProveedor;
-                    proveedor.Text = datosProveedorSeleccionado["razón social"].ToString();
-                    haySeleccionado = true;
-                }
-            }
-            Cursor = Cursors.Default;*/
-            //TODO: Hacer una vista para seleccionar el proveedor
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
-
     }
 }

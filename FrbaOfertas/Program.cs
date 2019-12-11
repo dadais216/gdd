@@ -31,10 +31,6 @@ namespace FrbaOfertas
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-            Console.WriteLine("!!!!\n\n\n\n");
-            Console.WriteLine(connectionStr);
-            Console.WriteLine("!!!!\n\n\n\n");
-
             con.Open(); // a veces falla la conexion no sé por que
 #if false
             Application.Run(new Login());
