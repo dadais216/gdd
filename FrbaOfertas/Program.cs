@@ -35,7 +35,7 @@ namespace FrbaOfertas
 #if false
             Application.Run(new Login());
 #else
-#if false//salto el login porque rompe las bolas
+#if true//salto el login porque rompe las bolas
             Application.Run(new Main("1", "4"));
 #else
 #if false
