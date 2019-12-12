@@ -22,7 +22,7 @@ namespace FrbaOfertas
             InitializeComponent();
 
             var table = util.tableQuery("SELECT nombre FROM " +
-                           "Funcionalidad f JOIN RolxFuncionalidad rf ON f.id = rf.funcionalidad " +
+                           "tp.Funcionalidad f JOIN tp.RolxFuncionalidad rf ON f.id = rf.funcionalidad " +
                            "WHERE rf.rol = " + rolIdOrNull_);
 
             for (int i = 0; i < table.Rows.Count; i++)

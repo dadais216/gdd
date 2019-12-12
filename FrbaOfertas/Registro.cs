@@ -25,12 +25,12 @@ namespace FrbaOfertas
         {
             if (contraseña.Text.Length == 0 || nombre.Text.Length == 0)
             {
-                info.Text = "insertar usuario y contraseña antes de seguir";
+                info.Text = "Insertar usuario y contraseña antes de seguir";
                 return false;
             }
-            if(util.tableQuery("SELECT 1 FROM Usuario WHERE nombre = @no", "@no", nombre.Text).Rows.Count != 0)
+            if (util.tableQuery("SELECT 1 FROM tp.Usuario WHERE nombre = @no", "@no", nombre.Text).Rows.Count != 0)
             {
-                info.Text = "ese nombre de usuario ya fue tomado";
+                info.Text = "Ese nombre de usuario ya fue tomado";
                 return false;
             }
             return true;
@@ -60,9 +60,9 @@ namespace FrbaOfertas
 
                     //no uso util porque necesito pasar contraseña sanatizado Y en UTF8, y no puedo hacer las 2 cosas con
                     //esa capa de abstraccion
-                    var command = new SqlCommand("INSERT INTO Usuario (nombre,contraseña,rol,cliente,proveedor)" +
+                    var command = new SqlCommand("INSERT INTO tp.Usuario (nombre,contraseña,rol,cliente,proveedor)" +
                                         "VALUES (@no,HASHBYTES('SHA2_256',@co)," +
-                                        "(SELECT id FROM Rol WHERE nombre='Cliente')," + id + ",null)", Program.con);
+                                        "(SELECT id FROM tp.Rol WHERE nombre='Cliente')," + id + ",null)", Program.con);
 
                     command.Parameters.AddWithValue("@no", nombre.Text);
                     command.Parameters.Add(new SqlParameter {
@@ -96,9 +96,9 @@ namespace FrbaOfertas
                     }
                     var id = util.tableQuery("SELECT @@IDENTITY").Rows[0].ItemArray[0].ToString();
 
-                    var command = new SqlCommand("INSERT INTO Usuario (nombre,contraseña,rol,cliente,proveedor)" +
+                    var command = new SqlCommand("INSERT INTO tp.Usuario (nombre,contraseña,rol,cliente,proveedor)" +
                     "VALUES (@no,HASHBYTES('SHA2_256',@co)," +
-                    "(SELECT id FROM Rol WHERE nombre='Proveedor'), null," + id + ")", Program.con);
+                    "(SELECT id FROM tp.Rol WHERE nombre='Proveedor'), null," + id + ")", Program.con);
 
                     command.Parameters.AddWithValue("@no", nombre.Text);
                     command.Parameters.Add(new SqlParameter
