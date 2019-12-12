@@ -48,7 +48,7 @@ namespace FrbaOfertas.Facturar
         private List<string> getProveedores()
         {
             List<string> proveedores = new List<string> { };
-            SqlCommand proveedoresQuery = new SqlCommand("SELECT RS FROM Proveedor", Program.con);
+            SqlCommand proveedoresQuery = new SqlCommand("SELECT RS FROM tp.Proveedor", Program.con);
             SqlDataReader reader = proveedoresQuery.ExecuteReader();
 
             while (reader.Read())
@@ -76,14 +76,14 @@ namespace FrbaOfertas.Facturar
 		                Oferta.fecha AS FECHA,
 		                Oferta.fecha_Venc AS VENCIMIENTO,
                         Compra_Oferta.id AS TICKET
-                FROM Compra_Oferta
-                JOIN Oferta ON Compra_Oferta.oferta = Oferta.codigo
-                JOIN Proveedor ON Proveedor.id = Oferta.proveedor
-                JOIN Cliente ON Cliente.id = Compra_Oferta.cliente
-                WHERE Proveedor.RS = @proveedor AND 
-                      Compra_Oferta.factura IS NULL AND
-	                  Compra_Oferta.fecha_Compra < @endDate AND
-	                  Compra_Oferta.fecha_Compra > @startDate
+                FROM tp.Compra_Oferta
+                JOIN tp.Oferta ON tp.Compra_Oferta.oferta = tp.Oferta.codigo
+                JOIN tp.Proveedor ON tp.Proveedor.id = tp.Oferta.proveedor
+                JOIN tp.Cliente ON tp.Cliente.id = tp.Compra_Oferta.cliente
+                WHERE tp.Proveedor.RS = @proveedor AND 
+                      tp.Compra_Oferta.factura IS NULL AND
+	                  tp.Compra_Oferta.fecha_Compra < @endDate AND
+	                  tp.Compra_Oferta.fecha_Compra > @startDate
                 ORDER BY 1 ASC
                 ",
                 Program.con
@@ -109,16 +109,16 @@ namespace FrbaOfertas.Facturar
             // Calculate monto total
             SqlCommand montoFacturaQuery = new SqlCommand(
                 @"
-                SELECT  SUM(Oferta.precio)
-                FROM Compra_Oferta
-                JOIN Oferta ON Compra_Oferta.oferta = Oferta.codigo
-                JOIN Proveedor ON Proveedor.id = Oferta.proveedor
-                WHERE Proveedor.RS = @proveedor AND
-                      Compra_Oferta.factura IS NULL AND 
-	                  Compra_Oferta.fecha_Compra < @end AND
-	                  Compra_Oferta.fecha_Compra > @start
+                SELECT SUM(Oferta.precio)
+                FROM tp.Compra_Oferta
+                JOIN tp.Oferta ON tp.Compra_Oferta.oferta = tp.Oferta.codigo
+                JOIN tp.Proveedor ON tp.Proveedor.id = tp.Oferta.proveedor
+                WHERE tp.Proveedor.RS = @proveedor AND
+                      tp.Compra_Oferta.factura IS NULL AND 
+	                  tp.Compra_Oferta.fecha_Compra < @end AND
+	                  tp.Compra_Oferta.fecha_Compra > @start
 
-                GROUP BY Proveedor.id
+                GROUP BY tp.Proveedor.id
                 ",
                 Program.con
             );
@@ -186,10 +186,10 @@ namespace FrbaOfertas.Facturar
             // Creo factura de proveedor
             SqlCommand insertarFactura = new SqlCommand(
                 @"
-                INSERT INTO Factura output INSERTED.nro
+                INSERT INTO tp.Factura output INSERTED.nro
                 VALUES (
                        @fecha,
-                       (SELECT id FROM Proveedor WHERE RS=@proveedor)
+                       (SELECT id FROM tp.Proveedor WHERE RS=@proveedor)
                 )
                 ",
                 Program.con
@@ -235,7 +235,7 @@ namespace FrbaOfertas.Facturar
         {
             string parameterPrefix = "compra_id";
             string querystr = @"
-                UPDATE Compra_Oferta 
+                UPDATE tp.Compra_Oferta 
                 SET factura=@factura
                 WHERE Compra_Oferta.id IN ({0})
                 ";

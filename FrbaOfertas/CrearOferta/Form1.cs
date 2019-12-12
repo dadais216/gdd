@@ -87,7 +87,7 @@ namespace FrbaOfertas.CrearOferta
         {
             if (this.sonCamposValidos())
             {
-                util.execCommand("INSERT INTO Oferta (descripcion, cantidad, fecha, fecha_Venc, " +
+                util.execCommand("INSERT INTO tp.Oferta (descripcion, cantidad, fecha, fecha_Venc, " +
                                 "precio, precio_Ficticio, proveedor) " +
                                 "VALUES (@de,@st,@fe,@fv,@pr,@pf,@pr)",
                                 

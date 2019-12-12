@@ -36,13 +36,14 @@ namespace FrbaOfertas.ListadoEstadistico
             query = new SqlCommand();
             query.Connection = Program.con;
             query.CommandText = @"
-            SELECT TOP 5 Proveedor.RS AS Proveedor,
-            FORMAT(AVG(dbo.descuento(Oferta.precio, Oferta.precio_Ficticio)), 'p') as DESCUENTOS_PROMEDIO
-            FROM Oferta
-            JOIN Proveedor ON Proveedor.id = Oferta.proveedor
-            WHERE Oferta.fecha > @startDate AND Oferta.fecha_Venc < @endDate
-            GROUP BY Proveedor.RS
-            ORDER BY AVG(dbo.descuento(Oferta.precio, Oferta.precio_Ficticio)) DESC
+            SELECT TOP 5 
+                    Proveedor.RS AS Proveedor,
+                    FORMAT(AVG(dbo.descuento(Oferta.precio, Oferta.precio_Ficticio)), 'p') as DESCUENTOS_PROMEDIO
+            FROM tp.Oferta
+            JOIN tp.Proveedor ON tp.Proveedor.id = tp.Oferta.proveedor
+            WHERE tp.Oferta.fecha > @startDate AND tp.Oferta.fecha_Venc < @endDate
+            GROUP BY tp.Proveedor.RS
+            ORDER BY AVG(dbo.descuento(tp.Oferta.precio, tp.Oferta.precio_Ficticio)) DESC
             ";
 
             DateTime moment;
@@ -80,9 +81,9 @@ namespace FrbaOfertas.ListadoEstadistico
             query.Connection = Program.con;
             query.CommandText = @"
             SELECT TOP 5 Proveedor.RS, SUM(Oferta.precio) AS FACTURACION
-            FROM Compra_Oferta
-            JOIN Oferta ON Compra_Oferta.oferta = Oferta.codigo
-            JOIN Proveedor ON Oferta.proveedor = Proveedor.id
+            FROM tp.Compra_Oferta
+            JOIN tp.Oferta ON Compra_Oferta.oferta = Oferta.codigo
+            JOIN tp.Proveedor ON Oferta.proveedor = Proveedor.id
             WHERE Oferta.fecha > @startDate AND Oferta.fecha_Venc < @endDate
             GROUP BY Proveedor.RS
             ORDER BY 2 DESC
