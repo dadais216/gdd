@@ -25,13 +25,13 @@ namespace FrbaOfertas.ComprarOferta
 
             fecha = date.Month.ToString() + "/" + date.Day.ToString() + "/" + date.Year.ToString();
 
-            clienteId = util.getVal("SELECT cliente FROM Usuario WHERE id= " + userId).ToString();
+            clienteId = util.getVal("SELECT cliente FROM tp.Usuario WHERE id= " + userId).ToString();
             doQuery();
         }
 
         private void actualizarSaldo()
         {
-            saldo = (decimal)util.getVal("SELECT saldo FROM Cliente WHERE id= " + clienteId);
+            saldo = (decimal)util.getVal("SELECT saldo FROM tp.Cliente WHERE id= " + clienteId);
             //se podria mantener el estado de saldo desde la aplicacion para no tener que hacer este query pero neh
             label1.Text = "Saldo: " + saldo.ToString();
         }
@@ -40,7 +40,7 @@ namespace FrbaOfertas.ComprarOferta
         {
             if (e.RowIndex == -1) return;
 
-            if (rolId != util.tableQuery("SELECT id FROM Rol WHERE nombre = 'Cliente'").Rows[0].ItemArray[0].ToString())
+            if (rolId != util.tableQuery("SELECT id FROM tp.Rol WHERE nombre = 'Cliente'").Rows[0].ItemArray[0].ToString())
             {
                 new ErrorWindow("un no cliente no puede comprar nada porque no tiene saldo en el sistema").Show();
                 return;
@@ -61,7 +61,7 @@ namespace FrbaOfertas.ComprarOferta
         private void doQuery()
         {
             actualizarSaldo();
-            dataGridView1.DataSource = util.tableQuery("SELECT descripcion,precio AS precioOferta ,precio_Ficticio AS precioOriginal,cantidad, codigo FROM Oferta " +
+            dataGridView1.DataSource = util.tableQuery("SELECT descripcion,precio AS precioOferta ,precio_Ficticio AS precioOriginal,cantidad, codigo FROM tp.Oferta " +
                                                         "WHERE '" + fecha + "' BETWEEN fecha AND fecha_Venc AND cantidad > 0");
         }
     }

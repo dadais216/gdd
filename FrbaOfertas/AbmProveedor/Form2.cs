@@ -36,7 +36,7 @@ namespace FrbaOfertas.AbmProveedor
 
             userId = userId_;
 
-            var table = util.tableQuery("SELECT habilitado FROM Usuario WHERE proveedor = " + userId);
+            var table = util.tableQuery("SELECT habilitado FROM tp.Usuario WHERE proveedor = " + userId);
 
             habilitado = (bool)table.Rows[0].ItemArray[0];
 
@@ -46,7 +46,7 @@ namespace FrbaOfertas.AbmProveedor
 
         private void Button2_Click(object sender, EventArgs e)
         {
-            util.execCommand("UPDATE Proveedor SET RS=@RS,dom=@di,ciudad=@ci,telefono=@te,CUIT=@CU,mail=@ma, " +
+            util.execCommand("UPDATE tp.Proveedor SET RS=@RS,dom=@di,ciudad=@ci,telefono=@te,CUIT=@CU,mail=@ma, " +
                                                             "codigoPostal=@co,rubro=@ru " +
                                                             "WHERE id=@id",
                                                             "@RS", razonSocial.Text,

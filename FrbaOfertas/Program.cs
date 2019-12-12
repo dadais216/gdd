@@ -35,7 +35,7 @@ namespace FrbaOfertas
             Console.WriteLine(connectionStr);
             Console.WriteLine("!!!!\n\n\n\n");
 
-            con.Open(); // a veces falla la conexion no sé por que
+            con.Open();
 #if false
             Application.Run(new Login());
 #else

@@ -33,7 +33,7 @@ namespace FrbaOfertas.AbmCliente
 
             userId = userId_;
 
-            var table = util.tableQuery("SELECT habilitado FROM Usuario WHERE cliente = " + userId);
+            var table = util.tableQuery("SELECT habilitado FROM tp.Usuario WHERE cliente = " + userId);
 
             habilitado = (bool)table.Rows[0].ItemArray[0];
 
@@ -45,7 +45,7 @@ namespace FrbaOfertas.AbmCliente
         {
             try
             {
-                util.execCommand("UPDATE Cliente SET dni=@dn,nombre=@no,apellido=@ap,direccion=@di, " +
+                util.execCommand("UPDATE tp.Cliente SET dni=@dn,nombre=@no,apellido=@ap,direccion=@di, " +
                                                                 "telefono=@te,mail=@ma,ciudad=@ci, fecha_Nac=@fe " +
                                                                 "WHERE id=@id",
                                                                 "@no", nombre.Text,
@@ -60,7 +60,7 @@ namespace FrbaOfertas.AbmCliente
             } catch (Exception _)
             {
                 //se puso una letra en un campo de numero o una fecha absurda
-                new ErrorWindow("datos mal ingresados").Show();
+                new ErrorWindow("Datos Mal Ingresados").Show();
             }
             if (contraseña.Text != "")
             {
@@ -75,7 +75,7 @@ namespace FrbaOfertas.AbmCliente
 
         private void Button1_Click(object sender, EventArgs e)
         {
-            util.execCommand("UPDATE Usuario SET habilitado = " + (habilitado ? "0 " : "1 ") + "WHERE cliente = " + userId);
+            util.execCommand("UPDATE tp.Usuario SET habilitado = " + (habilitado ? "0 " : "1 ") + "WHERE cliente = " + userId);
 
             Close();
         }

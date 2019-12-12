@@ -28,7 +28,7 @@ namespace FrbaOfertas.AbmCliente
 
             try
             {
-                util.execCommand("INSERT INTO Cliente " +
+                util.execCommand("INSERT INTO tp.Cliente " +
                                 "(dni,nombre,apellido,direccion,telefono,mail,fecha_Nac,ciudad,saldo) "+
                                 "VALUES (@dn,@no,@ap,@di,@te,@ma,@fe,@ci,@saldoInicial)",
                                 "@no", nombre.Text,

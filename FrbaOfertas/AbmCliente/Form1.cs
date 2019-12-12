@@ -26,7 +26,7 @@ namespace FrbaOfertas.AbmCliente
             query = new SqlCommand();
             query.Connection = Program.con;
             //pido cada uno en vez de usar * por si hay un cambio de columnas, que no explote nada 
-            query.CommandText = "SELECT id,dni,nombre,apellido,direccion,telefono,mail,fecha_Nac,ciudad,saldo FROM Cliente ";
+            query.CommandText = "SELECT id,dni,nombre,apellido,direccion,telefono,mail,fecha_Nac,ciudad,saldo FROM tp.Cliente ";
 
             bool filterBefore = false;
             var addFilter = new Action<string,TextBox,string,string>((param,text,filterQueryBeg,filterQueryEnd) =>
