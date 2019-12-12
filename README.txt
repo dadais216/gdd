@@ -4,5 +4,6 @@ Responsable: Álvarez Damián
 Email del Responsable: damuchi99@gmail.com
 
 Integrantes:
-Ambrosini Nahuel 15 555 95
-Álvarez Damián   16 417 24
+Ambrosini Nahuel 155 559 5
+Álvarez Damián   164 172 4
+Martin Daniel    159 186 1
