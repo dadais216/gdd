@@ -1,1 +1,0 @@
-sqlcmd -S localhost\SQLSERVER2012 -U gd -P gd2019 -i LevantarBaseWithSchema.sql -a 32767  -o log.txt
