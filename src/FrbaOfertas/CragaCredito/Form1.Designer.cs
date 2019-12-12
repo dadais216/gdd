@@ -32,7 +32,7 @@
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
-            this.tiposPago = new System.Windows.Forms.ComboBox();
+            this.tipoPago = new System.Windows.Forms.ComboBox();
             this.label3 = new System.Windows.Forms.Label();
             this.label4 = new System.Windows.Forms.Label();
             this.numeroTarjeta = new System.Windows.Forms.TextBox();
@@ -84,18 +84,17 @@
             // 
             // tiposPago
             // 
-            this.tiposPago.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.tiposPago.FormattingEnabled = true;
-            this.tiposPago.Items.AddRange(new object[] {
+            this.tipoPago.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.tipoPago.FormattingEnabled = true;
+            this.tipoPago.Items.AddRange(new object[] {
             "Efectivo",
             "Tarjeta de crédito",
             "Tarjeta de débito"});
-            this.tiposPago.Location = new System.Drawing.Point(135, 58);
-            this.tiposPago.Margin = new System.Windows.Forms.Padding(4);
-            this.tiposPago.Name = "tiposPago";
-            this.tiposPago.Size = new System.Drawing.Size(272, 24);
-            this.tiposPago.TabIndex = 6;
-            this.tiposPago.SelectionChangeCommitted += new System.EventHandler(this.tiposPago_SelectionChangeCommitted);
+            this.tipoPago.Location = new System.Drawing.Point(135, 58);
+            this.tipoPago.Margin = new System.Windows.Forms.Padding(4);
+            this.tipoPago.Name = "tiposPago";
+            this.tipoPago.Size = new System.Drawing.Size(272, 24);
+            this.tipoPago.TabIndex = 6;
             // 
             // label3
             // 
@@ -153,7 +152,6 @@
             this.tarjetas.Name = "tarjetas";
             this.tarjetas.Size = new System.Drawing.Size(272, 24);
             this.tarjetas.TabIndex = 16;
-            this.tarjetas.SelectionChangeCommitted += new System.EventHandler(this.tarjetas_SelectionChangeCommitted);
             // 
             // btnCancelar
             // 
@@ -176,7 +174,7 @@
             this.Controls.Add(this.tarjetas);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.numeroTarjeta);
-            this.Controls.Add(this.tiposPago);
+            this.Controls.Add(this.tipoPago);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.label2);
@@ -200,7 +198,7 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.ComboBox tiposPago;
+        private System.Windows.Forms.ComboBox tipoPago;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox numeroTarjeta;

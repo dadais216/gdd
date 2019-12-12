@@ -53,8 +53,8 @@ namespace FrbaOfertas
                 case "abm proveedor": new AbmProveedor.Form1().Show();break;
                 case "abm rol": new AbmRol.Form1().Show(); break;
                 case "compra oferta": new ComprarOferta.Form1(rolId,userId).Show(); break;
-                case "carga credito": new CragaCredito.Form1().Show(); break;
-                case "confeccion y publicacion de oferta": new CrearOferta.Form1().Show(); break;
+                case "carga credito": new CragaCredito.Form1(userId).Show(); break;
+                case "confeccion y publicacion de oferta": new CrearOferta.Form1(userId,rolId).Show(); break;
                 case "facturacion a proveedor": new Facturar.ListarFacturasProveedor().Show(); break;
                 case "listado estadistico": new ListadoEstadistico.ListadoView().Show(); break;
                 case "consumo oferta": new ConsumoOferta.Form1(userId).Show(); break;
