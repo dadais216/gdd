@@ -239,7 +239,7 @@ CREATE TABLE tp.RolxFuncionalidad(
 
 
 INSERT INTO tp.Funcionalidad (nombre)
-VALUES ('abm rol'), ('abm tp.Cliente'),('abm proveedor'),('carga credito')
+VALUES ('abm rol'), ('abm Cliente'),('abm proveedor'),('carga credito')
 ,('confeccion y publicacion de oferta'),('compra oferta'),('consumo oferta')
 ,('facturacion a proveedor'),('listado estadistico');
 --interpreto que loguearse y registrarse no son funcionalidades valores asignables a un rol
