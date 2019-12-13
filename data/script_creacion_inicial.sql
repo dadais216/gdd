@@ -13,8 +13,10 @@ IF OBJECT_ID('LOS_SIN_VOZ.Rol') IS NOT NULL DROP TABLE LOS_SIN_VOZ.Rol;
 IF OBJECT_ID('LOS_SIN_VOZ.Tipo_Pago') IS NOT NULL DROP TABLE LOS_SIN_VOZ.Tipo_Pago;
 IF OBJECT_ID('LOS_SIN_VOZ.Cliente') IS NOT NULL DROP TABLE LOS_SIN_VOZ.cliente;
 IF OBJECT_ID('LOS_SIN_VOZ.Proveedor') IS NOT NULL DROP TABLE LOS_SIN_VOZ.Proveedor;
+IF OBJECT_ID('LOS_SIN_VOZ.Rubro') IS NOT NULL DROP TABLE LOS_SIN_VOZ.Rubro;
 
 IF OBJECT_ID('LOS_SIN_VOZ.descuento') IS NOT NULL DROP FUNCTION LOS_SIN_VOZ.descuento;
+IF OBJECT_ID('LOS_SIN_VOZ.sp_facturar') IS NOT NULL DROP PROCEDURE LOS_SIN_VOZ.sp_facturar;
 
 IF EXISTS (SELECT * FROM sys.schemas WHERE name = N'LOS_SIN_VOZ')
 	DROP SCHEMA LOS_SIN_VOZ
@@ -74,6 +76,15 @@ SELECT (SELECT id FROM LOS_SIN_VOZ.Cliente WHERE dni=Cli_Dni),Carga_Credito,Carg
 FROM gd_esquema.Maestra AS M
 WHERE Carga_Credito IS NOT NULL
 
+CREATE TABLE LOS_SIN_VOZ.Rubro(
+	id INT IDENTITY(1,1) PRIMARY KEY,
+	nombre NVARCHAR(100),
+	)
+INSERT INTO LOS_SIN_VOZ.Rubro
+SELECT DISTINCT Provee_Rubro
+FROM gd_esquema.Maestra
+WHERE Provee_RS IS NOT NULL
+
 CREATE TABLE LOS_SIN_VOZ.Proveedor(
 	id INT IDENTITY(1,1) PRIMARY KEY,
 	RS VARCHAR(100) UNIQUE, --no uso esto como PK porque es mas lento y solo es unico dentro de un pais
@@ -81,7 +92,7 @@ CREATE TABLE LOS_SIN_VOZ.Proveedor(
 	ciudad VARCHAR(255),
 	telefono NUMERIC(18,0),
 	CUIT VARCHAR(16) UNIQUE,
-	rubro VARCHAR(32),
+	rubro INT REFERENCES LOS_SIN_VOZ.Rubro(id),
 	mail VARCHAR(255) DEFAULT null,
 	codigoPostal INT DEFAULT null, 
 	contacto VARCHAR(255) DEFAULT null,
@@ -90,9 +101,11 @@ CREATE TABLE LOS_SIN_VOZ.Proveedor(
 	--los proveedores y que se van a agregar mas adelante
 	)
 
+
 INSERT INTO LOS_SIN_VOZ.Proveedor (RS,dom,ciudad,telefono,CUIT,rubro)
-SELECT DISTINCT Provee_RS,Provee_Dom,Provee_Ciudad,Provee_Telefono,Provee_CUIT,Provee_Rubro
-FROM gd_esquema.Maestra
+SELECT DISTINCT Provee_RS,Provee_Dom,Provee_Ciudad,Provee_Telefono,Provee_CUIT, 
+(SELECT id FROM LOS_SIN_VOZ.Rubro WHERE nombre=Provee_Rubro)
+FROM gd_esquema.Maestra m
 WHERE Provee_RS IS NOT NULL
 
 CREATE TABLE LOS_SIN_VOZ.Oferta(
@@ -214,9 +227,15 @@ INSERT INTO LOS_SIN_VOZ.RolxFuncionalidad (rol,funcionalidad)
 (SELECT 4,id FROM LOS_SIN_VOZ.Funcionalidad);
 
 
-UPDATE LOS_SIN_VOZ.Cliente SET Saldo = (SELECT SUM(credito) FROM LOS_SIN_VOZ.Carga WHERE LOS_SIN_VOZ.Cliente.id=cliente)
+
+UPDATE LOS_SIN_VOZ.Cliente SET saldo = (SELECT SUM(credito) FROM LOS_SIN_VOZ.Carga 
+WHERE LOS_SIN_VOZ.Cliente.id=cliente)
 WHERE EXISTS (SELECT credito FROM LOS_SIN_VOZ.Carga WHERE LOS_SIN_VOZ.Cliente.id=cliente)
---@TODO restar las compras
+
+UPDATE LOS_SIN_VOZ.Cliente SET saldo = saldo - (SELECT SUM(precio) 
+	FROM LOS_SIN_VOZ.Oferta o JOIN LOS_SIN_VOZ.Compra_Oferta c 
+	ON o.codigo=c.oferta WHERE c.cliente=LOS_SIN_VOZ.Cliente.id)
+
 
 
 
@@ -311,7 +330,8 @@ CREATE FUNCTION LOS_SIN_VOZ.descuento(@precio_venta NUMERIC(18,2), @precio_origi
 RETURNS NUMERIC(18, 2)
 AS
 BEGIN
-	RETURN (@precio_original - @precio_venta)/NULLIF(@precio_original, 0)
+	RETURN @precio_venta/@precio_original 
+	--que sea tan simple me hace dudar que sea necesario que sea una funcion
 END
 GO
 
@@ -348,3 +368,7 @@ BEGIN
 	    LOS_SIN_VOZ.Compra_Oferta.fecha_Compra >= @desde AND
         LOS_SIN_VOZ.Compra_Oferta.fecha_Compra <= @hasta
 END
+
+
+INSERT INTO tp.Usuario (nombre,contraseña,rol,cliente,proveedor) VALUES ('admin',HASHBYTES('SHA2_256','w23e'),4,null,null)
+

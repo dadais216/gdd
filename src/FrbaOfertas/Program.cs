@@ -31,10 +31,20 @@ namespace FrbaOfertas
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
-
-#if true
             con.Open(); // a veces falla la conexion no sé por que
+#if false
+            Application.Run(new Login());
+#else
+#if true//salto el login porque rompe las bolas
             Application.Run(new Main("1", "4"));
+#else
+#if false
+            util.execCommand("UPDATE Cliente SET saldo=300 WHERE id=1");
+            Application.Run(new Main("1","1"));
+#else
+            Application.Run(new Main("252", "2"));
+#endif
+#endif
 #endif
         }
     }

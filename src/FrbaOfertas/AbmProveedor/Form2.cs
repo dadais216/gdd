@@ -46,6 +46,19 @@ namespace FrbaOfertas.AbmProveedor
 
         private void Button2_Click(object sender, EventArgs e)
         {
+            var table = util.tableQuery("SELECT id FROM LOS_SIN_VOZ.Rubro WHERE nombre = @no","@no",rubro.Text);
+
+            string rubroId;
+            if (table.Rows.Count == 0)
+            {
+                util.execCommand("INSERT LOS_SIN_VOZ.Rubro VALUES (@no)", "@no",rubro.Text);
+                rubroId = util.getVal("SELECT @@IDENTITY").ToString();
+            }
+            else
+            {
+                rubroId = table.Rows[0].ItemArray[0].ToString();
+            }
+
             util.execCommand("UPDATE LOS_SIN_VOZ.Proveedor SET RS=@RS,dom=@di,ciudad=@ci,telefono=@te,CUIT=@CU,mail=@ma, " +
                                                             "codigoPostal=@co,rubro=@ru " +
                                                             "WHERE id=@id",
@@ -56,7 +69,7 @@ namespace FrbaOfertas.AbmProveedor
                                                             "@cu", CUIT.Text,
                                                             "@ma", mail.Text,
                                                             "@co", codigoPostal.Text,
-                                                            "@ru", rubro.Text,
+                                                            "@ru", rubroId,
                                                             "@no", contacto.Text,
                                                             "@id", userId);
 

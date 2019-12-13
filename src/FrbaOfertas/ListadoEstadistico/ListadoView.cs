@@ -38,12 +38,12 @@ namespace FrbaOfertas.ListadoEstadistico
             query.CommandText = @"
             SELECT TOP 5 
                     Proveedor.RS AS Proveedor,
-                    FORMAT(AVG(dbo.descuento(Oferta.precio, Oferta.precio_Ficticio)), 'p') as DESCUENTOS_PROMEDIO
+                    FORMAT(AVG(LOS_SIN_VOZ.descuento(Oferta.precio, Oferta.precio_Ficticio)), 'p') as DESCUENTOS_PROMEDIO
             FROM LOS_SIN_VOZ.Oferta
             JOIN LOS_SIN_VOZ.Proveedor ON LOS_SIN_VOZ.Proveedor.id = LOS_SIN_VOZ.Oferta.proveedor
             WHERE LOS_SIN_VOZ.Oferta.fecha > @startDate AND LOS_SIN_VOZ.Oferta.fecha_Venc < @endDate
             GROUP BY LOS_SIN_VOZ.Proveedor.RS
-            ORDER BY AVG(dbo.descuento(LOS_SIN_VOZ.Oferta.precio, LOS_SIN_VOZ.Oferta.precio_Ficticio)) DESC
+            ORDER BY AVG(LOS_SIN_VOZ.descuento(LOS_SIN_VOZ.Oferta.precio, LOS_SIN_VOZ.Oferta.precio_Ficticio)) DESC
             ";
 
             DateTime moment;

@@ -25,7 +25,7 @@ namespace FrbaOfertas.AbmProveedor
         {
             query = new SqlCommand();
             query.Connection = Program.con;
-            query.CommandText = "SELECT id,RS,dom,ciudad,telefono,CUIT,mail,codigoPostal,rubro,contacto FROM LOS_SIN_VOZ.Proveedor ";
+            query.CommandText = "SELECT id,RS,dom,ciudad,telefono,CUIT,mail,codigoPostal,(SELECT nombre FROM tp.Rubro WHERE id=rubro),contacto FROM LOS_SIN_VOZ.Proveedor ";
 
             bool filterBefore = false;
             var addFilter = new Action<string,TextBox, string, string>((param,text, filterQueryBeg, filterQueryEnd) =>

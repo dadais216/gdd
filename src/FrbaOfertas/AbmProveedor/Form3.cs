@@ -23,6 +23,17 @@ namespace FrbaOfertas.AbmProveedor
 
             try
             {
+                var table = util.tableQuery("SELECT id FROM LOS_SIN_VOZ.Rubro WHERE nombre = @no", "@no", rubro.Text);
+                string rubroId;
+                if (table.Rows.Count == 0)
+                {
+                    util.execCommand("INSERT LOS_SIN_VOZ.Rubro VALUES (@no)", "@no", rubro.Text);
+                    rubroId = util.getVal("SELECT @@IDENTITY").ToString();
+                }
+                else
+                {
+                    rubroId = table.Rows[0].ItemArray[0].ToString();
+                }
                 util.execCommand("INSERT INTO LOS_SIN_VOZ.Proveedor (RS,dom,ciudad,telefono,CUIT,mail,codigoPostal,rubro,contacto) " +
                                  "VALUES (@RS,@di,@ci,@te,@cu,@ma,@co,@ru,@no)",
                                                             "@RS", razonSocial.Text,
@@ -32,14 +43,13 @@ namespace FrbaOfertas.AbmProveedor
                                                             "@cu", CUIT.Text,
                                                             "@ma", mail.Text,
                                                             "@co", codigoPostal.Text,
-                                                            "@ru", rubro.Text,
+                                                            "@ru", rubroId,
                                                             "@no", contacto.Text
                                                             );
                 finished = true;
             }
             catch (SqlException er)
             {
-                Console.WriteLine(er.Message + " >>>>>>>" + er.Number);
                 if (er.Number == 2627)
                 {
                     new ErrorWindow("un usuario con esos datos ya existe").Show();
