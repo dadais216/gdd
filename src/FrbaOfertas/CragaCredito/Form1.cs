@@ -26,7 +26,7 @@ namespace FrbaOfertas.CragaCredito
 
         private void ButtonCargar_Click(object sender, EventArgs e)
         {
-            var table = util.tableQuery("SELECT id FROM Tipo_Pago WHERE descripcion = @de", "@de", tipoPago.Text);
+            var table = util.tableQuery("SELECT id FROM LOS_SIN_VOZ.Tipo_Pago WHERE descripcion = @de", "@de", tipoPago.Text);
             tipoPagoId = table.Rows[0].ItemArray[0].ToString();
 
             if (this.sonCamposValidos())
@@ -129,7 +129,7 @@ namespace FrbaOfertas.CragaCredito
 
         private void cargarCmd()
         {
-            var command = new SqlCommand("INSERT INTO Carga (cliente, credito, fecha, tipo_Pago) " +
+            var command = new SqlCommand("INSERT INTO LOS_SIN_VOZ.Carga (cliente, credito, fecha, tipo_Pago) " +
                                             "VALUES (@cli,@cre,@fe,@tp)", Program.con);
 
             command.Parameters.AddWithValue("@cli", clienteId);

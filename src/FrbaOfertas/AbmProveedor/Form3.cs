@@ -23,7 +23,7 @@ namespace FrbaOfertas.AbmProveedor
 
             try
             {
-                util.execCommand("INSERT INTO tp.Proveedor (RS,dom,ciudad,telefono,CUIT,mail,codigoPostal,rubro,contacto) " +
+                util.execCommand("INSERT INTO LOS_SIN_VOZ.Proveedor (RS,dom,ciudad,telefono,CUIT,mail,codigoPostal,rubro,contacto) " +
                                  "VALUES (@RS,@di,@ci,@te,@cu,@ma,@co,@ru,@no)",
                                                             "@RS", razonSocial.Text,
                                                             "@di", direccion.Text,

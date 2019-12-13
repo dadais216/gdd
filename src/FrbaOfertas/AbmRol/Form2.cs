@@ -31,7 +31,7 @@ namespace FrbaOfertas.AbmRol
 
             button1.Text = habilitado ? "deshabilitar" : "habilitar";
 
-            var funcs = util.tableQuery("SELECT id,nombre FROM tp.Funcionalidad");
+            var funcs = util.tableQuery("SELECT id,nombre FROM LOS_SIN_VOZ.Funcionalidad");
 
 
             //no puedo asumir que la posicion de checked es igual al id porque no lo es si se modifica algo en la db
@@ -60,7 +60,7 @@ namespace FrbaOfertas.AbmRol
             }
 
             var funcsChecked = util.tableQuery("SELECT f.id " +
-                                       "FROM tp.Funcionalidad f JOIN tp.RolxFuncionalidad rf ON f.id = rf.funcionalidad " +
+                                       "FROM LOS_SIN_VOZ.Funcionalidad f JOIN LOS_SIN_VOZ.RolxFuncionalidad rf ON f.id = rf.funcionalidad " +
                                        "WHERE rf.rol = " + rolId);
 
             for (int i = 0; i < funcsChecked.Rows.Count; i++)
@@ -80,9 +80,9 @@ namespace FrbaOfertas.AbmRol
 
         private void Button2_Click(object sender, EventArgs e)
         {
-            util.execCommand("DELETE FROM tp.RolxFuncionalidad WHERE rol = " + rolId);
+            util.execCommand("DELETE FROM LOS_SIN_VOZ.RolxFuncionalidad WHERE rol = " + rolId);
 
-            string query = "INSERT INTO tp.RolxFuncionalidad (rol,funcionalidad) VALUES ";
+            string query = "INSERT INTO LOS_SIN_VOZ.RolxFuncionalidad (rol,funcionalidad) VALUES ";
 
             bool oneValIn = false;
             foreach(var tuple in checks)
@@ -106,7 +106,7 @@ namespace FrbaOfertas.AbmRol
 
             if (rolName != nombre.Text)
             {
-                util.execCommand("UPDATE tp.Rol SET nombre = @no WHERE id = " + rolId,
+                util.execCommand("UPDATE LOS_SIN_VOZ.Rol SET nombre = @no WHERE id = " + rolId,
                                     "@no",nombre.Text);
             }
 
@@ -116,11 +116,11 @@ namespace FrbaOfertas.AbmRol
 
         private void Button1_Click(object sender, EventArgs e)
         {
-            util.execCommand("UPDATE tp.Rol SET habilitado = " + (habilitado ? "0" : "1")
+            util.execCommand("UPDATE LOS_SIN_VOZ.Rol SET habilitado = " + (habilitado ? "0" : "1")
                                          + " WHERE id = " + rolId);
             if (habilitado)
             {
-                util.execCommand("UPDATE tp.Usuario SET rol = null WHERE rol = " + rolId);
+                util.execCommand("UPDATE LOS_SIN_VOZ.Usuario SET rol = null WHERE rol = " + rolId);
             }
             parent.doQuery();
             Close();

@@ -39,8 +39,8 @@ namespace FrbaOfertas.ConsumoOferta
         {
             var table = util.tableQuery(@"
                     SELECT CONCAT(nombre,' ',apellido),oferta,descripcion,fecha_Compra, c.id,co.id
-                    FROM tp.Compra_Oferta co JOIN tp.Cliente c ON c.id=co.cliente JOIN tp.Oferta o ON o.codigo=co.oferta
-                    WHERE co.fueCanjeado=0 AND o.proveedor=(SELECT proveedor FROM tp.Usuario WHERE id=" + userId + ")");
+                    FROM LOS_SIN_VOZ.Compra_Oferta co JOIN LOS_SIN_VOZ.Cliente c ON c.id=co.cliente JOIN LOS_SIN_VOZ.Oferta o ON o.codigo=co.oferta
+                    WHERE co.fueCanjeado=0 AND o.proveedor=(SELECT proveedor FROM LOS_SIN_VOZ.Usuario WHERE id=" + userId + ")");
             clienteCompraIds = new int[table.Rows.Count,2];
             //creo que los puse en el orden correcto, quiero que los pares esten juntos en memoria
 

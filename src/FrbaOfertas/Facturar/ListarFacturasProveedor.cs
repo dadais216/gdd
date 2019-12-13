@@ -22,7 +22,6 @@ namespace FrbaOfertas.Facturar
          Se informara el importe de la factura y su numero.
         */
         string chosenProveedor;
-        string montoFactura;
         DateTime fechaActual = DateTime.Parse(ConfigurationManager.AppSettings["fecha"]);
 
         public ListarFacturasProveedor()
@@ -48,7 +47,7 @@ namespace FrbaOfertas.Facturar
         private List<string> getProveedores()
         {
             List<string> proveedores = new List<string> { };
-            SqlCommand proveedoresQuery = new SqlCommand("SELECT RS FROM tp.Proveedor", Program.con);
+            SqlCommand proveedoresQuery = new SqlCommand("SELECT RS FROM LOS_SIN_VOZ.Proveedor", Program.con);
             SqlDataReader reader = proveedoresQuery.ExecuteReader();
 
             while (reader.Read())
@@ -76,14 +75,14 @@ namespace FrbaOfertas.Facturar
 		                Oferta.fecha AS FECHA,
 		                Oferta.fecha_Venc AS VENCIMIENTO,
                         Compra_Oferta.id AS TICKET
-                FROM tp.Compra_Oferta
-                JOIN tp.Oferta ON tp.Compra_Oferta.oferta = tp.Oferta.codigo
-                JOIN tp.Proveedor ON tp.Proveedor.id = tp.Oferta.proveedor
-                JOIN tp.Cliente ON tp.Cliente.id = tp.Compra_Oferta.cliente
-                WHERE tp.Proveedor.RS = @proveedor AND 
-                      tp.Compra_Oferta.factura IS NULL AND
-	                  tp.Compra_Oferta.fecha_Compra < @endDate AND
-	                  tp.Compra_Oferta.fecha_Compra > @startDate
+                FROM LOS_SIN_VOZ.Compra_Oferta
+                JOIN LOS_SIN_VOZ.Oferta ON LOS_SIN_VOZ.Compra_Oferta.oferta = LOS_SIN_VOZ.Oferta.codigo
+                JOIN LOS_SIN_VOZ.Proveedor ON LOS_SIN_VOZ.Proveedor.id = LOS_SIN_VOZ.Oferta.proveedor
+                JOIN LOS_SIN_VOZ.Cliente ON LOS_SIN_VOZ.Cliente.id = LOS_SIN_VOZ.Compra_Oferta.cliente
+                WHERE LOS_SIN_VOZ.Proveedor.RS = @proveedor AND 
+                      LOS_SIN_VOZ.Compra_Oferta.factura IS NULL AND
+	                  LOS_SIN_VOZ.Compra_Oferta.fecha_Compra < @endDate AND
+	                  LOS_SIN_VOZ.Compra_Oferta.fecha_Compra > @startDate
                 ORDER BY 1 ASC
                 ",
                 Program.con
@@ -110,15 +109,15 @@ namespace FrbaOfertas.Facturar
             SqlCommand montoFacturaQuery = new SqlCommand(
                 @"
                 SELECT SUM(Oferta.precio)
-                FROM tp.Compra_Oferta
-                JOIN tp.Oferta ON tp.Compra_Oferta.oferta = tp.Oferta.codigo
-                JOIN tp.Proveedor ON tp.Proveedor.id = tp.Oferta.proveedor
-                WHERE tp.Proveedor.RS = @proveedor AND
-                      tp.Compra_Oferta.factura IS NULL AND 
-	                  tp.Compra_Oferta.fecha_Compra < @end AND
-	                  tp.Compra_Oferta.fecha_Compra > @start
+                FROM LOS_SIN_VOZ.Compra_Oferta
+                JOIN LOS_SIN_VOZ.Oferta ON LOS_SIN_VOZ.Compra_Oferta.oferta = LOS_SIN_VOZ.Oferta.codigo
+                JOIN LOS_SIN_VOZ.Proveedor ON LOS_SIN_VOZ.Proveedor.id = LOS_SIN_VOZ.Oferta.proveedor
+                WHERE LOS_SIN_VOZ.Proveedor.RS = @proveedor AND
+                      LOS_SIN_VOZ.Compra_Oferta.factura IS NULL AND 
+	                  LOS_SIN_VOZ.Compra_Oferta.fecha_Compra < @end AND
+	                  LOS_SIN_VOZ.Compra_Oferta.fecha_Compra > @start
 
-                GROUP BY tp.Proveedor.id
+                GROUP BY LOS_SIN_VOZ.Proveedor.id
                 ",
                 Program.con
             );
@@ -158,8 +157,39 @@ namespace FrbaOfertas.Facturar
 
         }
 
+        private string getProveedorIdFromName(string proveedor) {
+
+            try
+            {
+                SqlCommand query = new SqlCommand("SELECT id FROM LOS_SIN_VOZ.Proveedor WHERE RS= " + proveedor.ToString(), Program.con);
+                object a = query.ExecuteScalar();
+                return a.ToString();
+            }
+            catch (Exception exc)
+            {
+                string msg = exc.ToString();
+                MessageBox.Show("Algo salió mal. Reintente", "Error");
+                string a = "1";
+                return a;
+            }
+
+
+        }
+
         private void facturarButton_Click(object sender, EventArgs e)
         {
+            // Ejecutar SP de facturacion pasandole parametros, proveedor id, fecha de facturacion, periodo desde y hasta
+            string prov_id = getProveedorIdFromName(chosenProveedor);
+            SqlCommand facturarQuery = new SqlCommand("LOS_SIN_VOZ.sp_facturar", Program.con);
+            facturarQuery.CommandType = CommandType.StoredProcedure;
+            facturarQuery.Parameters.AddWithValue("@prov", prov_id);
+            facturarQuery.Parameters.AddWithValue("@fecha_facturacion", fechaActual.ToString());
+            facturarQuery.Parameters.AddWithValue("@desde", desdePicker.Value.ToString());
+            facturarQuery.Parameters.AddWithValue("@hasta", hastaPicker.Value.ToString());
+
+
+         
+
             List<string> compra_ids = new List<string> {};
             foreach (DataGridViewRow compra in TablaFacturacion.Rows)
             {
@@ -171,13 +201,15 @@ namespace FrbaOfertas.Facturar
             string msg = "Desea confirmar la facturacíon para el proveedor " + chosenProveedor+"?";
             DialogResult confirm = MessageBox.Show(msg, "Confirmar operación", MessageBoxButtons.YesNo);
             if (confirm == DialogResult.Yes) {
-                crearFactura(compra_ids);
+                try
+                {
+                    facturarQuery.ExecuteNonQuery();
+                    MessageBox.Show("Facturacion exitosa", "Exito");
+                }
+                catch (Exception _) {
+                    MessageBox.Show("Algo salió mal. Reintente", "Error");
+                }
             }
-
-            // Debug.WriteLine(compra_ids);
-            // Crear row en factura
-            // Obtener todos los ids de compra oferta
-            // UPDATE Compra_Oferta SET factura = Factura.nro
         }
 
         private void crearFactura(List<string> compra_ids)
@@ -186,10 +218,10 @@ namespace FrbaOfertas.Facturar
             // Creo factura de proveedor
             SqlCommand insertarFactura = new SqlCommand(
                 @"
-                INSERT INTO tp.Factura output INSERTED.nro
+                INSERT INTO LOS_SIN_VOZ.Factura output INSERTED.nro
                 VALUES (
                        @fecha,
-                       (SELECT id FROM tp.Proveedor WHERE RS=@proveedor)
+                       (SELECT id FROM LOS_SIN_VOZ.Proveedor WHERE RS=@proveedor)
                 )
                 ",
                 Program.con
@@ -197,6 +229,8 @@ namespace FrbaOfertas.Facturar
             insertarFactura.Parameters.AddWithValue("@proveedor", chosenProveedor);
             insertarFactura.Parameters.AddWithValue("@fecha", fechaActual.ToString());
             int factura = Convert.ToInt32(insertarFactura.ExecuteScalar());
+
+            // Update compras
             SqlCommand updateCompras = buildComprasUpdateQuery(factura.ToString(), compra_ids);
             int affectedRows = updateCompras.ExecuteNonQuery();
             if (compra_ids.Count() == affectedRows) {
@@ -206,7 +240,6 @@ namespace FrbaOfertas.Facturar
                 MessageBox.Show("Algo salió mal. Reintente", "Error");
             }
             facturarButton.Enabled = false;
-            // clean datagrid view or disable facturar
         }
 
         private string buildComprasInClause(SqlCommand q,  List<string> compra_ids) 
@@ -235,7 +268,7 @@ namespace FrbaOfertas.Facturar
         {
             string parameterPrefix = "compra_id";
             string querystr = @"
-                UPDATE tp.Compra_Oferta 
+                UPDATE LOS_SIN_VOZ.Compra_Oferta 
                 SET factura=@factura
                 WHERE Compra_Oferta.id IN ({0})
                 ";

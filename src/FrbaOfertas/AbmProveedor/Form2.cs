@@ -36,7 +36,7 @@ namespace FrbaOfertas.AbmProveedor
 
             userId = userId_;
 
-            var table = util.tableQuery("SELECT habilitado FROM tp.Usuario WHERE proveedor = " + userId);
+            var table = util.tableQuery("SELECT habilitado FROM LOS_SIN_VOZ.Usuario WHERE proveedor = " + userId);
 
             habilitado = (bool)table.Rows[0].ItemArray[0];
 
@@ -46,7 +46,7 @@ namespace FrbaOfertas.AbmProveedor
 
         private void Button2_Click(object sender, EventArgs e)
         {
-            util.execCommand("UPDATE tp.Proveedor SET RS=@RS,dom=@di,ciudad=@ci,telefono=@te,CUIT=@CU,mail=@ma, " +
+            util.execCommand("UPDATE LOS_SIN_VOZ.Proveedor SET RS=@RS,dom=@di,ciudad=@ci,telefono=@te,CUIT=@CU,mail=@ma, " +
                                                             "codigoPostal=@co,rubro=@ru " +
                                                             "WHERE id=@id",
                                                             "@RS", razonSocial.Text,
@@ -76,7 +76,7 @@ namespace FrbaOfertas.AbmProveedor
 
         private void Button1_Click(object sender, EventArgs e)
         {
-            util.execCommand("UPDATE Usuario SET habilitado = " + (habilitado ? "0 " : "1 ") + "WHERE proveedor = " + userId);
+            util.execCommand("UPDATE LOS_SIN_VOZ.Usuario SET habilitado = " + (habilitado ? "0 " : "1 ") + "WHERE proveedor = " + userId);
 
             Close();
         }

@@ -1,26 +1,26 @@
 USE [GD2C2019]
 
-IF OBJECT_ID('tp.Carga') IS NOT NULL DROP TABLE tp.Carga;
-IF OBJECT_ID('tp.Compra_Oferta') IS NOT NULL DROP TABLE tp.Compra_Oferta;
-IF OBJECT_ID('tp.contraseñasMigracion') IS NOT NULL DROP TABLE tp.contraseñasMigracion;
-IF OBJECT_ID('tp.Cupon') IS NOT NULL DROP TABLE tp.Cupon;
-IF OBJECT_ID('tp.Factura') IS NOT NULL DROP TABLE tp.Factura;
-IF OBJECT_ID('tp.Oferta') IS NOT NULL DROP TABLE tp.Oferta;
-IF OBJECT_ID('tp.RolXFuncionalidad') IS NOT NULL DROP TABLE tp.RolXFuncionalidad;
-IF OBJECT_ID('tp.Funcionalidad') IS NOT NULL DROP TABLE tp.Funcionalidad;
-IF OBJECT_ID('tp.Usuario') IS NOT NULL DROP TABLE tp.Usuario;
-IF OBJECT_ID('tp.Rol') IS NOT NULL DROP TABLE tp.Rol;
-IF OBJECT_ID('tp.Tipo_Pago') IS NOT NULL DROP TABLE tp.Tipo_Pago;
-IF OBJECT_ID('tp.Cliente') IS NOT NULL DROP TABLE tp.cliente;
-IF OBJECT_ID('tp.Proveedor') IS NOT NULL DROP TABLE tp.Proveedor;
+IF OBJECT_ID('LOS_SIN_VOZ.Carga') IS NOT NULL DROP TABLE LOS_SIN_VOZ.Carga;
+IF OBJECT_ID('LOS_SIN_VOZ.Compra_Oferta') IS NOT NULL DROP TABLE LOS_SIN_VOZ.Compra_Oferta;
+IF OBJECT_ID('LOS_SIN_VOZ.contraseñasMigracion') IS NOT NULL DROP TABLE LOS_SIN_VOZ.contraseñasMigracion;
+IF OBJECT_ID('LOS_SIN_VOZ.Cupon') IS NOT NULL DROP TABLE LOS_SIN_VOZ.Cupon;
+IF OBJECT_ID('LOS_SIN_VOZ.Factura') IS NOT NULL DROP TABLE LOS_SIN_VOZ.Factura;
+IF OBJECT_ID('LOS_SIN_VOZ.Oferta') IS NOT NULL DROP TABLE LOS_SIN_VOZ.Oferta;
+IF OBJECT_ID('LOS_SIN_VOZ.RolXFuncionalidad') IS NOT NULL DROP TABLE LOS_SIN_VOZ.RolXFuncionalidad;
+IF OBJECT_ID('LOS_SIN_VOZ.Funcionalidad') IS NOT NULL DROP TABLE LOS_SIN_VOZ.Funcionalidad;
+IF OBJECT_ID('LOS_SIN_VOZ.Usuario') IS NOT NULL DROP TABLE LOS_SIN_VOZ.Usuario;
+IF OBJECT_ID('LOS_SIN_VOZ.Rol') IS NOT NULL DROP TABLE LOS_SIN_VOZ.Rol;
+IF OBJECT_ID('LOS_SIN_VOZ.Tipo_Pago') IS NOT NULL DROP TABLE LOS_SIN_VOZ.Tipo_Pago;
+IF OBJECT_ID('LOS_SIN_VOZ.Cliente') IS NOT NULL DROP TABLE LOS_SIN_VOZ.cliente;
+IF OBJECT_ID('LOS_SIN_VOZ.Proveedor') IS NOT NULL DROP TABLE LOS_SIN_VOZ.Proveedor;
 
-IF OBJECT_ID('tp.descuento') IS NOT NULL DROP FUNCTION tp.descuento;
+IF OBJECT_ID('LOS_SIN_VOZ.descuento') IS NOT NULL DROP FUNCTION LOS_SIN_VOZ.descuento;
 
-IF EXISTS (SELECT * FROM sys.schemas WHERE name = N'tp')
-	DROP SCHEMA tp
+IF EXISTS (SELECT * FROM sys.schemas WHERE name = N'LOS_SIN_VOZ')
+	DROP SCHEMA LOS_SIN_VOZ
 
 GO
-CREATE SCHEMA tp AUTHORIZATION [gd]
+CREATE SCHEMA LOS_SIN_VOZ AUTHORIZATION [gd]
 
 GO
 SET ANSI_NULLS ON  -- Only compare nulls with IS and IS NOT
@@ -29,7 +29,7 @@ GO
 SET QUOTED_IDENTIFIER ON  -- Allow double quoting to use reserved keywords as table names 
 
 ---------------------------------- CREATE TABLES -------------------------------------------
-CREATE TABLE tp.Cliente(
+CREATE TABLE LOS_SIN_VOZ.Cliente(
 	id INT IDENTITY(1,1) PRIMARY KEY,
 	dni NUMERIC(18,0) NOT NULL,
 	nombre VARCHAR(255) NOT NULL,
@@ -46,35 +46,35 @@ CREATE TABLE tp.Cliente(
 	--pero creo que me quedo con este.
 	--deberia ser todo NOT NULL?
 )
-INSERT INTO tp.Cliente (dni, nombre, apellido, direccion, telefono, mail, fecha_Nac, ciudad)
+INSERT INTO LOS_SIN_VOZ.Cliente (dni, nombre, apellido, direccion, telefono, mail, fecha_Nac, ciudad)
 SELECT DISTINCT Cli_Dni, Cli_Nombre, Cli_Apellido, Cli_Direccion, Cli_Telefono, Cli_Mail, Cli_Fecha_Nac, Cli_Ciudad
 FROM gd_esquema.Maestra 
 
-CREATE TABLE tp.Tipo_Pago(
+CREATE TABLE LOS_SIN_VOZ.Tipo_Pago(
 	id INT IDENTITY(1,1) PRIMARY KEY,
 	descripcion NVARCHAR(100),
 	)
-INSERT INTO tp.Tipo_Pago
+INSERT INTO LOS_SIN_VOZ.Tipo_Pago
 SELECT DISTINCT Tipo_Pago_Desc
 FROM gd_esquema.Maestra
 WHERE Tipo_Pago_Desc IS NOT NULL
 
 
-CREATE TABLE tp.Carga(
+CREATE TABLE LOS_SIN_VOZ.Carga(
 	id INT IDENTITY(1,1) PRIMARY KEY,
-	cliente INT REFERENCES tp.Cliente(id),
+	cliente INT REFERENCES LOS_SIN_VOZ.Cliente(id),
 	credito NUMERIC(18,2), --seria redundante ponerle NOT NULL a estos?
 	fecha DATETIME,
-	tipo_Pago INT REFERENCES tp.Tipo_Pago(id), -- ni idea de que es esto pero es algo de carga. Podria ser un enum
+	tipo_Pago INT REFERENCES LOS_SIN_VOZ.Tipo_Pago(id), -- ni idea de que es esto pero es algo de carga. Podria ser un enum
 	)
 
-INSERT INTO tp.Carga
-SELECT (SELECT id FROM tp.Cliente WHERE dni=Cli_Dni),Carga_Credito,Carga_Fecha, 
-		(select id from tp.Tipo_Pago where Tipo_Pago_Desc=Tipo_Pago.descripcion)
+INSERT INTO LOS_SIN_VOZ.Carga
+SELECT (SELECT id FROM LOS_SIN_VOZ.Cliente WHERE dni=Cli_Dni),Carga_Credito,Carga_Fecha, 
+		(select id from LOS_SIN_VOZ.Tipo_Pago where Tipo_Pago_Desc=Tipo_Pago.descripcion)
 FROM gd_esquema.Maestra AS M
 WHERE Carga_Credito IS NOT NULL
 
-CREATE TABLE tp.Proveedor(
+CREATE TABLE LOS_SIN_VOZ.Proveedor(
 	id INT IDENTITY(1,1) PRIMARY KEY,
 	RS VARCHAR(100) UNIQUE, --no uso esto como PK porque es mas lento y solo es unico dentro de un pais
 	dom VARCHAR(255),
@@ -90,12 +90,12 @@ CREATE TABLE tp.Proveedor(
 	--los proveedores y que se van a agregar mas adelante
 	)
 
-INSERT INTO tp.Proveedor (RS,dom,ciudad,telefono,CUIT,rubro)
+INSERT INTO LOS_SIN_VOZ.Proveedor (RS,dom,ciudad,telefono,CUIT,rubro)
 SELECT DISTINCT Provee_RS,Provee_Dom,Provee_Ciudad,Provee_Telefono,Provee_CUIT,Provee_Rubro
 FROM gd_esquema.Maestra
 WHERE Provee_RS IS NOT NULL
 
-CREATE TABLE tp.Oferta(
+CREATE TABLE LOS_SIN_VOZ.Oferta(
 	codigo VARCHAR(50) PRIMARY KEY,
 	descripcion VARCHAR(255),
 	cantidad NUMERIC(18,0), --es el stock
@@ -103,9 +103,9 @@ CREATE TABLE tp.Oferta(
 	fecha_Venc DATE NOT NULL,
 	precio NUMERIC(18,2) NOT NULL,
 	precio_Ficticio NUMERIC(18,2) NOT NULL,
-	proveedor INT REFERENCES tp.Proveedor(id)
+	proveedor INT REFERENCES LOS_SIN_VOZ.Proveedor(id)
 )
-INSERT INTO tp.Oferta
+INSERT INTO LOS_SIN_VOZ.Oferta
 SELECT DISTINCT Oferta_Codigo,
 				Oferta_Descripcion,
 				Oferta_Cantidad,
@@ -113,84 +113,40 @@ SELECT DISTINCT Oferta_Codigo,
 				Oferta_Fecha_Venc, 
 				Oferta_Precio, 
 				Oferta_Precio_Ficticio,
-				(SELECT id FROM tp.Proveedor p WHERE p.RS=m.Provee_RS)
+				(SELECT id FROM LOS_SIN_VOZ.Proveedor p WHERE p.RS=m.Provee_RS)
 FROM gd_esquema.Maestra m
 WHERE Oferta_Codigo IS NOT NULL 
 
 
-CREATE TABLE tp.Factura(
+CREATE TABLE LOS_SIN_VOZ.Factura(
 	nro NUMERIC(18,0) IDENTITY(200000, 1) PRIMARY KEY,
 	fecha DATETIME,
-	proveedor INT REFERENCES tp.Proveedor(id)
+	proveedor INT REFERENCES LOS_SIN_VOZ.Proveedor(id)
 )
 -- Esto es necesario porque los futuros nro de factura van a ser autogenerados pero los de la migracion no
 -- SQL se queja cuando le metes de prepo una pk a una tabla. y te exige que le apses el flag IDENTITY_INSERT
--- Tambiex hace obligatorio que pongas las columnas despues del INSERT INTO tp.TABLA (campo1, campo2) como para que quede bien claro que la estas cagando
-SET IDENTITY_INSERT tp.Factura ON 
-INSERT INTO tp.Factura (nro, fecha, proveedor)
-SELECT DISTINCT Factura_Nro,Factura_Fecha,(SELECT id FROM tp.Proveedor p WHERE p.RS=m.Provee_RS) 
+-- Tambiex hace obligatorio que pongas las columnas despues del INSERT INTO LOS_SIN_VOZ.TABLA (campo1, campo2) como para que quede bien claro que la estas cagando
+SET IDENTITY_INSERT LOS_SIN_VOZ.Factura ON 
+INSERT INTO LOS_SIN_VOZ.Factura (nro, fecha, proveedor)
+SELECT DISTINCT Factura_Nro,Factura_Fecha,(SELECT id FROM LOS_SIN_VOZ.Proveedor p WHERE p.RS=m.Provee_RS) 
 FROM gd_esquema.Maestra m 
 WHERE Factura_Nro IS NOT NULL
-SET IDENTITY_INSERT tp.Factura OFF -- A partir de ahora el nro de la factura va a ser autogenerado.
-/*
-
-haciendo
-SELECT Cli_Dni,Oferta_Codigo,COUNT(*) FROM gd_esquema.Maestra
-WHERE Oferta_Codigo IS NOT NULL
-GROUP BY Cli_Dni,Oferta_Codigo
-se puede ver que no hay registros de facturacion y entrega para todas las compra ventas.
-
-En un principio pense en primero llenar la tabla con todas las compra ventas y despues ir haciendo
-updates con joins para conseguir la factura y entrega de los que la tengan.
-Pero me di cuenta de que poniendo un max se hace lo que quiero, que es dejar el null cuando no hay
-registros y dejar el registro cuando esta, ya que solo hay 2 casos, o esta el registro o no esta.
+SET IDENTITY_INSERT LOS_SIN_VOZ.Factura OFF -- A partir de ahora el nro de la factura va a ser autogenerado.
 
 
-CREATE TABLE tp.tp.ompra_Oferta(
-	id INT IDENTITY(1,1) PRIMARY KEY, --no estoy seguro de si la combinacion de las 3 FK es una PK
-	cliente INT REFERENCES tp.Cliente(id),
-	oferta VARCHAR(50) REFERENCES tp.Oferta(codigo),
-	fecha_Compra DATETIME,
-	fecha_Entrega DATETIME,
-
-	--en la tabla maestra hay 3 tipos de filas,
-	--unas tienen la factura (indica la compra)
-	--otras tienen la entrega (indica entrega)
-	--y otros de la compra en si
-	)
-
-
-probando
-SELECT (SELECT id FROM tp.Cliente WHERE dni=Cli_Dni),Oferta_Codigo,COUNT(*) FROM gd_esquema.Maestra
-WHERE Oferta_Codigo IS NOT NULL
-GROUP BY Cli_Dni,Oferta_Codigo
-el count da siempre 1 o 3, 1 cuando solo hubo una compra, 3 cuando ademas de la compra hubo una entrega y una factura.
-
-puede verse que solo hay una combinacion de cada tp.Cliente con codigo oferta (ningun tp.Cliente compro una oferta 2 veces),
-lo que es conveniente porque simplifica el query para cargar compras ya que se puede agrupar por tp.Cliente y codigo.
-y hacer un max para poder traer los otros campos y no se queje por el group by 
-
-El max se encarga de dejar el valor que exista, e ignorar nulls, ya que solo hay dos casos posibles,
-o esta el valor unico o hay null. Que sea un max especificamente no significa nada.
-
-Cargo el valor de entrega porque hace mas simple construir la tabla de cupones, despues se lo saco
-
-*/
-
-
-CREATE TABLE tp.Compra_Oferta(
+CREATE TABLE LOS_SIN_VOZ.Compra_Oferta(
 	id INT IDENTITY(1,1) PRIMARY KEY,
-	cliente INT REFERENCES tp.Cliente(id),
-	oferta VARCHAR(50) REFERENCES tp.Oferta(codigo),
-	factura NUMERIC(18,0) REFERENCES tp.Factura(nro) DEFAULT null,
+	cliente INT REFERENCES LOS_SIN_VOZ.Cliente(id),
+	oferta VARCHAR(50) REFERENCES LOS_SIN_VOZ.Oferta(codigo),
+	factura NUMERIC(18,0) REFERENCES LOS_SIN_VOZ.Factura(nro) DEFAULT null,
 	fecha_Compra DATETIME,
 	fueCanjeado BIT DEFAULT 0,
 	fecha_Entrega DATETIME
 )
 
 -- Esto tira 'Warning: Null value is eliminated by an aggregate or other SET operation.' Porque estamos descartando una row que tiene NULL en factura y fecha compra y es justamente lo deseado, no es un error.
-INSERT INTO tp.Compra_Oferta (cliente, oferta, factura, fecha_Compra, fecha_Entrega)
-SELECT  (SELECT id FROM tp.Cliente WHERE dni=Cli_Dni) AS Cliente,
+INSERT INTO LOS_SIN_VOZ.Compra_Oferta (cliente, oferta, factura, fecha_Compra, fecha_Entrega)
+SELECT  (SELECT id FROM LOS_SIN_VOZ.Cliente WHERE dni=Cli_Dni) AS Cliente,
 		Oferta_Codigo,
 		MAX(Factura_Nro),
 		MAX(Oferta_Fecha_Compra),
@@ -199,46 +155,46 @@ FROM gd_esquema.Maestra
 WHERE Oferta_Codigo IS NOT NULL
 GROUP BY Cli_Dni,Oferta_Codigo
 
-CREATE TABLE tp.Cupon(
+CREATE TABLE LOS_SIN_VOZ.Cupon(
 	codigo INT IDENTITY(1000,1) PRIMARY KEY, --podria ser algo mas complejo esto, o podria no serlo
-	cliente INT REFERENCES tp.Cliente(id),
+	cliente INT REFERENCES LOS_SIN_VOZ.Cliente(id),
 	fecha_Consumo DATETIME,
 )
 
-INSERT INTO tp.Cupon
+INSERT INTO LOS_SIN_VOZ.Cupon
 SELECT Cliente, fecha_Entrega 
-FROM tp.Compra_Oferta
+FROM LOS_SIN_VOZ.Compra_Oferta
 WHERE fecha_Entrega IS NOT null
 
-ALTER TABLE tp.Compra_Oferta DROP COLUMN fecha_Entrega
+ALTER TABLE LOS_SIN_VOZ.Compra_Oferta DROP COLUMN fecha_Entrega
 /*
 se podrian juntar la compra oferta con el cupon, porque lo modelamos para que sea una relacion 1 a 1.
 El id de la tabla seria el codigo cupon, que no significaria nada en compras sin cupon
 Y se ahorraria tener el campo 'fue canjeado' en compra oferta
 Y se tendria la informacion de de que compra oferta nacio el cupon.
-No lo hago para no alejarme mucho de lo que parece querer el tp, igual no es nada muy loco
+No lo hago para no alejarme mucho de lo que parece querer el LOS_SIN_VOZ. igual no es nada muy loco
 */
 
 
-CREATE TABLE tp.Funcionalidad(
+CREATE TABLE LOS_SIN_VOZ.Funcionalidad(
 	id int IDENTITY(1,1) PRIMARY KEY,
 	nombre varchar(40),
 )
 
-CREATE TABLE tp.Rol(
+CREATE TABLE LOS_SIN_VOZ.Rol(
 	id int IDENTITY(1,1) PRIMARY KEY,
 	nombre varchar(40),
 	habilitado bit DEFAULT 1,
 )
 
-CREATE TABLE tp.RolxFuncionalidad(
+CREATE TABLE LOS_SIN_VOZ.RolxFuncionalidad(
 	id int IDENTITY(1,1) PRIMARY KEY,
-	funcionalidad int FOREIGN KEY REFERENCES tp.Funcionalidad(id),
-	rol int FOREIGN KEY REFERENCES tp.Rol(id),
+	funcionalidad int FOREIGN KEY REFERENCES LOS_SIN_VOZ.Funcionalidad(id),
+	rol int FOREIGN KEY REFERENCES LOS_SIN_VOZ.Rol(id),
 )
 
 
-INSERT INTO tp.Funcionalidad (nombre)
+INSERT INTO LOS_SIN_VOZ.Funcionalidad (nombre)
 VALUES ('abm rol'), ('abm cliente'),('abm proveedor'),('carga credito')
 ,('confeccion y publicacion de oferta'),('compra oferta'),('consumo oferta')
 ,('facturacion a proveedor'),('listado estadistico');
@@ -247,19 +203,19 @@ VALUES ('abm rol'), ('abm cliente'),('abm proveedor'),('carga credito')
 --aparte.
 
 
-INSERT INTO tp.Rol (nombre)
+INSERT INTO LOS_SIN_VOZ.Rol (nombre)
 VALUES ('cliente'),('proveedor'),('administrador'),('administrador general');
 
-INSERT INTO tp.RolxFuncionalidad (rol,funcionalidad) -- Dado que es un script de migración único a ejecutar por única vez, es permisible esto
+INSERT INTO LOS_SIN_VOZ.RolxFuncionalidad (rol,funcionalidad) -- Dado que es un script de migración único a ejecutar por única vez, es permisible esto
 VALUES  (1,4),(1,6),
 		(2,5),(2,7),
 		(3,1),(3,2),(3,3),(3,8),(3,9);
-INSERT INTO tp.RolxFuncionalidad (rol,funcionalidad)
-(SELECT 4,id FROM tp.Funcionalidad);
+INSERT INTO LOS_SIN_VOZ.RolxFuncionalidad (rol,funcionalidad)
+(SELECT 4,id FROM LOS_SIN_VOZ.Funcionalidad);
 
 
-UPDATE tp.Cliente SET Saldo = (SELECT SUM(credito) FROM tp.Carga WHERE tp.Cliente.id=cliente)
-WHERE EXISTS (SELECT credito FROM tp.Carga WHERE tp.Cliente.id=cliente)
+UPDATE LOS_SIN_VOZ.Cliente SET Saldo = (SELECT SUM(credito) FROM LOS_SIN_VOZ.Carga WHERE LOS_SIN_VOZ.Cliente.id=cliente)
+WHERE EXISTS (SELECT credito FROM LOS_SIN_VOZ.Carga WHERE LOS_SIN_VOZ.Cliente.id=cliente)
 --@TODO restar las compras
 
 
@@ -270,7 +226,7 @@ WHERE EXISTS (SELECT credito FROM tp.Carga WHERE tp.Cliente.id=cliente)
 Entiendo que un nombre y apellido no son unicos pero se da la casualidad de que
 si son unicos en la base de datos de la que se esta migrando:
 
-SELECT c.Cli_Nombre FROM tp.Cliente c JOIN tp.Cliente b 
+SELECT c.Cli_Nombre FROM LOS_SIN_VOZ.Cliente c JOIN LOS_SIN_VOZ.Cliente b 
 ON c.Cli_Nombre=b.Cli_Nombre AND c.Cli_Apellido=b.Cli_Apellido AND c.id!=b.id;
 
 da vacio.
@@ -281,24 +237,24 @@ con proveedores pasa algo parecido. RS es unico solo dentro de un pais, por lo q
 haya 2 sociedades con el mismo nombre pero no se dio
 */
 
-CREATE TABLE tp.Usuario(
+CREATE TABLE LOS_SIN_VOZ.Usuario(
 	id INT IDENTITY(1,1) PRIMARY KEY, -- estario bueno que la PK sea (cliente,proveedor), pero sql no se banca que parte de una pk sea null
 	nombre VARCHAR(128) NOT NULL UNIQUE, --este podria ser la PK, pero *creo* que es mas lento
 	contraseña BINARY(32) NOT NULL,
-	rol INT FOREIGN KEY REFERENCES tp.Rol(id),
+	rol INT FOREIGN KEY REFERENCES LOS_SIN_VOZ.Rol(id),
 	fallosLogin INT DEFAULT 0,
 	habilitado BIT DEFAULT 1,
-	cliente INT FOREIGN KEY REFERENCES tp.Cliente(id),
-	proveedor INT FOREIGN KEY REFERENCES tp.Proveedor(id),
-	--se podrian guardar la FK del tp.Cliente y del proveedor en un mismo campo y discriminar por el rol
+	cliente INT FOREIGN KEY REFERENCES LOS_SIN_VOZ.Cliente(id),
+	proveedor INT FOREIGN KEY REFERENCES LOS_SIN_VOZ.Proveedor(id),
+	--se podrian guardar la FK del LOS_SIN_VOZ.Cliente y del proveedor en un mismo campo y discriminar por el rol
 	--si es que eso existe en sql ni idea
 )
 
 --tabla temporal donde se guardan las contraseÃ±as autogeneradas para los usuarios, para entregarselas
 --a estos. La idea es que cambien esta contraseÃ±a provisional por una de verdad.
 --Sin hacer esta tabla se le estaria asignando contraseÃ±as aleatorias a todos los usuarios, que no conoce nadie
-CREATE TABLE tp.contraseñasMigracion(
-	id INT PRIMARY KEY FOREIGN KEY REFERENCES tp.Usuario(id),
+CREATE TABLE LOS_SIN_VOZ.contraseñasMigracion(
+	id INT PRIMARY KEY FOREIGN KEY REFERENCES LOS_SIN_VOZ.Usuario(id),
 	contraseñaDesnuda VARCHAR(128)
 )
 
@@ -307,9 +263,9 @@ DECLARE @apellido VARCHAR(128)
 DECLARE @id INT
 DECLARE @rol INT
 DECLARE @contraseñaDesnuda VARCHAR(64)
-SET @rol = (SELECT id FROM tp.Rol WHERE nombre='Cliente');
+SET @rol = (SELECT id FROM LOS_SIN_VOZ.Rol WHERE nombre='Cliente');
 
-DECLARE cur CURSOR FOR (SELECT nombre,apellido,id FROM tp.Cliente);
+DECLARE cur CURSOR FOR (SELECT nombre,apellido,id FROM LOS_SIN_VOZ.Cliente);
 OPEN cur  
 FETCH NEXT FROM cur INTO @nombre,@apellido,@id
 WHILE @@FETCH_STATUS = 0  
@@ -317,19 +273,19 @@ BEGIN
 	
 	SET @contraseñaDesnuda = CONVERT(varchar(64),ABS(CHECKSUM(NewId())));
 
-	INSERT INTO tp.Usuario (nombre,contraseña,rol,cliente,proveedor) VALUES
+	INSERT INTO LOS_SIN_VOZ.Usuario (nombre,contraseña,rol,cliente,proveedor) VALUES
 	(CONCAT(@nombre,' ',@apellido),HASHBYTES('SHA2_256',@contraseñaDesnuda),@rol,@id,null)
 	
-	INSERT INTO tp.contraseñasMigracion VALUES (@@IDENTITY ,@contraseñaDesnuda)
+	INSERT INTO LOS_SIN_VOZ.contraseñasMigracion VALUES (@@IDENTITY ,@contraseñaDesnuda)
 	FETCH NEXT FROM cur INTO @nombre,@apellido,@id
 END 
 CLOSE cur  
 DEALLOCATE cur 
 
 DECLARE @rs VARCHAR(100)
-SET @rol = (SELECT id FROM tp.Rol WHERE nombre='Proveedor');
+SET @rol = (SELECT id FROM LOS_SIN_VOZ.Rol WHERE nombre='Proveedor');
 
-DECLARE cur CURSOR FOR (SELECT RS,id FROM tp.Proveedor);
+DECLARE cur CURSOR FOR (SELECT RS,id FROM LOS_SIN_VOZ.Proveedor);
 OPEN cur  
 FETCH NEXT FROM cur INTO @RS,@id
 WHILE @@FETCH_STATUS = 0  
@@ -337,10 +293,10 @@ BEGIN
 	
 	SET @contraseñaDesnuda = CONVERT(varchar(64),ABS(CHECKSUM(NewId())));
 
-	INSERT INTO tp.Usuario (nombre,contraseña,rol,cliente,proveedor) VALUES
+	INSERT INTO LOS_SIN_VOZ.Usuario (nombre,contraseña,rol,cliente,proveedor) VALUES
 	(@RS,HASHBYTES('SHA2_256',@contraseñaDesnuda),@rol,null,@id)
 	
-	INSERT INTO tp.contraseñasMigracion VALUES (@@IDENTITY ,@contraseñaDesnuda)
+	INSERT INTO LOS_SIN_VOZ.contraseñasMigracion VALUES (@@IDENTITY ,@contraseñaDesnuda)
 	FETCH NEXT FROM cur INTO @RS,@id
 END 
 CLOSE cur  
@@ -351,12 +307,44 @@ DEALLOCATE cur ;
 -- Dado el precio de ahora y el precio de antes. Calcula el descuento.
 -- Devuelve valor entre 0 y 1. Usar FORMAT(func(), 'p') para imprimir lindo
 GO
-CREATE FUNCTION tp.descuento(@precio_venta NUMERIC(18,2), @precio_original NUMERIC(18,2))
+CREATE FUNCTION LOS_SIN_VOZ.descuento(@precio_venta NUMERIC(18,2), @precio_original NUMERIC(18,2))
 RETURNS NUMERIC(18, 2)
 AS
 BEGIN
-	RETURN (@precio_original - @precio_venta)
-			/
-			NULLIF(@precio_venta, 0)
+	RETURN (@precio_original - @precio_venta)/NULLIF(@precio_original, 0)
 END
 GO
+
+
+-- Stored Procedure
+-- Dado que la facturación es un proceso sensible, se engloba en una transacción implicita asociada a la stored procedure
+CREATE PROCEDURE LOS_SIN_VOZ.sp_facturar(@prov int, @fecha_facturacion DATETIME, @desde DATETIME, @hasta DATETIME)
+AS
+BEGIN
+
+	DECLARE @factura int
+	DECLARE @inserted table (id NUMERIC(18))
+	INSERT INTO LOS_SIN_VOZ.Factura 
+	OUTPUT INSERTED.nro into @inserted
+	VALUES
+		(@fecha_facturacion, @prov)
+
+    -- OBTENER SU ID
+	SELECT @factura = id from @inserted
+
+	-- UPDATEAR COMPRAS con factura asociada
+	UPDATE
+		LOS_SIN_VOZ.Compra_Oferta
+	SET
+		factura = @factura
+	FROM 
+		LOS_SIN_VOZ.Compra_Oferta
+		JOIN LOS_SIN_VOZ.Oferta ON 
+			 LOS_SIN_VOZ.Oferta.codigo = LOS_SIN_VOZ.Compra_Oferta.oferta
+	WHERE
+		--Only set factura for compras that dont have a factura yet. And they match the time period and proveedor
+	    LOS_SIN_VOZ.Compra_Oferta.factura IS NULL AND
+		LOS_SIN_VOZ.Oferta.proveedor=@prov AND
+	    LOS_SIN_VOZ.Compra_Oferta.fecha_Compra >= @desde AND
+        LOS_SIN_VOZ.Compra_Oferta.fecha_Compra <= @hasta
+END

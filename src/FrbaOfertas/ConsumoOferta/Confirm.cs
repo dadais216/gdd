@@ -32,8 +32,8 @@ namespace FrbaOfertas.ConsumoOferta
             //moverlo a un procedure seria mejor porque ahorra el envio pero ni ganas
             util.execCommand(@"
                 BEGIN TRANSACTION
-                INSERT INTO tp.Cupon VALUES (" + cliente + ",'" + fecha + @"')
-                UPDATE tp.Compra_Oferta SET fueCanjeado=1 WHERE id=" + compra + @"
+                INSERT INTO LOS_SIN_VOZ.Cupon VALUES (" + cliente + ",'" + fecha + @"')
+                UPDATE LOS_SIN_VOZ.Compra_Oferta SET fueCanjeado=1 WHERE id=" + compra + @"
                 COMMIT TRANSACTION");
             Close();
         }

@@ -23,7 +23,7 @@ namespace FrbaOfertas.AbmRol
 
         public void doQuery()
         {
-            var table = util.tableQuery("SELECT id,nombre,habilitado FROM tp.Rol ");
+            var table = util.tableQuery("SELECT id,nombre,habilitado FROM LOS_SIN_VOZ.Rol ");
 
             userIds = new string[table.Rows.Count];
 

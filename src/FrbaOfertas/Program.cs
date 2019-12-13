@@ -31,8 +31,11 @@ namespace FrbaOfertas
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
+
+#if true
             con.Open(); // a veces falla la conexion no sé por que
-            Application.Run(new Login());
+            Application.Run(new Main("1", "4"));
+#endif
         }
     }
 }

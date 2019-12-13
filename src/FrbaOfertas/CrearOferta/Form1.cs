@@ -21,12 +21,12 @@ namespace FrbaOfertas.CrearOferta
         {
             InitializeComponent();
 
-            if (util.getVal("SELECT id FROM Rol WHERE nombre = 'Proveedor'").ToString()==rolId)
+            if (util.getVal("SELECT id FROM LOS_SIN_VOZ.Rol WHERE nombre = 'Proveedor'").ToString() == rolId)
             {
                 lblProveedor.Hide();
                 CUIT.Hide();
 
-                proveedorId = util.getVal("SELECT proveedor FROM Usuario WHERE id=" + userId).ToString();
+                proveedorId = util.getVal("SELECT Proveedor FROM LOS_SIN_VOZ.Usuario WHERE id=" + userId).ToString();
             }
             calendarioPublicacion.MinDate = fecha;
             calendarioVencimiento.MinDate = fecha;
@@ -71,7 +71,7 @@ namespace FrbaOfertas.CrearOferta
             {
                 if (proveedorId == null)
                 {
-                    var table=util.tableQuery("SELECT id FROM Proveedor WHERE CUIT= @cu",
+                    var table = util.tableQuery("SELECT id FROM LOS_SIN_VOZ.Proveedor WHERE CUIT= @cu",
                                             "@cu",CUIT.Text);
                     if (table.Rows.Count == 0)
                     {
@@ -99,13 +99,13 @@ namespace FrbaOfertas.CrearOferta
                     codigoStr = new String(codigo);
 
 
-                    if (util.tableQuery("SELECT 1 FROM Oferta WHERE codigo = '" + codigoStr+ "'").Rows.Count == 0)
+                    if (util.tableQuery("SELECT 1 FROM LOS_SIN_VOZ.Oferta WHERE codigo = '" + codigoStr + "'").Rows.Count == 0)
                         //improbable que haya colisiones pero no esta de mas probar.
                         break;
 
                 }
 
-                var command = new SqlCommand("INSERT INTO Oferta (codigo,descripcion, cantidad, fecha, fecha_Venc, " +
+                var command = new SqlCommand("INSERT INTO LOS_SIN_VOZ.Oferta (codigo,descripcion, cantidad, fecha, fecha_Venc, " +
                                             "precio, precio_Ficticio, proveedor) " +
                                              "VALUES (@co,@de,@st,@fp,@fv,@po,@pl,@pr)", Program.con);
 
