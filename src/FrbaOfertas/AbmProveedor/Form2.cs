@@ -36,7 +36,7 @@ namespace FrbaOfertas.AbmProveedor
 
             userId = userId_;
 
-            var table = util.tableQuery("SELECT habilitado FROM tp.Usuario WHERE proveedor = " + userId);
+            var table = util.tableQuery("SELECT habilitado FROM LOS_SIN_VOZ.Usuario WHERE proveedor = " + userId);
 
             habilitado = (bool)table.Rows[0].ItemArray[0];
 
@@ -46,12 +46,12 @@ namespace FrbaOfertas.AbmProveedor
 
         private void Button2_Click(object sender, EventArgs e)
         {
-            var table = util.tableQuery("SELECT id FROM tp.Rubro WHERE nombre = @no","@no",rubro.Text);
+            var table = util.tableQuery("SELECT id FROM LOS_SIN_VOZ.Rubro WHERE nombre = @no","@no",rubro.Text);
 
             string rubroId;
             if (table.Rows.Count == 0)
             {
-                util.execCommand("INSERT tp.Rubro VALUES (@no)","@no",rubro.Text);
+                util.execCommand("INSERT LOS_SIN_VOZ.Rubro VALUES (@no)", "@no",rubro.Text);
                 rubroId = util.getVal("SELECT @@IDENTITY").ToString();
             }
             else
@@ -59,9 +59,7 @@ namespace FrbaOfertas.AbmProveedor
                 rubroId = table.Rows[0].ItemArray[0].ToString();
             }
 
-
-
-            util.execCommand("UPDATE tp.Proveedor SET RS=@RS,dom=@di,ciudad=@ci,telefono=@te,CUIT=@CU,mail=@ma, " +
+            util.execCommand("UPDATE LOS_SIN_VOZ.Proveedor SET RS=@RS,dom=@di,ciudad=@ci,telefono=@te,CUIT=@CU,mail=@ma, " +
                                                             "codigoPostal=@co,rubro=@ru " +
                                                             "WHERE id=@id",
                                                             "@RS", razonSocial.Text,
@@ -91,7 +89,7 @@ namespace FrbaOfertas.AbmProveedor
 
         private void Button1_Click(object sender, EventArgs e)
         {
-            util.execCommand("UPDATE Usuario SET habilitado = " + (habilitado ? "0 " : "1 ") + "WHERE proveedor = " + userId);
+            util.execCommand("UPDATE LOS_SIN_VOZ.Usuario SET habilitado = " + (habilitado ? "0 " : "1 ") + "WHERE proveedor = " + userId);
 
             Close();
         }

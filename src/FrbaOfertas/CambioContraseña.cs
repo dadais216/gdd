@@ -24,7 +24,7 @@ namespace FrbaOfertas
         {
             if (nueva.Text != "")
             {
-                var table = util.tableQuery("SELECT contraseña FROM tp.Usuario WHERE id = " + userId);
+                var table = util.tableQuery("SELECT contraseña FROM LOS_SIN_VOZ.Usuario WHERE id = " + userId);
                 if (((byte[])table.Rows[0].ItemArray[0])
                         .SequenceEqual(
                                         util.hashString(anterior.Text)))
@@ -46,7 +46,7 @@ namespace FrbaOfertas
 
         static public void cambiarContraseña(string nueva,string id)
         {
-            var command = new SqlCommand("UPDATE tp.Usuario SET contraseña = HASHBYTES('SHA2_256',@nu) WHERE id= " + id, Program.con);
+            var command = new SqlCommand("UPDATE LOS_SIN_VOZ.Usuario SET contraseña = HASHBYTES('SHA2_256',@nu) WHERE id= " + id, Program.con);
             command.Parameters.Add(new SqlParameter
             {
                 SqlDbType = SqlDbType.VarChar, //c# pasa por default unicode, osea nvarchar

@@ -1,0 +1,1 @@
+sqlcmd -S localhost\SQLSERVER2012 -U gd -P gd2019 -i script_creacion_inicial.sql -a 32767  -o log_creacion.txt

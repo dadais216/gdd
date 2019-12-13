@@ -23,18 +23,18 @@ namespace FrbaOfertas.AbmProveedor
 
             try
             {
-                var table = util.tableQuery("SELECT id FROM tp.Rubro WHERE nombre = @no", "@no", rubro.Text);
+                var table = util.tableQuery("SELECT id FROM LOS_SIN_VOZ.Rubro WHERE nombre = @no", "@no", rubro.Text);
                 string rubroId;
                 if (table.Rows.Count == 0)
                 {
-                    util.execCommand("INSERT tp.Rubro VALUES (@no)", "@no", rubro.Text);
+                    util.execCommand("INSERT LOS_SIN_VOZ.Rubro VALUES (@no)", "@no", rubro.Text);
                     rubroId = util.getVal("SELECT @@IDENTITY").ToString();
                 }
                 else
                 {
                     rubroId = table.Rows[0].ItemArray[0].ToString();
                 }
-                util.execCommand("INSERT INTO tp.Proveedor (RS,dom,ciudad,telefono,CUIT,mail,codigoPostal,rubro,contacto) " +
+                util.execCommand("INSERT INTO LOS_SIN_VOZ.Proveedor (RS,dom,ciudad,telefono,CUIT,mail,codigoPostal,rubro,contacto) " +
                                  "VALUES (@RS,@di,@ci,@te,@cu,@ma,@co,@ru,@no)",
                                                             "@RS", razonSocial.Text,
                                                             "@di", direccion.Text,

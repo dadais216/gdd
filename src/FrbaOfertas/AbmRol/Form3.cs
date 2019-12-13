@@ -22,7 +22,7 @@ namespace FrbaOfertas.AbmRol
             InitializeComponent();
 
             SqlDataAdapter adp = new SqlDataAdapter("SELECT id,nombre " +
-                                                    "FROM tp.Funcionalidad"
+                                                    "FROM LOS_SIN_VOZ.Funcionalidad"
                                                     , Program.con);
             DataTable funcs = new DataTable();
             adp.Fill(funcs);
@@ -55,15 +55,15 @@ namespace FrbaOfertas.AbmRol
 
         private void Button2_Click(object sender, EventArgs e)
         {
-            util.execCommand("INSERT INTO tp.Rol (nombre) VALUES (@no)",
+            util.execCommand("INSERT INTO LOS_SIN_VOZ.Rol (nombre) VALUES (@no)",
                                 "@no",nombre.Text);
 
-            var table = util.tableQuery("SELECT id FROM tp.Rol WHERE nombre = @no",
+            var table = util.tableQuery("SELECT id FROM LOS_SIN_VOZ.Rol WHERE nombre = @no",
                                 "@no", nombre.Text);
 
             string rolId = table.Rows[0].ItemArray[0].ToString();
 
-            string query = "INSERT INTO tp.RolxFuncionalidad (rol,funcionalidad) VALUES ";
+            string query = "INSERT INTO LOS_SIN_VOZ.RolxFuncionalidad (rol,funcionalidad) VALUES ";
 
             bool oneValIn = false;
             foreach (var tuple in checks)

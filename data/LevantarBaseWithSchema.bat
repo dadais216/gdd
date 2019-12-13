@@ -1,1 +1,0 @@
-sqlcmd -S localhost\SQLSERVER2012 -U gdCupon2019 -P gd2019 -i script_creación_inicial.sql -a 32767  -o log.txt

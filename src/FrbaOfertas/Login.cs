@@ -21,7 +21,7 @@ namespace FrbaOfertas
 
         private void button1_Click(object sender, EventArgs e)
         {
-            var user = util.tableQuery("SELECT contraseña,habilitado,rol,id FROM tp.Usuario WHERE nombre = @no", 
+            var user = util.tableQuery("SELECT contraseña,habilitado,rol,id FROM LOS_SIN_VOZ.Usuario WHERE nombre = @no", 
                                         "@no",nombre.Text);
 
             if (user.Rows.Count == 0)
@@ -37,7 +37,7 @@ namespace FrbaOfertas
 
                     if (inputBytes.SequenceEqual(passBytes))
                     {
-                        util.execCommand("UPDATE tp.Usuario SET " +
+                        util.execCommand("UPDATE LOS_SIN_VOZ.Usuario SET " +
                                                 "fallosLogin = 0 " +
                                          "WHERE nombre = @no", "@no", nombre.Text);
 
@@ -54,7 +54,7 @@ namespace FrbaOfertas
                     {
                         info.Text = "contraseña incorrecta";
 
-                        util.execCommand("UPDATE tp.Usuario SET " +
+                        util.execCommand("UPDATE LOS_SIN_VOZ.Usuario SET " +
                                                 "fallosLogin = fallosLogin + 1, "+
                                                 "habilitado = (CASE WHEN fallosLogin > 2 THEN 0 ELSE habilitado END) " +
                                          "WHERE nombre = @no", "@no", nombre.Text);
