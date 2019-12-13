@@ -81,8 +81,8 @@ namespace FrbaOfertas.Facturar
                 JOIN LOS_SIN_VOZ.Cliente ON LOS_SIN_VOZ.Cliente.id = LOS_SIN_VOZ.Compra_Oferta.cliente
                 WHERE LOS_SIN_VOZ.Proveedor.RS = @proveedor AND 
                       LOS_SIN_VOZ.Compra_Oferta.factura IS NULL AND
-	                  LOS_SIN_VOZ.Compra_Oferta.fecha_Compra < @endDate AND
-	                  LOS_SIN_VOZ.Compra_Oferta.fecha_Compra > @startDate
+	                  LOS_SIN_VOZ.Compra_Oferta.fecha_Compra <= @endDate AND
+	                  LOS_SIN_VOZ.Compra_Oferta.fecha_Compra >= @startDate
                 ORDER BY 1 ASC
                 ",
                 Program.con
@@ -114,8 +114,8 @@ namespace FrbaOfertas.Facturar
                 JOIN LOS_SIN_VOZ.Proveedor ON LOS_SIN_VOZ.Proveedor.id = LOS_SIN_VOZ.Oferta.proveedor
                 WHERE LOS_SIN_VOZ.Proveedor.RS = @proveedor AND
                       LOS_SIN_VOZ.Compra_Oferta.factura IS NULL AND 
-	                  LOS_SIN_VOZ.Compra_Oferta.fecha_Compra < @end AND
-	                  LOS_SIN_VOZ.Compra_Oferta.fecha_Compra > @start
+	                  LOS_SIN_VOZ.Compra_Oferta.fecha_Compra <= @end AND
+	                  LOS_SIN_VOZ.Compra_Oferta.fecha_Compra >= @start
 
                 GROUP BY LOS_SIN_VOZ.Proveedor.id
                 ",
@@ -158,22 +158,9 @@ namespace FrbaOfertas.Facturar
         }
 
         private string getProveedorIdFromName(string proveedor) {
-
-            try
-            {
-                SqlCommand query = new SqlCommand("SELECT id FROM LOS_SIN_VOZ.Proveedor WHERE RS= " + proveedor.ToString(), Program.con);
-                object a = query.ExecuteScalar();
-                return a.ToString();
-            }
-            catch (Exception exc)
-            {
-                string msg = exc.ToString();
-                MessageBox.Show("Algo salió mal. Reintente", "Error");
-                string a = "1";
-                return a;
-            }
-
-
+            SqlCommand query = new SqlCommand("SELECT id FROM LOS_SIN_VOZ.Proveedor WHERE RS='"+proveedor+"'", Program.con);
+            object a = query.ExecuteScalar();
+            return a.ToString();
         }
 
         private void facturarButton_Click(object sender, EventArgs e)
