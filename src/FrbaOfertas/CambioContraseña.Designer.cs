@@ -58,6 +58,7 @@
             // 
             this.nueva.Location = new System.Drawing.Point(12, 75);
             this.nueva.Name = "nueva";
+            this.nueva.PasswordChar = '#';
             this.nueva.Size = new System.Drawing.Size(258, 20);
             this.nueva.TabIndex = 10;
             // 
@@ -65,6 +66,7 @@
             // 
             this.anterior.Location = new System.Drawing.Point(12, 34);
             this.anterior.Name = "anterior";
+            this.anterior.PasswordChar = '#';
             this.anterior.Size = new System.Drawing.Size(258, 20);
             this.anterior.TabIndex = 9;
             // 

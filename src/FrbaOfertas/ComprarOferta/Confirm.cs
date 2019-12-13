@@ -31,7 +31,7 @@ namespace FrbaOfertas.ComprarOferta
             //moverlo a un procedure seria mejor porque ahorra el envio pero ni ganas
             util.execCommand(@"
             BEGIN TRANSACTION
-            INSERT INTO LOS_SIN_VOZ.Compra_Oferta (cliente,oferta,fecha_Compra) VALUES (" + userId + ",'" + codigo + "'," + fecha + @")
+            INSERT INTO LOS_SIN_VOZ.Compra_Oferta (cliente,oferta,fecha_Compra) VALUES (" + userId + ",'" + codigo + "','" + fecha + @"')
             UPDATE LOS_SIN_VOZ.Oferta SET cantidad=cantidad-1 WHERE codigo='" + codigo + @"'
             UPDATE LOS_SIN_VOZ.Cliente SET saldo = saldo - " + precio + @"
             COMMIT TRANSACTION

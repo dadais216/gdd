@@ -170,9 +170,9 @@ namespace FrbaOfertas.Facturar
             SqlCommand facturarQuery = new SqlCommand("LOS_SIN_VOZ.sp_facturar", Program.con);
             facturarQuery.CommandType = CommandType.StoredProcedure;
             facturarQuery.Parameters.AddWithValue("@prov", prov_id);
-            facturarQuery.Parameters.AddWithValue("@fecha_facturacion", fechaActual.ToString());
-            facturarQuery.Parameters.AddWithValue("@desde", desdePicker.Value.ToString());
-            facturarQuery.Parameters.AddWithValue("@hasta", hastaPicker.Value.ToString());
+            facturarQuery.Parameters.AddWithValue("@fecha_facturacion", fechaActual);
+            facturarQuery.Parameters.AddWithValue("@desde", desdePicker.Value);
+            facturarQuery.Parameters.AddWithValue("@hasta", hastaPicker.Value);
             string msg = "Desea confirmar la facturacíon para el proveedor " + chosenProveedor+"?";
             DialogResult confirm = MessageBox.Show(msg, "Confirmar operación", MessageBoxButtons.YesNo);
             if (confirm == DialogResult.Yes) {
