@@ -58,9 +58,9 @@ namespace FrbaOfertas
             return new string(c);
         }
 
-        static public object getVal(string s)
+        static public object getVal(string s, params string[] parameters)
         {
-            return tableQuery(s).Rows[0].ItemArray[0];
+            return tableQuery(s,parameters).Rows[0].ItemArray[0];
         }
     }
 }

@@ -60,22 +60,23 @@ namespace FrbaOfertas.AbmProveedor
             }
             try
             {
-                util.execCommand("UPDATE LOS_SIN_VOZ.Proveedor SET RS=@RS,dom=@di,ciudad=@ci,telefono=@te,CUIT=@CU,mail=@ma, " +
-                                                                "codigoPostal=@co,rubro=@ru " +
-                                                                "WHERE id=@id",
-                                                                "@RS", razonSocial.Text,
-                                                                "@di", direccion.Text,
-                                                                "@ci", ciudad.Text,
-                                                                "@te", telefono.Text,
-                                                                "@cu", CUIT.Text,
-                                                                "@ma", mail.Text,
-                                                                "@co", codigoPostal.Text,
-                                                                "@ru", rubroId,
-                                                                "@no", contacto.Text,
-                                                                "@id", userId);
+                var command = new SqlCommand("UPDATE LOS_SIN_VOZ.Proveedor SET RS=@RS,dom=@di,ciudad=@ci," +
+                                                "telefono=@te,CUIT=@CU,mail=@ma, codigoPostal=@co,rubro=@ru " +
+                                                "WHERE id=@id", Program.con);
 
-                //hacer una modificacion setea los nulls de mail y codigoPostal a "" y 0, arreglarlo implica no usar los parameters
-                //estos (que son una cagada). No sé si vale la pena molestarse por eso igual
+                command.Parameters.AddWithValue("@RS", razonSocial.Text);
+                command.Parameters.AddWithValue("@di", direccion.Text);
+                command.Parameters.AddWithValue("@ci", ciudad.Text);
+                command.Parameters.AddWithValue("@te", telefono.Text);
+                command.Parameters.AddWithValue("@cu", CUIT.Text);
+                command.Parameters.AddWithValue("@ma", mail.Text==""?DBNull.Value:(object)mail.Text);
+                command.Parameters.AddWithValue("@co", codigoPostal.Text == "" ? DBNull.Value : (object)codigoPostal.Text);
+                command.Parameters.AddWithValue("@ru", rubroId);
+                command.Parameters.AddWithValue("@no", contacto.Text);
+                command.Parameters.AddWithValue("@id", userId);
+
+                command.ExecuteNonQuery();
+
             }
             catch (SqlException er)
             {

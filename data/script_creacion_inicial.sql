@@ -57,9 +57,7 @@ CREATE TABLE LOS_SIN_VOZ.Tipo_Pago(
 	descripcion NVARCHAR(100),
 	)
 INSERT INTO LOS_SIN_VOZ.Tipo_Pago
-SELECT DISTINCT Tipo_Pago_Desc
-FROM gd_esquema.Maestra
-WHERE Tipo_Pago_Desc IS NOT NULL
+VALUES ('Efectivo'),('Crédito'),('Débito')
 
 
 CREATE TABLE LOS_SIN_VOZ.Carga(
@@ -68,11 +66,13 @@ CREATE TABLE LOS_SIN_VOZ.Carga(
 	credito NUMERIC(18,2), --seria redundante ponerle NOT NULL a estos?
 	fecha DATETIME,
 	tipo_Pago INT REFERENCES LOS_SIN_VOZ.Tipo_Pago(id), -- ni idea de que es esto pero es algo de carga. Podria ser un enum
+	numeroTarjeta NUMERIC(16,0) DEFAULT null --no me parece que valga la pena hacer otra tabla
+	--es null para cargas en efectivo y cargas de tarjeta que vengan de la base vieja
 	)
 
 INSERT INTO LOS_SIN_VOZ.Carga
 SELECT (SELECT id FROM LOS_SIN_VOZ.Cliente WHERE dni=Cli_Dni),Carga_Credito,Carga_Fecha, 
-		(select id from LOS_SIN_VOZ.Tipo_Pago where Tipo_Pago_Desc=Tipo_Pago.descripcion)
+		(select id from LOS_SIN_VOZ.Tipo_Pago where Tipo_Pago_Desc=Tipo_Pago.descripcion),null
 FROM gd_esquema.Maestra AS M
 WHERE Carga_Credito IS NOT NULL
 

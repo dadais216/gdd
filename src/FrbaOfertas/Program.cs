@@ -32,14 +32,14 @@ namespace FrbaOfertas
             Application.SetCompatibleTextRenderingDefault(false);
 
             con.Open(); // a veces falla la conexion no sé por que
-#if true
+#if false
             Application.Run(new Login());
 #else
-#if true//salto el login porque rompe las bolas
+#if false//salto el login porque rompe las bolas
             Application.Run(new Main("1", "4"));
 #else
-#if false
-            util.execCommand("UPDATE Cliente SET saldo=300 WHERE id=1");
+#if true
+            util.execCommand("UPDATE LOS_SIN_VOZ.Cliente SET saldo=300 WHERE id=1");
             Application.Run(new Main("1","1"));
 #else
             Application.Run(new Main("252", "2"));
