@@ -322,6 +322,8 @@ CLOSE cur
 DEALLOCATE cur ;
 
 
+INSERT INTO LOS_SIN_VOZ.Usuario (nombre,contraseña,rol,cliente,proveedor) VALUES ('admin',HASHBYTES('SHA2_256','w23e'),4,null,null)
+
 -- Funciones
 -- Dado el precio de ahora y el precio de antes. Calcula el descuento.
 -- Devuelve valor entre 0 y 1. Usar FORMAT(func(), 'p') para imprimir lindo
@@ -369,6 +371,4 @@ BEGIN
         LOS_SIN_VOZ.Compra_Oferta.fecha_Compra <= @hasta
 END
 
-
-INSERT INTO tp.Usuario (nombre,contraseña,rol,cliente,proveedor) VALUES ('admin',HASHBYTES('SHA2_256','w23e'),4,null,null)
 

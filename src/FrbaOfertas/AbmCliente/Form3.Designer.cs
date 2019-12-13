@@ -45,6 +45,7 @@
             this.nombre = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
+            this.button3 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // fnac
@@ -177,7 +178,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(9, 456);
+            this.button1.Location = new System.Drawing.Point(9, 527);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(260, 71);
             this.button1.TabIndex = 33;
@@ -185,11 +186,22 @@
             this.button1.UseVisualStyleBackColor = true;
             this.button1.Click += new System.EventHandler(this.Button1_Click);
             // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(6, 447);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(263, 62);
+            this.button3.TabIndex = 39;
+            this.button3.Text = "limpiar";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.Button3_Click);
+            // 
             // Form3
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(292, 542);
+            this.ClientSize = new System.Drawing.Size(292, 610);
+            this.Controls.Add(this.button3);
             this.Controls.Add(this.button1);
             this.Controls.Add(this.fnac);
             this.Controls.Add(this.label15);
@@ -233,5 +245,6 @@
         private System.Windows.Forms.TextBox nombre;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button button3;
     }
 }

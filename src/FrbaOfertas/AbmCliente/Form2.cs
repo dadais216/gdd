@@ -57,10 +57,18 @@ namespace FrbaOfertas.AbmCliente
                                                                 "@ci", ciudad.Text,
                                                                 "@fe", util.flipDayMonth(fnac.Text),
                                                                 "@id", userId);
-            } catch (Exception _)
+            }
+            catch (SqlException er)
             {
-                //se puso una letra en un campo de numero o una fecha absurda
-                new ErrorWindow("Datos Mal Ingresados").Show();
+                if (er.Number == 2627)
+                {
+                    new ErrorWindow("un usuario con esos datos ya existe").Show();
+                }
+                else
+                {
+                    new ErrorWindow("datos faltantes o mal ingresados").Show(); //tira el mismo error para datos vacios y malos sql
+                }
+
             }
             if (contraseña.Text != "")
             {
@@ -78,6 +86,19 @@ namespace FrbaOfertas.AbmCliente
             util.execCommand("UPDATE LOS_SIN_VOZ.Usuario SET habilitado = " + (habilitado ? "0 " : "1 ") + "WHERE cliente = " + userId);
 
             Close();
+        }
+
+        private void Button3_Click(object sender, EventArgs e)
+        {
+            nombre.Text = "";
+            apellido.Text = "";
+            dni.Text = "";
+            direccion.Text = "";
+            telefono.Text = "";
+            mail.Text = "";
+            ciudad.Text = "";
+            fnac.Text = "";
+            contraseña.Text = "";
         }
     }
 }

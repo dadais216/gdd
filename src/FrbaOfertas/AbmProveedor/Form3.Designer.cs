@@ -47,11 +47,12 @@
             this.label11 = new System.Windows.Forms.Label();
             this.razonSocial = new System.Windows.Forms.TextBox();
             this.label8 = new System.Windows.Forms.Label();
+            this.button3 = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(9, 444);
+            this.button1.Location = new System.Drawing.Point(12, 530);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(260, 71);
             this.button1.TabIndex = 33;
@@ -203,11 +204,22 @@
             this.label8.TabIndex = 34;
             this.label8.Text = "razon social";
             // 
+            // button3
+            // 
+            this.button3.Location = new System.Drawing.Point(9, 450);
+            this.button3.Name = "button3";
+            this.button3.Size = new System.Drawing.Size(263, 62);
+            this.button3.TabIndex = 52;
+            this.button3.Text = "limpiar";
+            this.button3.UseVisualStyleBackColor = true;
+            this.button3.Click += new System.EventHandler(this.Button3_Click);
+            // 
             // Form3
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(292, 537);
+            this.ClientSize = new System.Drawing.Size(292, 613);
+            this.Controls.Add(this.button3);
             this.Controls.Add(this.contacto);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.codigoPostal);
@@ -254,5 +266,6 @@
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox razonSocial;
         private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Button button3;
     }
 }

@@ -58,24 +58,36 @@ namespace FrbaOfertas.AbmProveedor
             {
                 rubroId = table.Rows[0].ItemArray[0].ToString();
             }
+            try
+            {
+                util.execCommand("UPDATE LOS_SIN_VOZ.Proveedor SET RS=@RS,dom=@di,ciudad=@ci,telefono=@te,CUIT=@CU,mail=@ma, " +
+                                                                "codigoPostal=@co,rubro=@ru " +
+                                                                "WHERE id=@id",
+                                                                "@RS", razonSocial.Text,
+                                                                "@di", direccion.Text,
+                                                                "@ci", ciudad.Text,
+                                                                "@te", telefono.Text,
+                                                                "@cu", CUIT.Text,
+                                                                "@ma", mail.Text,
+                                                                "@co", codigoPostal.Text,
+                                                                "@ru", rubroId,
+                                                                "@no", contacto.Text,
+                                                                "@id", userId);
 
-            util.execCommand("UPDATE LOS_SIN_VOZ.Proveedor SET RS=@RS,dom=@di,ciudad=@ci,telefono=@te,CUIT=@CU,mail=@ma, " +
-                                                            "codigoPostal=@co,rubro=@ru " +
-                                                            "WHERE id=@id",
-                                                            "@RS", razonSocial.Text,
-                                                            "@di", direccion.Text,
-                                                            "@ci", ciudad.Text,
-                                                            "@te", telefono.Text,
-                                                            "@cu", CUIT.Text,
-                                                            "@ma", mail.Text,
-                                                            "@co", codigoPostal.Text,
-                                                            "@ru", rubroId,
-                                                            "@no", contacto.Text,
-                                                            "@id", userId);
-
-            //hacer una modificacion setea los nulls de mail y codigoPostal a "" y 0, arreglarlo implica no usar los parameters
-            //estos (que son una cagada). No sé si vale la pena molestarse por eso igual
-
+                //hacer una modificacion setea los nulls de mail y codigoPostal a "" y 0, arreglarlo implica no usar los parameters
+                //estos (que son una cagada). No sé si vale la pena molestarse por eso igual
+            }
+            catch (SqlException er)
+            {
+                if (er.Number == 2627)
+                {
+                    new ErrorWindow("un usuario con esos datos ya existe").Show();
+                }
+                else
+                {
+                    new ErrorWindow("datos faltantes o mal ingresados").Show(); //tira el mismo error para datos vacios y malos sql
+                }
+            }
 
             if (contraseña.Text != "")
             {
@@ -92,6 +104,20 @@ namespace FrbaOfertas.AbmProveedor
             util.execCommand("UPDATE LOS_SIN_VOZ.Usuario SET habilitado = " + (habilitado ? "0 " : "1 ") + "WHERE proveedor = " + userId);
 
             Close();
+        }
+
+        private void Button3_Click(object sender, EventArgs e)
+        {
+            razonSocial.Text = "";
+            direccion.Text = "";
+            ciudad.Text = "";
+            telefono.Text = "";
+            CUIT.Text = "";
+            mail.Text = "";
+            codigoPostal.Text = "";
+            rubro.Text = "";
+            contacto.Text = "";
+            contraseña.Text = "";
         }
     }
 }

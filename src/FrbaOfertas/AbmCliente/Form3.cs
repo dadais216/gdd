@@ -51,7 +51,6 @@ namespace FrbaOfertas.AbmCliente
             }
             catch (SqlException er)
             {
-                Console.WriteLine(er.Message + " >>>>>>>" + er.Number);
                 if (er.Number == 2627)
                 {
                     new ErrorWindow("un usuario con esos datos ya existe").Show();
@@ -64,6 +63,18 @@ namespace FrbaOfertas.AbmCliente
             }
             Close();
 
+        }
+
+        private void Button3_Click(object sender, EventArgs e)
+        {
+            nombre.Text = "";
+            apellido.Text = "";
+            dni.Text = "";
+            direccion.Text = "";
+            telefono.Text = "";
+            mail.Text = "";
+            fnac.Text = "";
+            ciudad.Text = "";
         }
     }
 }

@@ -63,5 +63,18 @@ namespace FrbaOfertas.AbmProveedor
             Close();
 
         }
+
+        private void Button3_Click(object sender, EventArgs e)
+        {
+            razonSocial.Text = "";
+            direccion.Text = "";
+            ciudad.Text = "";
+            telefono.Text = "";
+            CUIT.Text = "";
+            mail.Text = "";
+            codigoPostal.Text = "";
+            rubro.Text = "";
+            contacto.Text = "";
+        }
     }
 }

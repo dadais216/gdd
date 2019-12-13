@@ -121,7 +121,7 @@ namespace FrbaOfertas.CrearOferta
 
                 command.ExecuteNonQuery();
 
-
+                MessageBox.Show("Publicacion exitosa");
 
 
 

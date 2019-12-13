@@ -32,7 +32,7 @@ namespace FrbaOfertas
             Application.SetCompatibleTextRenderingDefault(false);
 
             con.Open(); // a veces falla la conexion no sé por que
-#if false
+#if true
             Application.Run(new Login());
 #else
 #if true//salto el login porque rompe las bolas
