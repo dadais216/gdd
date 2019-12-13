@@ -222,7 +222,7 @@ VALUES ('cliente'),('proveedor'),('administrador'),('administrador general');
 INSERT INTO LOS_SIN_VOZ.RolxFuncionalidad (rol,funcionalidad) -- Dado que es un script de migración único a ejecutar por única vez, es permisible esto
 VALUES  (1,4),(1,6),
 		(2,5),(2,7),
-		(3,1),(3,2),(3,3),(3,8),(3,9);
+		(3,1),(3,2),(3,3),(3,5),(3,8),(3,9);
 INSERT INTO LOS_SIN_VOZ.RolxFuncionalidad (rol,funcionalidad)
 (SELECT 4,id FROM LOS_SIN_VOZ.Funcionalidad);
 
