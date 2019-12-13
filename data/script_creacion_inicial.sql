@@ -18,11 +18,26 @@ IF OBJECT_ID('LOS_SIN_VOZ.Rubro') IS NOT NULL DROP TABLE LOS_SIN_VOZ.Rubro;
 IF OBJECT_ID('LOS_SIN_VOZ.descuento') IS NOT NULL DROP FUNCTION LOS_SIN_VOZ.descuento;
 IF OBJECT_ID('LOS_SIN_VOZ.sp_facturar') IS NOT NULL DROP PROCEDURE LOS_SIN_VOZ.sp_facturar;
 
+
 IF EXISTS (SELECT * FROM sys.schemas WHERE name = N'LOS_SIN_VOZ')
 	DROP SCHEMA LOS_SIN_VOZ
 
 GO
-CREATE SCHEMA LOS_SIN_VOZ AUTHORIZATION [gd]
+
+-- CREACION DE USUARIO PARA CORRER LA APLICACION
+-- Autogenerado a partir de la opcion Script Action To File de SQL Server Management Studio
+USE [master]
+GO
+CREATE LOGIN [gdCupon2019] WITH PASSWORD=N'gd2019', DEFAULT_DATABASE=[master], CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF
+GO
+ALTER SERVER ROLE [sysadmin] ADD MEMBER [gdCupon2019]
+GO
+USE [GD2C2019]
+GO
+CREATE USER [gdCupon2019] FOR LOGIN [gdCupon2019]
+GO
+
+CREATE SCHEMA LOS_SIN_VOZ AUTHORIZATION [gdCupon2019]
 
 GO
 SET ANSI_NULLS ON  -- Only compare nulls with IS and IS NOT
@@ -37,9 +52,9 @@ CREATE TABLE LOS_SIN_VOZ.Cliente(
 	nombre VARCHAR(255) NOT NULL,
 	apellido VARCHAR(255) NOT NULL,
 	direccion VARCHAR(255) NOT NULL,
-	telefono NUMERIC(18,0) NOT NULL, /*UNIQUE?*/
-	mail VARCHAR(255) NOT NULL, /*UNIQUE hay dos minas que comparte mail, no sé si considerarlo un problema*/
-	fecha_Nac DATE, /*deberia ser NOT NULL pero no solucione el tema de la conversion*/
+	telefono NUMERIC(18,0) NOT NULL,
+	mail VARCHAR(255) NOT NULL,
+	fecha_Nac DATE,
 	ciudad VARCHAR(255) NOT NULL,
 	saldo DECIMAL(32,2) NOT NULL DEFAULT 0,
 	UNIQUE(nombre,apellido,dni,telefono,mail,fecha_Nac) 
@@ -138,7 +153,7 @@ CREATE TABLE LOS_SIN_VOZ.Factura(
 )
 -- Esto es necesario porque los futuros nro de factura van a ser autogenerados pero los de la migracion no
 -- SQL se queja cuando le metes de prepo una pk a una tabla. y te exige que le apses el flag IDENTITY_INSERT
--- Tambiex hace obligatorio que pongas las columnas despues del INSERT INTO LOS_SIN_VOZ.TABLA (campo1, campo2) como para que quede bien claro que la estas cagando
+-- Tambien hace obligatorio que pongas las columnas despues del INSERT INTO LOS_SIN_VOZ.TABLA (campo1, campo2) como para que quede bien claro que la estas cagando
 SET IDENTITY_INSERT LOS_SIN_VOZ.Factura ON 
 INSERT INTO LOS_SIN_VOZ.Factura (nro, fecha, proveedor)
 SELECT DISTINCT Factura_Nro,Factura_Fecha,(SELECT id FROM LOS_SIN_VOZ.Proveedor p WHERE p.RS=m.Provee_RS) 
