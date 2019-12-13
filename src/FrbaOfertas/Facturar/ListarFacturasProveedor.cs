@@ -29,10 +29,10 @@ namespace FrbaOfertas.Facturar
             InitializeComponent();
             facturarButton.Enabled = false; // Si no hay resultados, no se puede facturar
 
-            // Setear período a fecha de app - 3 meses.
+            // Setear período a fecha de app - 1 meses.
             string currentDate = fechaActual.ToString();
             hastaPicker.Value = DateTime.Parse(currentDate); // Current date
-            desdePicker.Value = DateTime.Parse(currentDate).AddMonths(-3); // 3 months before
+            desdePicker.Value = DateTime.Parse(currentDate).AddMonths(-1); // 1 month before
 
             // Populate proveedores.
             List<string> proveedores = getProveedores();
@@ -173,18 +173,6 @@ namespace FrbaOfertas.Facturar
             facturarQuery.Parameters.AddWithValue("@fecha_facturacion", fechaActual.ToString());
             facturarQuery.Parameters.AddWithValue("@desde", desdePicker.Value.ToString());
             facturarQuery.Parameters.AddWithValue("@hasta", hastaPicker.Value.ToString());
-
-
-         
-
-            List<string> compra_ids = new List<string> {};
-            foreach (DataGridViewRow compra in TablaFacturacion.Rows)
-            {
-                compra_ids.Add(compra.Cells["TICKET"].Value.ToString());
-            }
-
-            // Create Factura
-            // Asociar compras a factura
             string msg = "Desea confirmar la facturacíon para el proveedor " + chosenProveedor+"?";
             DialogResult confirm = MessageBox.Show(msg, "Confirmar operación", MessageBoxButtons.YesNo);
             if (confirm == DialogResult.Yes) {
@@ -192,11 +180,14 @@ namespace FrbaOfertas.Facturar
                 {
                     facturarQuery.ExecuteNonQuery();
                     MessageBox.Show("Facturacion exitosa", "Exito");
+                    facturarButton.Enabled = false;
                 }
                 catch (Exception _) {
                     MessageBox.Show("Algo salió mal. Reintente", "Error");
                 }
             }
+
+
         }
 
         private void crearFactura(List<string> compra_ids)
