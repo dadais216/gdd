@@ -343,6 +343,7 @@ GO
 CREATE PROCEDURE LOS_SIN_VOZ.sp_facturar(@prov int, @fecha_facturacion DATETIME, @desde DATETIME, @hasta DATETIME)
 AS
 BEGIN
+	BEGIN TRAN facturacion
 
 	DECLARE @factura int
 	DECLARE @inserted table (id NUMERIC(18))
@@ -369,6 +370,8 @@ BEGIN
 		LOS_SIN_VOZ.Oferta.proveedor=@prov AND
 	    LOS_SIN_VOZ.Compra_Oferta.fecha_Compra >= @desde AND
         LOS_SIN_VOZ.Compra_Oferta.fecha_Compra <= @hasta
+
+    COMMIT TRAN facturacion
 END
 
 
