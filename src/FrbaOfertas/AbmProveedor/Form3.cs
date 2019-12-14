@@ -52,11 +52,11 @@ namespace FrbaOfertas.AbmProveedor
             {
                 if (er.Number == 2627)
                 {
-                    new ErrorWindow("un usuario con esos datos ya existe").Show();
+                    MessageBox.Show("un usuario con esos datos ya existe");
                 }
                 else
                 {
-                    new ErrorWindow("datos faltantes o mal ingresados").Show(); //tira el mismo error para datos vacios y malos sql
+                    MessageBox.Show("datos faltantes o mal ingresados"); //tira el mismo error para datos vacios y malos sql
                 }
 
             }

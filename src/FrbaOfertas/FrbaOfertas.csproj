@@ -164,12 +164,6 @@
     <Compile Include="CrearOferta\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="ErrorWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="ErrorWindow.Designer.cs">
-      <DependentUpon>ErrorWindow.cs</DependentUpon>
-    </Compile>
     <Compile Include="Facturar\ListarFacturasProveedor.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -240,9 +234,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="CrearOferta\Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="ErrorWindow.resx">
-      <DependentUpon>ErrorWindow.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Facturar\ListarFacturasProveedor.resx">
       <DependentUpon>ListarFacturasProveedor.cs</DependentUpon>

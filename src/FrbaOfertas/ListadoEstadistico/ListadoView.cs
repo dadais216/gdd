@@ -41,7 +41,7 @@ namespace FrbaOfertas.ListadoEstadistico
                     FORMAT(AVG(LOS_SIN_VOZ.descuento(Oferta.precio, Oferta.precio_Ficticio)), 'p') as DESCUENTOS_PROMEDIO
             FROM LOS_SIN_VOZ.Oferta
             JOIN LOS_SIN_VOZ.Proveedor ON LOS_SIN_VOZ.Proveedor.id = LOS_SIN_VOZ.Oferta.proveedor
-            WHERE LOS_SIN_VOZ.Oferta.fecha > @startDate AND LOS_SIN_VOZ.Oferta.fecha_Venc < @endDate
+            WHERE LOS_SIN_VOZ.Oferta.fecha > @startDate AND LOS_SIN_VOZ.Oferta.fecha_Venc <= @endDate
             GROUP BY LOS_SIN_VOZ.Proveedor.RS
             ORDER BY AVG(LOS_SIN_VOZ.descuento(LOS_SIN_VOZ.Oferta.precio, LOS_SIN_VOZ.Oferta.precio_Ficticio)) DESC
             ";
@@ -84,7 +84,7 @@ namespace FrbaOfertas.ListadoEstadistico
             FROM LOS_SIN_VOZ.Compra_Oferta
             JOIN LOS_SIN_VOZ.Oferta ON Compra_Oferta.oferta = Oferta.codigo
             JOIN LOS_SIN_VOZ.Proveedor ON Oferta.proveedor = Proveedor.id
-            WHERE Oferta.fecha > @startDate AND Oferta.fecha_Venc < @endDate
+            WHERE Oferta.fecha > @startDate AND Oferta.fecha_Venc <= @endDate
             GROUP BY Proveedor.RS
             ORDER BY 2 DESC
             ";

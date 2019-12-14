@@ -98,5 +98,13 @@ namespace FrbaOfertas.AbmProveedor
 
             newForm.Show();
         }
+
+        private void Button2_Click(object sender, EventArgs e)
+        {
+            textBox1.Text = "";
+            textBox3.Text = "";
+            textBox4.Text = "";
+            dataGridView1.DataSource = null;
+        }
     }
 }

@@ -17,12 +17,20 @@ namespace FrbaOfertas.CragaCredito
         DateTime fecha = Convert.ToDateTime(ConfigurationManager.AppSettings["fecha"]);
         string clienteId;
 
-        public Form1(string userId)
+        public Form1(string userId,string rolId)
         {
+            if((string)util.getVal("SELECT nombre FROM LOS_SIN_VOZ.Rol WHERE id=" + rolId) != "cliente")
+            {
+                MessageBox.Show("funcionalidad solo disponible para clientes");
+                Close();
+                return;
+            }
+
             clienteId = util.getVal("SELECT cliente FROM LOS_SIN_VOZ.Usuario WHERE id="+userId).ToString();
             InitializeComponent();
             numeroTarjeta.Hide();
             label3.Hide();
+            Show();
         }
 
         private void ButtonCargar_Click(object sender, EventArgs e)

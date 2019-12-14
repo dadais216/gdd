@@ -27,7 +27,7 @@ namespace FrbaOfertas.ComprarOferta
 
             if (rolId != util.tableQuery("SELECT id FROM LOS_SIN_VOZ.Rol WHERE nombre = 'Cliente'").Rows[0].ItemArray[0].ToString())
             {
-                new ErrorWindow("un no cliente no puede comprar nada porque no tiene saldo en el sistema").Show();
+                MessageBox.Show("un no cliente no puede comprar nada porque no tiene saldo en el sistema");
                 return;
             }
 
@@ -44,10 +44,11 @@ namespace FrbaOfertas.ComprarOferta
 
         private void DataGridView1_CellClick_1(object sender, DataGridViewCellEventArgs e)
         {
+            ;
             if (e.RowIndex == -1) return;
             if (saldo < (decimal)dataGridView1.Rows[e.RowIndex].Cells[1].Value)
             {
-                new ErrorWindow("saldo insuficiente");
+                MessageBox.Show("saldo insuficiente");
                 return;
             }
 
