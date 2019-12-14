@@ -25,18 +25,28 @@ IF EXISTS (SELECT * FROM sys.schemas WHERE name = N'LOS_SIN_VOZ')
 GO
 
 -- CREACION DE USUARIO PARA CORRER LA APLICACION
--- Autogenerado a partir de la opcion Script Action To File de SQL Server Management Studio
+-- Autogenerado modificado a partir de la opcion Script Action To File de SQL Server Management Studio
+-- Se asume que en la base de datos no va a existir el usuario ni el login y que si existe, ya tiene los permisos necesarios
+-- Esto es una peculiaridad del tp ya que no conocemos el entorno de prueba. Contemplamos el caso que exista para evitar el error
+-- y asumimos que si existe, tiene los permisos adecuados.
 USE [master]
 GO
-CREATE LOGIN [gdCupon2019] WITH PASSWORD=N'gd2019', DEFAULT_DATABASE=[master], CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF
+
+-- CREO LOGIN SI NO EXISTE
+IF NOT EXISTS(SELECT * FROM sys.sql_logins WHERE name='gdCupon2019')
+	CREATE LOGIN [gdCupon2019] WITH PASSWORD=N'gd2019', DEFAULT_DATABASE=[master], CHECK_EXPIRATION=OFF, CHECK_POLICY=OFF
+
+-- LE AGREGO PERMISOS DE sysadmin
 GO
 ALTER SERVER ROLE [sysadmin] ADD MEMBER [gdCupon2019]
-GO
-USE [GD2C2019]
-GO
-CREATE USER [gdCupon2019] FOR LOGIN [gdCupon2019]
-GO
 
+-- Agrego el usuario para la conexion a la db de la aplicación
+USE [GD2C2019]	
+GO
+IF NOT EXISTS(SELECT * FROM sys.sysusers WHERE name='gdCupon2019')
+	CREATE USER [gdCupon2019] FOR LOGIN [gdCupon2019]
+
+GO
 CREATE SCHEMA LOS_SIN_VOZ AUTHORIZATION [gdCupon2019]
 
 GO
